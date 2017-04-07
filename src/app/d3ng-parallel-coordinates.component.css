@@ -1,0 +1,32 @@
+:host /deep/ {
+  display: block;
+}
+:host /deep/ .foreground path {
+  fill: none;
+  stroke-opacity: .5;
+  stroke-width: 1.5px;
+  stroke: #111;
+}
+
+:host /deep/ .foreground path.selected {
+  stroke: blue;
+  stroke-opacity: 1;
+}
+
+:host /deep/ .brush .extent {
+  fill-opacity: .3;
+  stroke: #fff;
+  shape-rendering: crispEdges;
+}
+
+:host /deep/ .axis line, .axis path {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+:host /deep/ .axis text {
+  text-shadow: 0 1px 0 #fff;
+  cursor: move;
+}
+

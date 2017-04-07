@@ -1,0 +1,2052 @@
+{
+  "children": [{
+    "children": [{
+      "children": [{
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "CBO": 1,
+                    "DIT": 8,
+                    "LCOM": 325,
+                    "NOC": 0,
+                    "RFC": 24,
+                    "WMC-1": 26,
+                    "WMC-CC": 97,
+                    "WMC-HV": 1678,
+                    "dependencies": [{
+                      "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                      "value": 21
+                    }],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/RepositoryModelFactoryImpl",
+                    "label": "RepositoryModelFactoryImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 5,
+                    "LCOM": 113,
+                    "NOC": 0,
+                    "RFC": 17,
+                    "WMC-1": 19,
+                    "WMC-CC": 126,
+                    "WMC-HV": 2129,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 27
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/UnresolvedLinkImpl",
+                    "label": "UnresolvedLinkImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 5,
+                    "LCOM": 144,
+                    "NOC": 0,
+                    "RFC": 19,
+                    "WMC-1": 21,
+                    "WMC-CC": 144,
+                    "WMC-HV": 2408,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 34
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/DiffImpl",
+                    "label": "DiffImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 6,
+                    "LCOM": 44,
+                    "NOC": 3,
+                    "RFC": 13,
+                    "WMC-1": 13,
+                    "WMC-CC": 69,
+                    "WMC-HV": 1207,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 15
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/DataSetImpl",
+                    "label": "DataSetImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 9,
+                    "LCOM": 4266,
+                    "NOC": 0,
+                    "RFC": 97,
+                    "WMC-1": 101,
+                    "WMC-CC": 643,
+                    "WMC-HV": 8705,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 103
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelFactory",
+                        "value": 1
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/RepositoryModelPackageImpl",
+                    "label": "RepositoryModelPackageImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 7,
+                    "LCOM": 22,
+                    "NOC": 1,
+                    "RFC": 15,
+                    "WMC-1": 9,
+                    "WMC-CC": 27,
+                    "WMC-HV": 617,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 5
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/DataStoreMetaDataImpl",
+                    "label": "DataStoreMetaDataImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 5,
+                    "LCOM": 26,
+                    "NOC": 4,
+                    "RFC": 6,
+                    "WMC-1": 8,
+                    "WMC-CC": 27,
+                    "WMC-HV": 576,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 6
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/RepositoryElementImpl",
+                    "label": "RepositoryElementImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 8,
+                    "LCOM": 61,
+                    "NOC": 0,
+                    "RFC": 27,
+                    "WMC-1": 15,
+                    "WMC-CC": 88,
+                    "WMC-HV": 1451,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 20
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/ImportMetaDataImpl",
+                    "label": "ImportMetaDataImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 6,
+                    "LCOM": 22,
+                    "NOC": 1,
+                    "RFC": 9,
+                    "WMC-1": 9,
+                    "WMC-CC": 28,
+                    "WMC-HV": 639,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 5
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/AbstractFileRefImpl",
+                    "label": "AbstractFileRefImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 7,
+                    "LCOM": 52,
+                    "NOC": 0,
+                    "RFC": 14,
+                    "WMC-1": 13,
+                    "WMC-CC": 62,
+                    "WMC-HV": 1296,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 14
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/JavaCompilationUnitRefImpl",
+                    "label": "JavaCompilationUnitRefImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 8,
+                    "LCOM": 61,
+                    "NOC": 0,
+                    "RFC": 23,
+                    "WMC-1": 15,
+                    "WMC-CC": 89,
+                    "WMC-HV": 1453,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 20
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/MongoDBMetaDataImpl",
+                    "label": "MongoDBMetaDataImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 5,
+                    "LCOM": 74,
+                    "NOC": 0,
+                    "RFC": 14,
+                    "WMC-1": 16,
+                    "WMC-CC": 97,
+                    "WMC-HV": 1658,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 21
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/RefImpl",
+                    "label": "RefImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 7,
+                    "LCOM": 39,
+                    "NOC": 0,
+                    "RFC": 16,
+                    "WMC-1": 10,
+                    "WMC-CC": 73,
+                    "WMC-HV": 987,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 17
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/RepositoryModelImpl",
+                    "label": "RepositoryModelImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 5,
+                    "LCOM": 44,
+                    "NOC": 0,
+                    "RFC": 11,
+                    "WMC-1": 13,
+                    "WMC-CC": 69,
+                    "WMC-HV": 1187,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 15
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/ImportErrorImpl",
+                    "label": "ImportErrorImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 6,
+                    "LCOM": 44,
+                    "NOC": 2,
+                    "RFC": 13,
+                    "WMC-1": 13,
+                    "WMC-CC": 70,
+                    "WMC-HV": 1176,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 15
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/DirectoryElementImpl",
+                    "label": "DirectoryElementImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 7,
+                    "LCOM": 169,
+                    "NOC": 0,
+                    "RFC": 29,
+                    "WMC-1": 23,
+                    "WMC-CC": 170,
+                    "WMC-HV": 2555,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 40
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/RepositoryMetaDataImpl",
+                    "label": "RepositoryMetaDataImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 5,
+                    "LCOM": 40,
+                    "NOC": 0,
+                    "RFC": 10,
+                    "WMC-1": 12,
+                    "WMC-CC": 57,
+                    "WMC-HV": 1113,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 11
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/TargetImpl",
+                    "label": "TargetImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 3,
+                    "DIT": 5,
+                    "LCOM": 92,
+                    "NOC": 0,
+                    "RFC": 14,
+                    "WMC-1": 16,
+                    "WMC-CC": 127,
+                    "WMC-HV": 2045,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 27
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/Rev",
+                        "value": 1
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/CompilationUnitModelImpl",
+                    "label": "CompilationUnitModelImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 6,
+                    "LCOM": 171,
+                    "NOC": 0,
+                    "RFC": 21,
+                    "WMC-1": 22,
+                    "WMC-CC": 195,
+                    "WMC-HV": 2645,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 47
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/RevImpl",
+                    "label": "RevImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 5,
+                    "LCOM": 104,
+                    "NOC": 0,
+                    "RFC": 15,
+                    "WMC-1": 17,
+                    "WMC-CC": 131,
+                    "WMC-HV": 2311,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 31
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/ParentRelationImpl",
+                    "label": "ParentRelationImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 7,
+                    "LCOM": 44,
+                    "NOC": 1,
+                    "RFC": 19,
+                    "WMC-1": 13,
+                    "WMC-CC": 70,
+                    "WMC-HV": 1195,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 15
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/TaskDataImpl",
+                    "label": "TaskDataImpl",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 7,
+                    "LCOM": 47,
+                    "NOC": 0,
+                    "RFC": 17,
+                    "WMC-1": 11,
+                    "WMC-CC": 94,
+                    "WMC-HV": 1171,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage/Literals",
+                        "value": 1
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                        "value": 22
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/repositorymodel/impl/RepositoryModelDirectoryImpl",
+                    "label": "RepositoryModelDirectoryImpl",
+                    "type": "type"
+                  }
+                ],
+                "id": "de/hub/srcrepo/repositorymodel/impl",
+                "label": "impl",
+                "type": "package"
+              },
+              {
+                "children": [
+                  {
+                    "CBO": 1,
+                    "DIT": 2,
+                    "LCOM": 274,
+                    "NOC": 0,
+                    "RFC": 24,
+                    "WMC-1": 24,
+                    "WMC-CC": 30,
+                    "WMC-HV": 325,
+                    "dependencies": [{
+                      "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                      "value": 1
+                    }],
+                    "id": "de/hub/srcrepo/repositorymodel/util/RepositoryModelAdapterFactory",
+                    "label": "RepositoryModelAdapterFactory",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 1,
+                    "DIT": 0,
+                    "LCOM": 274,
+                    "NOC": 0,
+                    "RFC": 22,
+                    "WMC-1": 24,
+                    "WMC-CC": 171,
+                    "WMC-HV": 1527,
+                    "dependencies": [{
+                      "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                      "value": 21
+                    }],
+                    "id": "de/hub/srcrepo/repositorymodel/util/RepositoryModelSwitch",
+                    "label": "RepositoryModelSwitch",
+                    "type": "type"
+                  }
+                ],
+                "id": "de/hub/srcrepo/repositorymodel/util",
+                "label": "util",
+                "type": "package"
+              },
+              {
+                "CBO": 0,
+                "DIT": 3,
+                "LCOM": 1,
+                "NOC": 2,
+                "RFC": 3,
+                "WMC-1": 2,
+                "WMC-CC": 2,
+                "WMC-HV": 2,
+                "id": "de/hub/srcrepo/repositorymodel/AbstractFileRef",
+                "label": "AbstractFileRef",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 2,
+                "LCOM": 66,
+                "NOC": 1,
+                "RFC": 12,
+                "WMC-1": 12,
+                "WMC-CC": 12,
+                "WMC-HV": 12,
+                "id": "de/hub/srcrepo/repositorymodel/Diff",
+                "label": "Diff",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 2,
+                "LCOM": 15,
+                "NOC": 1,
+                "RFC": 6,
+                "WMC-1": 6,
+                "WMC-CC": 6,
+                "WMC-HV": 6,
+                "id": "de/hub/srcrepo/repositorymodel/ImportError",
+                "label": "ImportError",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 4,
+                "LCOM": 3,
+                "NOC": 1,
+                "RFC": 10,
+                "WMC-1": 3,
+                "WMC-CC": 3,
+                "WMC-HV": 3,
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryModel",
+                "label": "RepositoryModel",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 4,
+                "LCOM": 120,
+                "NOC": 1,
+                "RFC": 23,
+                "WMC-1": 16,
+                "WMC-CC": 16,
+                "WMC-HV": 16,
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryMetaData",
+                "label": "RepositoryMetaData",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 4,
+                "LCOM": 6,
+                "NOC": 1,
+                "RFC": 11,
+                "WMC-1": 4,
+                "WMC-CC": 4,
+                "WMC-HV": 4,
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryModelDirectory",
+                "label": "RepositoryModelDirectory",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 3,
+                "LCOM": 15,
+                "NOC": 4,
+                "RFC": 7,
+                "WMC-1": 6,
+                "WMC-CC": 6,
+                "WMC-HV": 6,
+                "id": "de/hub/srcrepo/repositorymodel/DirectoryElement",
+                "label": "DirectoryElement",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 2,
+                "LCOM": 15,
+                "NOC": 1,
+                "RFC": 6,
+                "WMC-1": 6,
+                "WMC-CC": 6,
+                "WMC-HV": 6,
+                "id": "de/hub/srcrepo/repositorymodel/CompilationUnitModel",
+                "label": "CompilationUnitModel",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 2,
+                "LCOM": 10,
+                "NOC": 1,
+                "RFC": 5,
+                "WMC-1": 5,
+                "WMC-CC": 5,
+                "WMC-HV": 5,
+                "id": "de/hub/srcrepo/repositorymodel/ParentRelation",
+                "label": "ParentRelation",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 2,
+                "LCOM": 6,
+                "NOC": 1,
+                "RFC": 4,
+                "WMC-1": 4,
+                "WMC-CC": 4,
+                "WMC-HV": 4,
+                "id": "de/hub/srcrepo/repositorymodel/Target",
+                "label": "Target",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 4,
+                "LCOM": 15,
+                "NOC": 2,
+                "RFC": 13,
+                "WMC-1": 6,
+                "WMC-CC": 6,
+                "WMC-HV": 6,
+                "id": "de/hub/srcrepo/repositorymodel/TaskData",
+                "label": "TaskData",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 5,
+                "LCOM": 28,
+                "NOC": 1,
+                "RFC": 17,
+                "WMC-1": 8,
+                "WMC-CC": 8,
+                "WMC-HV": 8,
+                "id": "de/hub/srcrepo/repositorymodel/MongoDBMetaData",
+                "label": "MongoDBMetaData",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 5,
+                "LCOM": 4465,
+                "NOC": 1,
+                "RFC": 95,
+                "WMC-1": 95,
+                "WMC-CC": 95,
+                "WMC-HV": 95,
+                "dependencies": [{
+                  "id": "de/hub/srcrepo/repositorymodel/impl/RepositoryModelPackageImpl",
+                  "value": 1
+                }],
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                "label": "RepositoryModelPackage",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 3,
+                "LCOM": 78,
+                "NOC": 1,
+                "RFC": 14,
+                "WMC-1": 13,
+                "WMC-CC": 13,
+                "WMC-HV": 13,
+                "id": "de/hub/srcrepo/repositorymodel/Rev",
+                "label": "Rev",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 5,
+                "LCOM": 28,
+                "NOC": 1,
+                "RFC": 21,
+                "WMC-1": 8,
+                "WMC-CC": 8,
+                "WMC-HV": 8,
+                "id": "de/hub/srcrepo/repositorymodel/ImportMetaData",
+                "label": "ImportMetaData",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 2,
+                "LCOM": 0,
+                "NOC": 5,
+                "RFC": 1,
+                "WMC-1": 1,
+                "WMC-CC": 1,
+                "WMC-HV": 1,
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryElement",
+                "label": "RepositoryElement",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 4,
+                "LCOM": 120,
+                "NOC": 1,
+                "RFC": 16,
+                "WMC-1": 16,
+                "WMC-CC": 16,
+                "WMC-HV": 16,
+                "dependencies": [{
+                  "id": "de/hub/srcrepo/repositorymodel/impl/RepositoryModelFactoryImpl",
+                  "value": 1
+                }],
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryModelFactory",
+                "label": "RepositoryModelFactory",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 2,
+                "LCOM": 66,
+                "NOC": 0,
+                "RFC": 12,
+                "WMC-1": 12,
+                "WMC-CC": 12,
+                "WMC-HV": 12,
+                "id": "de/hub/srcrepo/repositorymodel/Import",
+                "label": "Import",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 2,
+                "LCOM": 0,
+                "NOC": 1,
+                "RFC": 0,
+                "WMC-1": 0,
+                "WMC-CC": 0,
+                "WMC-HV": 0,
+                "id": "de/hub/srcrepo/repositorymodel/AbstractCompilationUnitModel",
+                "label": "AbstractCompilationUnitModel",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 2,
+                "LCOM": 15,
+                "NOC": 0,
+                "RFC": 6,
+                "WMC-1": 6,
+                "WMC-CC": 6,
+                "WMC-HV": 6,
+                "id": "de/hub/srcrepo/repositorymodel/Model",
+                "label": "Model",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 2,
+                "LCOM": 28,
+                "NOC": 1,
+                "RFC": 8,
+                "WMC-1": 8,
+                "WMC-CC": 8,
+                "WMC-HV": 8,
+                "id": "de/hub/srcrepo/repositorymodel/Ref",
+                "label": "Ref",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 4,
+                "LCOM": 1,
+                "NOC": 2,
+                "RFC": 9,
+                "WMC-1": 2,
+                "WMC-CC": 2,
+                "WMC-HV": 2,
+                "id": "de/hub/srcrepo/repositorymodel/DataStoreMetaData",
+                "label": "DataStoreMetaData",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 4,
+                "LCOM": 6,
+                "NOC": 1,
+                "RFC": 7,
+                "WMC-1": 4,
+                "WMC-CC": 4,
+                "WMC-HV": 4,
+                "id": "de/hub/srcrepo/repositorymodel/JavaCompilationUnitRef",
+                "label": "JavaCompilationUnitRef",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 3,
+                "LCOM": 6,
+                "NOC": 0,
+                "RFC": 4,
+                "WMC-1": 4,
+                "WMC-CC": 4,
+                "WMC-HV": 4,
+                "id": "de/hub/srcrepo/repositorymodel/CompilationUnitDeltaModel",
+                "label": "CompilationUnitDeltaModel",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 3,
+                "LCOM": 15,
+                "NOC": 4,
+                "RFC": 7,
+                "WMC-1": 6,
+                "WMC-CC": 6,
+                "WMC-HV": 6,
+                "id": "de/hub/srcrepo/repositorymodel/DataSet",
+                "label": "DataSet",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 4,
+                "LCOM": 15,
+                "NOC": 0,
+                "RFC": 13,
+                "WMC-1": 6,
+                "WMC-CC": 6,
+                "WMC-HV": 6,
+                "id": "de/hub/srcrepo/repositorymodel/ModelRepositoryDirectory",
+                "label": "ModelRepositoryDirectory",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 2,
+                "LCOM": 45,
+                "NOC": 1,
+                "RFC": 10,
+                "WMC-1": 10,
+                "WMC-CC": 10,
+                "WMC-HV": 10,
+                "id": "de/hub/srcrepo/repositorymodel/UnresolvedLink",
+                "label": "UnresolvedLink",
+                "type": "type"
+              }
+            ],
+            "id": "de/hub/srcrepo/repositorymodel",
+            "label": "repositorymodel",
+            "type": "package"
+          },
+          {
+            "children": [
+              {
+                "CBO": 1,
+                "DIT": 1,
+                "LCOM": 10,
+                "NOC": 0,
+                "RFC": 4,
+                "WMC-1": 5,
+                "WMC-CC": 92,
+                "WMC-HV": 1419,
+                "dependencies": [{
+                  "id": "de/hub/srcrepo/repositorymodel/Target",
+                  "value": 2
+                }],
+                "id": "de/hub/srcrepo/compress/SrcRepoComparerConfigurationFullHeuristics",
+                "label": "SrcRepoComparerConfigurationFullHeuristics",
+                "type": "type"
+              },
+              {
+                "CBO": 6,
+                "DIT": 2,
+                "LCOM": 95,
+                "NOC": 2,
+                "RFC": 11,
+                "WMC-1": 15,
+                "WMC-CC": 136,
+                "WMC-HV": 4313,
+                "dependencies": [
+                  {
+                    "id": "de/hub/srcrepo/RepositoryModelUtil",
+                    "value": 2
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/CompilationUnitModel",
+                    "value": 2
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                    "value": 1
+                  },
+                  {
+                    "id": "de/hub/srcrepo/AbstractRevVisitor",
+                    "value": 1
+                  },
+                  {
+                    "id": "de/hub/srcrepo/SrcRepoActivator",
+                    "value": 2
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/DataSet",
+                    "value": 2
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/JavaCompilationUnitRef",
+                    "value": 3
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/Diff",
+                    "value": 1
+                  }
+                ],
+                "id": "de/hub/srcrepo/compress/AbstractCompressionMeasureVisitor",
+                "label": "AbstractCompressionMeasureVisitor",
+                "type": "type"
+              },
+              {
+                "CBO": 8,
+                "DIT": 3,
+                "LCOM": 8,
+                "NOC": 0,
+                "RFC": 11,
+                "WMC-1": 5,
+                "WMC-CC": 100,
+                "WMC-HV": 2484,
+                "dependencies": [
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/AbstractFileRef",
+                    "value": 2
+                  },
+                  {
+                    "id": "de/hub/srcrepo/compress/AbstractCompressionMeasureVisitor",
+                    "value": 12
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/CompilationUnitModel",
+                    "value": 2
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                    "value": 1
+                  },
+                  {
+                    "id": "de/hub/srcrepo/SrcRepoActivator",
+                    "value": 4
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/Rev",
+                    "value": 2
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/JavaCompilationUnitRef",
+                    "value": 2
+                  },
+                  {
+                    "id": "de/hub/srcrepo/internal/Copier",
+                    "value": 2
+                  }
+                ],
+                "id": "de/hub/srcrepo/compress/CompressionMeasureVisitor",
+                "label": "CompressionMeasureVisitor",
+                "type": "type"
+              },
+              {
+                "CBO": 2,
+                "DIT": 1,
+                "LCOM": 8,
+                "NOC": 0,
+                "RFC": 4,
+                "WMC-1": 5,
+                "WMC-CC": 67,
+                "WMC-HV": 1459,
+                "dependencies": [
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                    "value": 2
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/Target",
+                    "value": 2
+                  }
+                ],
+                "id": "de/hub/srcrepo/compress/SrcRepoComparerConfiguration",
+                "label": "SrcRepoComparerConfiguration",
+                "type": "type"
+              },
+              {
+                "CBO": 1,
+                "DIT": 1,
+                "LCOM": 10,
+                "NOC": 0,
+                "RFC": 4,
+                "WMC-1": 5,
+                "WMC-CC": 57,
+                "WMC-HV": 1060,
+                "dependencies": [{
+                  "id": "de/hub/srcrepo/repositorymodel/Target",
+                  "value": 2
+                }],
+                "id": "de/hub/srcrepo/compress/SrcRepoComparerConfigurationFullMetaClass",
+                "label": "SrcRepoComparerConfigurationFullMetaClass",
+                "type": "type"
+              },
+              {
+                "CBO": 7,
+                "DIT": 3,
+                "LCOM": 1,
+                "NOC": 0,
+                "RFC": 12,
+                "WMC-1": 3,
+                "WMC-CC": 70,
+                "WMC-HV": 1849,
+                "dependencies": [
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/AbstractFileRef",
+                    "value": 2
+                  },
+                  {
+                    "id": "de/hub/srcrepo/compress/AbstractCompressionMeasureVisitor",
+                    "value": 16
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/CompilationUnitModel",
+                    "value": 2
+                  },
+                  {
+                    "id": "de/hub/srcrepo/SrcRepoActivator",
+                    "value": 4
+                  },
+                  {
+                    "id": "de/hub/srcrepo/ocl/OclExtensions",
+                    "value": 1
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/Rev",
+                    "value": 2
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/JavaCompilationUnitRef",
+                    "value": 2
+                  },
+                  {
+                    "id": "de/hub/srcrepo/internal/Copier",
+                    "value": 2
+                  }
+                ],
+                "id": "de/hub/srcrepo/compress/EmfComparenMeasureVisitor",
+                "label": "EmfComparenMeasureVisitor",
+                "type": "type"
+              }
+            ],
+            "id": "de/hub/srcrepo/compress",
+            "label": "compress",
+            "type": "package"
+          },
+          {
+            "children": [
+              {
+                "CBO": 0,
+                "DIT": 5,
+                "LCOM": 15,
+                "NOC": 0,
+                "RFC": 4,
+                "WMC-1": 6,
+                "WMC-CC": 20,
+                "WMC-HV": 730,
+                "id": "de/hub/srcrepo/internal/Copier",
+                "label": "Copier",
+                "type": "type"
+              },
+              {
+                "CBO": 1,
+                "DIT": 1,
+                "LCOM": 229,
+                "NOC": 0,
+                "RFC": 18,
+                "WMC-1": 30,
+                "WMC-CC": 324,
+                "WMC-HV": 5673,
+                "dependencies": [{
+                  "id": "de/hub/srcrepo/SrcRepoActivator",
+                  "value": 2
+                }],
+                "id": "de/hub/srcrepo/internal/SrcRepoBindingManager",
+                "label": "SrcRepoBindingManager",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 0,
+                "LCOM": 6,
+                "NOC": 0,
+                "RFC": 0,
+                "WMC-1": 4,
+                "WMC-CC": 42,
+                "WMC-HV": 846,
+                "id": "de/hub/srcrepo/internal/SrcRepoMethodRedefinitionManager",
+                "label": "SrcRepoMethodRedefinitionManager",
+                "type": "type"
+              },
+              {
+                "CBO": 5,
+                "DIT": 6,
+                "LCOM": 9,
+                "NOC": 1,
+                "RFC": 3,
+                "WMC-1": 6,
+                "WMC-CC": 107,
+                "WMC-HV": 2003,
+                "dependencies": [
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/CompilationUnitModel",
+                    "value": 3
+                  },
+                  {
+                    "id": "de/hub/srcrepo/SrcRepoActivator",
+                    "value": 8
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/RepositoryModelFactory",
+                    "value": 2
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/Target",
+                    "value": 2
+                  },
+                  {
+                    "id": "de/hub/srcrepo/internal/SrcRepoBindingManager",
+                    "value": 1
+                  },
+                  {
+                    "id": "de/hub/srcrepo/internal/ImportJavaCompilationUnitsJob/ImportJavaCompilationUnitResult",
+                    "value": 4
+                  }
+                ],
+                "id": "de/hub/srcrepo/internal/ImportJavaCompilationUnitsJob",
+                "label": "ImportJavaCompilationUnitsJob",
+                "type": "type"
+              },
+              {
+                "CBO": 1,
+                "DIT": 0,
+                "LCOM": 15,
+                "NOC": 0,
+                "RFC": 0,
+                "WMC-1": 6,
+                "WMC-CC": 102,
+                "WMC-HV": 2175,
+                "dependencies": [{
+                  "id": "de/hub/srcrepo/SrcRepoActivator",
+                  "value": 4
+                }],
+                "id": "de/hub/srcrepo/internal/ProjectUtil",
+                "label": "ProjectUtil",
+                "type": "type"
+              }
+            ],
+            "id": "de/hub/srcrepo/internal",
+            "label": "internal",
+            "type": "package"
+          },
+          {
+            "children": [
+              {
+                "CBO": 0,
+                "DIT": 0,
+                "LCOM": 1,
+                "NOC": 0,
+                "RFC": 1,
+                "WMC-1": 2,
+                "WMC-CC": 8,
+                "WMC-HV": 196,
+                "id": "de/hub/srcrepo/metrics/AnalysisVisitor",
+                "label": "AnalysisVisitor",
+                "type": "type"
+              },
+              {
+                "DIT": 0,
+                "NOC": 0,
+                "WMC-1": 22,
+                "WMC-CC": 143,
+                "WMC-HV": 5320,
+                "error": true,
+                "id": "de/hub/srcrepo/metrics/ModiscoMetrics",
+                "label": "ModiscoMetrics",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 0,
+                "LCOM": 0,
+                "NOC": 0,
+                "RFC": 0,
+                "WMC-1": 0,
+                "WMC-CC": 0,
+                "WMC-HV": 0,
+                "id": "de/hub/srcrepo/metrics/Metrics",
+                "label": "Metrics",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 0,
+                "LCOM": 0,
+                "NOC": 0,
+                "RFC": 0,
+                "WMC-1": 0,
+                "WMC-CC": 0,
+                "WMC-HV": 0,
+                "id": "de/hub/srcrepo/metrics/Metric",
+                "label": "Metric",
+                "type": "type"
+              }
+            ],
+            "id": "de/hub/srcrepo/metrics",
+            "label": "metrics",
+            "type": "package"
+          },
+          {
+            "children": [
+              {
+                "CBO": 1,
+                "DIT": 0,
+                "LCOM": 78,
+                "NOC": 0,
+                "RFC": 0,
+                "WMC-1": 13,
+                "WMC-CC": 58,
+                "WMC-HV": 2256,
+                "dependencies": [
+                  {
+                    "id": "de/hub/srcrepo/ocl/OclExtensions",
+                    "value": 22
+                  },
+                  {
+                    "id": "de/hub/srcrepo/metrics/ModiscoMetrics",
+                    "value": 1
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/RepositoryModel",
+                    "value": 1
+                  }
+                ],
+                "id": "de/hub/srcrepo/ocl/OclUtil",
+                "label": "OclUtil",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 0,
+                "LCOM": 153,
+                "NOC": 0,
+                "RFC": 0,
+                "WMC-1": 18,
+                "WMC-CC": 90,
+                "WMC-HV": 2746,
+                "dependencies": [{
+                  "id": "de/hub/srcrepo/ocl/OclExtensions/Result",
+                  "value": 15
+                }],
+                "id": "de/hub/srcrepo/ocl/OclExtensions",
+                "label": "OclExtensions",
+                "type": "type"
+              }
+            ],
+            "id": "de/hub/srcrepo/ocl",
+            "label": "ocl",
+            "type": "package"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "CBO": 0,
+                    "DIT": 0,
+                    "LCOM": 25,
+                    "NOC": 0,
+                    "RFC": 8,
+                    "WMC-1": 10,
+                    "WMC-CC": 55,
+                    "WMC-HV": 1620,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/SrcRepoActivator",
+                        "value": 6
+                      },
+                      {
+                        "id": "de/hub/srcrepo/ocl/OclExtensions",
+                        "value": 1
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/snapshot/internal/SSLink",
+                    "label": "SSLink",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 1,
+                    "DIT": 0,
+                    "LCOM": 0,
+                    "NOC": 0,
+                    "RFC": 0,
+                    "WMC-1": 1,
+                    "WMC-CC": 8,
+                    "WMC-HV": 208,
+                    "dependencies": [{
+                      "id": "de/hub/srcrepo/repositorymodel/UnresolvedLink",
+                      "value": 4
+                    }],
+                    "id": "de/hub/srcrepo/snapshot/internal/SnapshotUtils",
+                    "label": "SnapshotUtils",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 0,
+                    "DIT": 3,
+                    "LCOM": 0,
+                    "NOC": 0,
+                    "RFC": 0,
+                    "WMC-1": 3,
+                    "WMC-CC": 13,
+                    "WMC-HV": 626,
+                    "id": "de/hub/srcrepo/snapshot/internal/DebugAdapter",
+                    "label": "DebugAdapter",
+                    "type": "type"
+                  },
+                  {
+                    "CBO": 2,
+                    "DIT": 0,
+                    "LCOM": 35,
+                    "NOC": 0,
+                    "RFC": 11,
+                    "WMC-1": 11,
+                    "WMC-CC": 40,
+                    "WMC-HV": 1053,
+                    "dependencies": [
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/CompilationUnitModel",
+                        "value": 3
+                      },
+                      {
+                        "id": "de/hub/srcrepo/repositorymodel/Rev",
+                        "value": 1
+                      }
+                    ],
+                    "id": "de/hub/srcrepo/snapshot/internal/SSCompilationUnitModel",
+                    "label": "SSCompilationUnitModel",
+                    "type": "type"
+                  }
+                ],
+                "id": "de/hub/srcrepo/snapshot/internal",
+                "label": "internal",
+                "type": "package"
+              },
+              {
+                "CBO": 6,
+                "DIT": 2,
+                "LCOM": 327,
+                "NOC": 0,
+                "RFC": 19,
+                "WMC-1": 31,
+                "WMC-CC": 318,
+                "WMC-HV": 8212,
+                "dependencies": [
+                  {
+                    "id": "de/hub/srcrepo/snapshot/ModiscoIncrementalSnapshotImpl/SSCopier",
+                    "value": 14
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/CompilationUnitModel",
+                    "value": 4
+                  },
+                  {
+                    "id": "de/hub/srcrepo/SrcRepoActivator",
+                    "value": 17
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/Rev",
+                    "value": 1
+                  },
+                  {
+                    "id": "de/hub/srcrepo/repositorymodel/JavaCompilationUnitRef",
+                    "value": 1
+                  },
+                  {
+                    "id": "de/hub/srcrepo/snapshot/internal/SSLink",
+                    "value": 4
+                  },
+                  {
+                    "id": "de/hub/srcrepo/snapshot/internal/SSCompilationUnitModel",
+                    "value": 17
+                  }
+                ],
+                "id": "de/hub/srcrepo/snapshot/ModiscoIncrementalSnapshotImpl",
+                "label": "ModiscoIncrementalSnapshotImpl",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 0,
+                "LCOM": 6,
+                "NOC": 1,
+                "RFC": 4,
+                "WMC-1": 4,
+                "WMC-CC": 4,
+                "WMC-HV": 4,
+                "id": "de/hub/srcrepo/snapshot/IModiscoSnapshotModel",
+                "label": "IModiscoSnapshotModel",
+                "type": "type"
+              },
+              {
+                "CBO": 0,
+                "DIT": 1,
+                "LCOM": 66,
+                "NOC": 1,
+                "RFC": 16,
+                "WMC-1": 12,
+                "WMC-CC": 12,
+                "WMC-HV": 12,
+                "id": "de/hub/srcrepo/snapshot/IModiscoIncrementalSnapshotModel",
+                "label": "IModiscoIncrementalSnapshotModel",
+                "type": "type"
+              }
+            ],
+            "id": "de/hub/srcrepo/snapshot",
+            "label": "snapshot",
+            "type": "package"
+          },
+          {
+            "CBO": 0,
+            "DIT": 0,
+            "LCOM": 30,
+            "NOC": 0,
+            "RFC": 0,
+            "WMC-1": 9,
+            "WMC-CC": 110,
+            "WMC-HV": 2895,
+            "id": "de/hub/srcrepo/EMFPrettyPrint",
+            "label": "EMFPrettyPrint",
+            "type": "type"
+          },
+          {
+            "CBO": 2,
+            "DIT": 2,
+            "LCOM": 12,
+            "NOC": 1,
+            "RFC": 10,
+            "WMC-1": 8,
+            "WMC-CC": 42,
+            "WMC-HV": 1232,
+            "dependencies": [
+              {
+                "id": "de/hub/srcrepo/ProjectAwareRevVisitor/ProjectFile",
+                "value": 5
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/JavaCompilationUnitRef",
+                "value": 1
+              }
+            ],
+            "id": "de/hub/srcrepo/ProjectAwareRevVisitor",
+            "label": "ProjectAwareRevVisitor",
+            "type": "type"
+          },
+          {
+            "CBO": 6,
+            "DIT": 0,
+            "LCOM": 28,
+            "NOC": 0,
+            "RFC": 0,
+            "WMC-1": 8,
+            "WMC-CC": 44,
+            "WMC-HV": 800,
+            "dependencies": [
+              {
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+                "value": 4
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryElement",
+                "value": 4
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/Rev",
+                "value": 7
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/DataSet",
+                "value": 1
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryModel",
+                "value": 3
+              },
+              {
+                "id": "de/hub/srcrepo/RepositoryModelUtil/RevCacheAdapter",
+                "value": 7
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/ParentRelation",
+                "value": 1
+              }
+            ],
+            "id": "de/hub/srcrepo/RepositoryModelUtil",
+            "label": "RepositoryModelUtil",
+            "type": "type"
+          },
+          {
+            "CBO": 5,
+            "DIT": 3,
+            "LCOM": 19,
+            "NOC": 0,
+            "RFC": 13,
+            "WMC-1": 7,
+            "WMC-CC": 74,
+            "WMC-HV": 1517,
+            "dependencies": [
+              {
+                "id": "de/hub/srcrepo/snapshot/IModiscoIncrementalSnapshotModel",
+                "value": 10
+              },
+              {
+                "id": "de/hub/srcrepo/SrcRepoActivator",
+                "value": 16
+              },
+              {
+                "id": "de/hub/srcrepo/snapshot/IModiscoIncrementalSnapshotModel/Factory",
+                "value": 1
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/Rev",
+                "value": 1
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryModel",
+                "value": 1
+              }
+            ],
+            "id": "de/hub/srcrepo/MoDiscoRevVisitor",
+            "label": "MoDiscoRevVisitor",
+            "type": "type"
+          },
+          {
+            "CBO": 13,
+            "DIT": 1,
+            "LCOM": 127,
+            "NOC": 0,
+            "RFC": 12,
+            "WMC-1": 18,
+            "WMC-CC": 207,
+            "WMC-HV": 3694,
+            "dependencies": [
+              {
+                "id": "de/hub/srcrepo/RepositoryModelUtil",
+                "value": 2
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/AbstractFileRef",
+                "value": 2
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/ImportMetaData",
+                "value": 5
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryElement",
+                "value": 1
+              },
+              {
+                "id": "de/hub/srcrepo/internal/ImportJavaCompilationUnitsJob",
+                "value": 1
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryModelFactory",
+                "value": 3
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/DataSet",
+                "value": 10
+              },
+              {
+                "id": "de/hub/srcrepo/MoDiscoRepositoryModelImportVisitor/RefreshJob",
+                "value": 11
+              },
+              {
+                "id": "de/hub/srcrepo/internal/ImportJavaCompilationUnitsJob/ImportJavaCompilationUnitResult",
+                "value": 2
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryMetaData",
+                "value": 16
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/CompilationUnitModel",
+                "value": 1
+              },
+              {
+                "id": "de/hub/srcrepo/MoDiscoRepositoryModelImportVisitor/ImportJavaCompilationUnits",
+                "value": 2
+              },
+              {
+                "id": "de/hub/srcrepo/ISourceControlSystem",
+                "value": 8
+              },
+              {
+                "id": "de/hub/srcrepo/MoDiscoRepositoryModelImportVisitor/GetLOCCount",
+                "value": 3
+              },
+              {
+                "id": "de/hub/srcrepo/MoDiscoRepositoryModelImportVisitor/CheckoutJob",
+                "value": 2
+              },
+              {
+                "id": "de/hub/srcrepo/SrcRepoActivator",
+                "value": 30
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/Rev",
+                "value": 7
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/ImportError",
+                "value": 3
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/JavaCompilationUnitRef",
+                "value": 3
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/Diff",
+                "value": 14
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryModel",
+                "value": 1
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/TaskData",
+                "value": 3
+              },
+              {
+                "id": "de/hub/srcrepo/internal/ProjectUtil",
+                "value": 5
+              }
+            ],
+            "id": "de/hub/srcrepo/MoDiscoRepositoryModelImportVisitor",
+            "label": "MoDiscoRepositoryModelImportVisitor",
+            "type": "type"
+          },
+          {
+            "CBO": 5,
+            "DIT": 0,
+            "LCOM": 2,
+            "NOC": 0,
+            "RFC": 2,
+            "WMC-1": 4,
+            "WMC-CC": 28,
+            "WMC-HV": 542,
+            "dependencies": [
+              {
+                "id": "de/hub/srcrepo/IRepositoryModelVisitor",
+                "value": 7
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/Rev",
+                "value": 1
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/Diff",
+                "value": 5
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryModel",
+                "value": 1
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/ParentRelation",
+                "value": 1
+              }
+            ],
+            "id": "de/hub/srcrepo/RepositoryModelFlatTraversal",
+            "label": "RepositoryModelFlatTraversal",
+            "type": "type"
+          },
+          {
+            "CBO": 2,
+            "DIT": 0,
+            "LCOM": 3,
+            "NOC": 0,
+            "RFC": 0,
+            "WMC-1": 3,
+            "WMC-CC": 35,
+            "WMC-HV": 977,
+            "dependencies": [
+              {
+                "id": "de/hub/srcrepo/ISourceControlSystem",
+                "value": 2
+              },
+              {
+                "id": "de/hub/srcrepo/SrcRepoActivator",
+                "value": 5
+              }
+            ],
+            "id": "de/hub/srcrepo/RetrieveFilesFromGitRepositories",
+            "label": "RetrieveFilesFromGitRepositories",
+            "type": "type"
+          },
+          {
+            "CBO": 3,
+            "DIT": 1,
+            "LCOM": 45,
+            "NOC": 0,
+            "RFC": 10,
+            "WMC-1": 10,
+            "WMC-CC": 21,
+            "WMC-HV": 319,
+            "dependencies": [
+              {
+                "id": "de/hub/srcrepo/SrcRepoActivator",
+                "value": 4
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/Rev",
+                "value": 4
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryModel",
+                "value": 1
+              }
+            ],
+            "id": "de/hub/srcrepo/EmptyRepositoryModelVisitor",
+            "label": "EmptyRepositoryModelVisitor",
+            "type": "type"
+          },
+          {
+            "CBO": 0,
+            "DIT": 2,
+            "LCOM": 3,
+            "NOC": 0,
+            "RFC": 10,
+            "WMC-1": 6,
+            "WMC-CC": 10,
+            "WMC-HV": 134,
+            "id": "de/hub/srcrepo/RevVisitor",
+            "label": "RevVisitor",
+            "type": "type"
+          },
+          {
+            "CBO": 7,
+            "DIT": 1,
+            "LCOM": 28,
+            "NOC": 0,
+            "RFC": 8,
+            "WMC-1": 16,
+            "WMC-CC": 255,
+            "WMC-HV": 4855,
+            "dependencies": [
+              {
+                "id": "de/hub/srcrepo/RepositoryModelUtil",
+                "value": 3
+              },
+              {
+                "id": "de/hub/srcrepo/SrcRepoActivator",
+                "value": 18
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryModelFactory",
+                "value": 4
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/Rev",
+                "value": 10
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/Diff",
+                "value": 5
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/Ref",
+                "value": 4
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryModel",
+                "value": 4
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/ParentRelation",
+                "value": 2
+              }
+            ],
+            "id": "de/hub/srcrepo/GitSourceControlSystem",
+            "label": "GitSourceControlSystem",
+            "type": "type"
+          },
+          {
+            "CBO": 0,
+            "DIT": 0,
+            "LCOM": 21,
+            "NOC": 1,
+            "RFC": 7,
+            "WMC-1": 7,
+            "WMC-CC": 7,
+            "WMC-HV": 7,
+            "id": "de/hub/srcrepo/ISourceControlSystem",
+            "label": "ISourceControlSystem",
+            "type": "type"
+          },
+          {
+            "CBO": 3,
+            "DIT": 1,
+            "LCOM": 74,
+            "NOC": 0,
+            "RFC": 11,
+            "WMC-1": 13,
+            "WMC-CC": 52,
+            "WMC-HV": 979,
+            "dependencies": [
+              {
+                "id": "de/hub/srcrepo/ISourceControlSystem",
+                "value": 1
+              },
+              {
+                "id": "de/hub/srcrepo/SrcRepoActivator",
+                "value": 8
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/Rev",
+                "value": 5
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryModel",
+                "value": 1
+              }
+            ],
+            "id": "de/hub/srcrepo/RepositoryModelRevisionCheckoutVisitor",
+            "label": "RepositoryModelRevisionCheckoutVisitor",
+            "type": "type"
+          },
+          {
+            "CBO": 7,
+            "DIT": 1,
+            "LCOM": 102,
+            "NOC": 3,
+            "RFC": 10,
+            "WMC-1": 17,
+            "WMC-CC": 98,
+            "WMC-HV": 1524,
+            "dependencies": [
+              {
+                "id": "de/hub/srcrepo/RepositoryModelUtil",
+                "value": 1
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryElement",
+                "value": 1
+              },
+              {
+                "id": "de/hub/srcrepo/SrcRepoActivator",
+                "value": 2
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/Rev",
+                "value": 2
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryModelFactory",
+                "value": 1
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/DataSet",
+                "value": 2
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/Diff",
+                "value": 18
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryModel",
+                "value": 1
+              }
+            ],
+            "id": "de/hub/srcrepo/AbstractRevVisitor",
+            "label": "AbstractRevVisitor",
+            "type": "type"
+          },
+          {
+            "CBO": 0,
+            "DIT": 0,
+            "LCOM": 45,
+            "NOC": 4,
+            "RFC": 10,
+            "WMC-1": 10,
+            "WMC-CC": 10,
+            "WMC-HV": 10,
+            "id": "de/hub/srcrepo/IRepositoryModelVisitor",
+            "label": "IRepositoryModelVisitor",
+            "type": "type"
+          },
+          {
+            "CBO": 8,
+            "DIT": 0,
+            "LCOM": 7,
+            "NOC": 0,
+            "RFC": 3,
+            "WMC-1": 6,
+            "WMC-CC": 84,
+            "WMC-HV": 1726,
+            "dependencies": [
+              {
+                "id": "de/hub/srcrepo/IRepositoryModelVisitor",
+                "value": 10
+              },
+              {
+                "id": "de/hub/srcrepo/SrcRepoActivator",
+                "value": 2
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/Rev",
+                "value": 6
+              },
+              {
+                "id": "de/hub/srcrepo/RepositoryModelTraversal/Stats",
+                "value": 9
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/Diff",
+                "value": 5
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/RepositoryModel",
+                "value": 1
+              },
+              {
+                "id": "de/hub/srcrepo/RepositoryModelTraversal/Branch",
+                "value": 6
+              },
+              {
+                "id": "de/hub/srcrepo/repositorymodel/ParentRelation",
+                "value": 5
+              }
+            ],
+            "id": "de/hub/srcrepo/RepositoryModelTraversal",
+            "label": "RepositoryModelTraversal",
+            "type": "type"
+          },
+          {
+            "CBO": 1,
+            "DIT": 2,
+            "LCOM": 77,
+            "NOC": 0,
+            "RFC": 7,
+            "WMC-1": 14,
+            "WMC-CC": 60,
+            "WMC-HV": 1195,
+            "dependencies": [{
+              "id": "de/hub/srcrepo/repositorymodel/RepositoryModelPackage",
+              "value": 2
+            }],
+            "id": "de/hub/srcrepo/SrcRepoActivator",
+            "label": "SrcRepoActivator",
+            "type": "type"
+          }
+        ],
+        "id": "de/hub/srcrepo",
+        "label": "srcrepo",
+        "type": "package"
+      }],
+      "id": "de/hub",
+      "label": "hub",
+      "type": "package"
+    }],
+    "id": "de",
+    "label": "de",
+    "type": "package"
+  }],
+  "id": "root",
+  "label": "root",
+  "type": "root"
+}
