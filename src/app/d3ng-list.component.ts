@@ -19,10 +19,8 @@ export class D3ngListComponent extends D3ngChart implements OnChanges {
 
   protected onSelectedChanged() {
     if (this.d3Chart) {
-      var self = this;
-      this.d3Chart.classed("selected", function (d) {
-        return self.selected.indexOf(d) != -1;
-      });
+      const self = this;
+      this.d3Chart.classed("selected", d => self.selected.indexOf(d) != -1);
     }
   }
 
@@ -36,8 +34,8 @@ export class D3ngListComponent extends D3ngChart implements OnChanges {
       .selectAll("p")
       .data(this.data)
       .enter().append("p")
-      .text(function(d) { return "# " + self.getLabel(d); })
-      .on("click", function(d) {
+      .text(d => "# " + self.getLabel(d))
+      .on("click", d => {
         self.selected = [ d ];
         self.selectedChange.emit(self.selected);
       });

@@ -25,7 +25,7 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
 
   protected onSelectedChanged() {
     if (this.lines) {
-      var self = this;
+      const self = this;
       this.lines.classed("selected", function(d) {
         return self.selected.indexOf(d) != -1;
       });
@@ -33,11 +33,15 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
   }
 
   protected clear() {
-
+    this.chart.nativeElement.innerHTML = "";
   }
 
+  /**
+   * Fill all `dimension`s in all data objects with value 0, if no
+   * value exists.
+   */
   protected normalizeData() {
-    var self = this;
+    const self = this;
     this.data.forEach(function(d) {
       self.dimensions.forEach(function(dim) {
         if (!d[dim]) {
@@ -47,10 +51,6 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
     });
   }
 
-  /**
-   * Fill all `dimension`s in all data objects with value 0, if no
-   * value exists.
-   */
   protected draw() {
     if (!this.data ||!this.dimensions) {
       return;
@@ -59,39 +59,37 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
 
     self.normalizeData();
 
-    var m = [30, 3, 5, 30];
-    var w = 600 - m[1] - m[3];
-    var h = 300 - m[0] - m[2];
+    const m = [30, 3, 5, 30];
+    const w = 600 - m[1] - m[3];
+    const h = 300 - m[0] - m[2];
 
     // var w = this.offsetWidth - m[1] - m[3];
     // var h = this.offsetHeight - m[0] - m[2];
 
-    var x = d3.scale.ordinal().domain(self.dimensions).rangePoints([0, w]);
-    var y = {};
+    const x = d3.scale.ordinal().domain(self.dimensions).rangePoints([0, w]);
+    const y = {};
 
-    var line = d3.svg.line();
-    var axis = d3.svg.axis().orient("left");
+    const line = d3.svg.line();
+    const axis = d3.svg.axis().orient("left");
 
     // Helper function: returns the path for a given data point.
-    function path(d) {
-      return line(self.dimensions.map(function(p) { return [x(p), y[p](d[p])]; }));
-    }
+    const path = d => line(self.dimensions.map(p => [x(p), y[p](d[p])]));
 
     // Add svg chart.
-    var d_chart = d3.select(self.chart.nativeElement);
-    var svg = d_chart.append("svg:svg")
+    const d_chart = d3.select(self.chart.nativeElement);
+    const svg = d_chart.append("svg:svg")
       .attr("width", w + m[1] + m[3])
       .attr("height", h + m[0] + m[2])
       .append("svg:g")
       .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
     // Create a scale and brush for each dimension.
-    self.dimensions.forEach(function(d) {
-      self.data.forEach(function(p) { p[d] = +p[d]; });
+    self.dimensions.forEach(d => {
+      self.data.forEach(p => { p[d] = +p[d]; });
 
       // Calculate domain with 5% extra space
-      var extent = d3.extent(self.data, function(p) { return p[d]; });
-      var size = extent[1] - extent[0];
+      const extent = d3.extent(self.data, p => p[d]);
+      const size = extent[1] - extent[0];
       extent[0] = extent[0] - size*.05;
       extent[1] = extent[1] + size*.05;
 
@@ -103,15 +101,13 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
       // Create the brush
       y[d].brush = d3.svg.brush()
         .y(y[d])
-        .on("brush", function() {
+        .on("brush", () => {
           // Handles a brush event, toggling the display of foreground lines.
-          var actives = self.dimensions.filter(function(p) { return !y[p].brush.empty(); });
-          var extents = actives.map(function(p) { return y[p].brush.extent(); });
-          var selection = [];
-          foreground.each(function(d) {
-            var selected = actives.length != 0 && actives.every(function(p, i) {
-                return extents[i][0] <= d[p] && d[p] <= extents[i][1];
-              });
+          const actives = self.dimensions.filter(p => !y[p].brush.empty());
+          const extents = actives.map(p => y[p].brush.extent());
+          const selection = [];
+          foreground.each(d => {
+            const selected = actives.length != 0 && actives.every((p,i) => extents[i][0] <= d[p] && d[p] <= extents[i][1]);
             if (selected) {
               selection.push(d);
             }
@@ -122,7 +118,7 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
     });
 
     // Add foreground lines.
-    var foreground = svg.append("svg:g")
+    const foreground = svg.append("svg:g")
       .attr("class", "foreground")
       .selectAll("path")
       .data(self.data)
@@ -130,29 +126,29 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
       .attr("d", path);
     self.lines = foreground;
 
-    var i = 0;
+    let i = 0;
 
     // Add a group element for each dimension.
-    var g = svg.selectAll(".dimension")
+    const g = svg.selectAll(".dimension")
       .data(self.dimensions)
       .enter().append("svg:g")
       .attr("class", "dimension")
-      .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+      .attr("transform", d => "translate(" + x(d) + ")")
       .call(d3.behavior.drag()
-        .origin(function(d) { return {x: x(d)}; })
-        .on("dragstart", function(d) {
+        .origin(d => { return {x: x(d)}; })
+        .on("dragstart", d => {
           i = self.dimensions.indexOf(d);
         })
-        .on("drag", function(d) {
+        .on("drag", d => {
           x.range()[i] = d3.event.x;
-          self.dimensions.sort(function(a, b) { return x(a) - x(b); });
-          g.attr("transform", function(d) { return "translate(" + x(d) + ")"; });
+          self.dimensions.sort((a, b) => x(a) - x(b));
+          g.attr("transform", d => "translate(" + x(d) + ")");
           foreground.attr("d", path);
         })
-        .on("dragend", function(d) {
+        .on("dragend", d => {
           x.domain(self.dimensions).rangePoints([0, w]);
-          var t = d3.transition().duration(500);
-          t.selectAll(".dimension").attr("transform", function(d) { return "translate(" + x(d) + ")"; });
+          const t = d3.transition().duration(500);
+          t.selectAll(".dimension").attr("transform", d => "translate(" + x(d) + ")");
           t.selectAll(".foreground path").attr("d", path);
         }));
 

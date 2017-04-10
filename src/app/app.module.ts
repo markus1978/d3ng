@@ -9,9 +9,11 @@ import { D3ngDemosComponent } from "./demos/d3ng-demos.component";
 import { D3ngListDemoComponent } from "./demos/d3ng-list-demo.component";
 import { D3ngPatternDemoComponent } from "./demos/d3ng-pattern-demo.component";
 
-import { RouterModule }   from '@angular/router';
-import {D3ngParallelCoordinatesDemoComponent} from "./demos/d3ng-parallel-coordinates-demo.component";
-import {D3ngParallelCoordinatesComponent} from "./d3ng-parallel-coordinates.component";
+import { RouterModule } from '@angular/router';
+import { D3ngParallelCoordinatesDemoComponent } from "./demos/d3ng-parallel-coordinates-demo.component";
+import { D3ngParallelCoordinatesComponent } from "./d3ng-parallel-coordinates.component";
+import {D3ngTreeMapComponent} from "./d3ng-tree-map.component";
+import {D3ngTreeMapDemoComponent} from "./demos/d3ng-tree-map-demo.component";
 
 
 
@@ -20,10 +22,12 @@ import {D3ngParallelCoordinatesComponent} from "./d3ng-parallel-coordinates.comp
     AppComponent,
     D3ngListComponent,
     D3ngParallelCoordinatesComponent,
+    D3ngTreeMapComponent,
     D3ngDemosComponent,
     D3ngListDemoComponent,
     D3ngPatternDemoComponent,
     D3ngParallelCoordinatesDemoComponent,
+    D3ngTreeMapDemoComponent,
   ],
   imports: [
     BrowserModule,
@@ -45,7 +49,11 @@ import {D3ngParallelCoordinatesComponent} from "./d3ng-parallel-coordinates.comp
       {
         path: 'demos/parallel-coordinates',
         component: D3ngParallelCoordinatesDemoComponent
-      }
+      },
+      {
+        path: 'demos/tree-map',
+        component: D3ngTreeMapDemoComponent
+      },
     ])
   ],
   providers: [],

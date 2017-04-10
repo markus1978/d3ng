@@ -8,8 +8,9 @@ import {D3ngChart} from "../d3ng-chart";
     <a routerLink="/demos/list">List</a>
     <a routerLink="/demos/pattern">Pattern</a>
     <a routerLink="/demos/parallel-coordinates">Parallel Coordinates</a>
+    <a routerLink="/demos/tree-map">Tree Map</a>
   `,
-  styles: [ ]
+  styles: [ 'a { display: block; }' ]
 })
 
 export class D3ngDemosComponent {
