@@ -22,14 +22,14 @@ export class D3ngChordDiagramComponent extends D3ngDependencyChart implements On
   private chord = null;
 
 
-  protected onSelectedChanged() {
+  protected drawSelected(selected:Array<any>) {
     const self = this;
     if (this.group && this.chord) {
       this.group.classed("selected", p => {
-        return !self.selected.every(d => p.index != self.indexes[self.getId(d)]);
+        return !selected.every(d => p.index != self.indexes[self.getId(d)]);
       });
       this.chord.classed("selected", function(p) {
-        return !self.selected.every(function(d) {
+        return !selected.every(function(d) {
           var selectedIndex = self.indexes[self.getId(d)];
           return !(p.source.index == selectedIndex || p.target.index == selectedIndex);
         });
