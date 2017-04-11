@@ -7,7 +7,7 @@ import {D3ngChart} from "../d3ng-chart";
     <h2>D3ng Parallel Coordinates Demo</h2>
     <d3ng-parallel-coordinates [data]="data" [dimensions]="[ 'a', 'b', 'c' ]" [(selected)]="selection"></d3ng-parallel-coordinates>
   `,
-  styles: [ ]
+  styles: [ 'd3ng-parallel-coordinates { height : 300px; }' ]
 })
 
 export class D3ngParallelCoordinatesDemoComponent {

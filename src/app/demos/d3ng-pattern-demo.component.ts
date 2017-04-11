@@ -19,7 +19,6 @@ export class D3ngPatternDemoComponent {
     http.get('/assets/de.hub.srcrepo.json')
       .map((res: Response) => res.json())
       .subscribe(res => {
-        console.log(res);
         this.source = res;
       });
   }

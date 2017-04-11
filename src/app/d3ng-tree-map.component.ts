@@ -75,6 +75,10 @@ export class D3ngTreeMapComponent extends D3ngHierarchicalChart implements OnCha
     const self = this;
     const data = this.computeHiearchyRoot();
 
+    if (!data) {
+      return;
+    }
+
     const w = this.chart.nativeElement.offsetWidth;
     let h = this.chart.nativeElement.offsetHeight;
 
@@ -111,7 +115,7 @@ export class D3ngTreeMapComponent extends D3ngHierarchicalChart implements OnCha
 
     const nodes = treemap.nodes(root)
       .filter(function(d) {
-        const children = self.getChildren(d);
+        // const children = self.getChildren(d);
         return self.data.indexOf(d) != -1; //!children || children.length == 0;
       });
 

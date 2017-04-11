@@ -1,8 +1,7 @@
 import {EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from "@angular/core";
 
-declare var D3ngPatternParser: any;
+declare let D3ngPatternParser: any;
 import "./d3ng-pattern-parser";
-import {isNullOrUndefined} from "util";
 
 export interface LimitTerm extends  PatternTerm {
   isTypeNegated: boolean;
@@ -160,14 +159,14 @@ export abstract class D3ngChart implements OnChanges, OnInit {
         } else {
           return patternTerm.type == "." || self.getType(d) == patternTerm.type;
         }
-      }
+      };
 
       const visit = function(d, index) {
         const patternTerm = self.parsedPattern[index];
         const isLast = index + 1 == self.parsedPattern.length;
         if (typeMatches(d, patternTerm)) {
           const children = self.getChildren(d);
-          children.forEach(function(c) { visit(c, index)})
+          children.forEach(function(c) { visit(c, index)});
           if (isLast) {
             if (patternTerm.limit) {
               const limitMatches = !children.every(function(c) { return !typeMatches(c,patternTerm.limit); });

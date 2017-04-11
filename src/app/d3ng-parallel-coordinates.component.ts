@@ -59,12 +59,9 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
 
     self.normalizeData();
 
-    const m = [30, 3, 5, 30];
-    const w = 600 - m[1] - m[3];
-    const h = 300 - m[0] - m[2];
-
-    // var w = this.offsetWidth - m[1] - m[3];
-    // var h = this.offsetHeight - m[0] - m[2];
+    const m = [30, 30, 5, 30];
+    const w = this.chart.nativeElement.offsetWidth - m[1] - m[3];
+    const h = this.chart.nativeElement.offsetHeight - m[0] - m[2];
 
     const x = d3.scale.ordinal().domain(self.dimensions).rangePoints([0, w]);
     const y = {};

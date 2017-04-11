@@ -1,0 +1,31 @@
+:host, :host div {
+  height: 100%;
+  display: block;
+}
+
+:host /deep/ #circle circle {
+  fill: none;
+  pointer-events: all;
+}
+
+:host /deep/ .group path {
+  fill-opacity: .5;
+}
+
+:host /deep/ .selected {
+  fill: blue !important;
+}
+
+:host /deep/ .group.selected path {
+  fill: blue !important;
+}
+
+:host /deep/ path.chord {
+  stroke: #000;
+  stroke-width: .25 px;
+}
+
+:host /deep/ #circle:hover path.fade {
+  display: none;
+}
+

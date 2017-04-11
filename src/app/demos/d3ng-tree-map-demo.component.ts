@@ -21,7 +21,6 @@ export class D3ngTreeMapDemoComponent {
     http.get('/assets/tree-map-demo.json')
       .map((res: Response) => res.json())
       .subscribe(res => {
-        console.log(res);
         this.source = res;
       });
   }

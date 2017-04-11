@@ -14,8 +14,9 @@ import { D3ngParallelCoordinatesDemoComponent } from "./demos/d3ng-parallel-coor
 import { D3ngParallelCoordinatesComponent } from "./d3ng-parallel-coordinates.component";
 import {D3ngTreeMapComponent} from "./d3ng-tree-map.component";
 import {D3ngTreeMapDemoComponent} from "./demos/d3ng-tree-map-demo.component";
-
-
+import {D3ngChordDiagramComponent} from "./d3ng-chord-diagram.component";
+import {D3ngChordDiagramDemoComponent} from "./demos/d3ng-chord-diagram-demo.component";
+import {D3ngCodeVizComponent} from "./code-viz/d3ng-code-viz.component";
 
 @NgModule({
   declarations: [
@@ -23,17 +24,24 @@ import {D3ngTreeMapDemoComponent} from "./demos/d3ng-tree-map-demo.component";
     D3ngListComponent,
     D3ngParallelCoordinatesComponent,
     D3ngTreeMapComponent,
+    D3ngChordDiagramComponent,
     D3ngDemosComponent,
     D3ngListDemoComponent,
     D3ngPatternDemoComponent,
     D3ngParallelCoordinatesDemoComponent,
     D3ngTreeMapDemoComponent,
+    D3ngChordDiagramDemoComponent,
+    D3ngCodeVizComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     RouterModule.forRoot([
+      {
+        path: 'code-viz',
+        component: D3ngCodeVizComponent
+      },
       {
         path: 'demos',
         component: D3ngDemosComponent
@@ -53,6 +61,10 @@ import {D3ngTreeMapDemoComponent} from "./demos/d3ng-tree-map-demo.component";
       {
         path: 'demos/tree-map',
         component: D3ngTreeMapDemoComponent
+      },
+      {
+        path: 'demos/chord-diagram',
+        component: D3ngChordDiagramDemoComponent
       },
     ])
   ],
