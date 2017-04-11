@@ -8,7 +8,7 @@ import 'rxjs/Rx';
     <h2>D3ng Code Viz</h2>
     
     <div style="height: 300px">
-      <d3ng-parallel-coordinates [source]="data" pattern="root/package/type" 
+      <d3ng-parallel-coordinates [source]="data" pattern="root/package/type+" 
                                  [(selected)]="selection" 
                                  [dimensions]='["WMC-1", "WMC-CC", "WMC-HV", "DIT", "NOC", "CBO", "RFC", "LCOM"]'></d3ng-parallel-coordinates>
     </div>

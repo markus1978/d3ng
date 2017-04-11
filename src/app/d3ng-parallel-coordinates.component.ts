@@ -23,11 +23,10 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
 
   private lines = null;
 
-  protected onSelectedChanged() {
+  protected drawSelected(selected:Array<any>) {
     if (this.lines) {
-      const self = this;
       this.lines.classed("selected", function(d) {
-        return self.selected.indexOf(d) != -1;
+        return selected.indexOf(d) != -1;
       });
     }
   }

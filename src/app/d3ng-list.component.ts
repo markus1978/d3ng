@@ -17,10 +17,9 @@ export class D3ngListComponent extends D3ngChart implements OnChanges {
 
   private d3Chart = null;
 
-  protected onSelectedChanged() {
+  protected drawSelected(selected:Array<any>) {
     if (this.d3Chart) {
-      const self = this;
-      this.d3Chart.classed("selected", d => self.selected.indexOf(d) != -1);
+      this.d3Chart.classed("selected", d => selected.indexOf(d) != -1);
     }
   }
 
