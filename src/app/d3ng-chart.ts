@@ -3,14 +3,12 @@ import {EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from "@an
 declare let D3ngPatternParser: any;
 import "./d3ng-pattern-parser";
 
-export interface LimitTerm extends  PatternTerm {
-  isTypeNegated: boolean;
-}
-
 export interface PatternTerm {
   type:string;
   isNegated:boolean;
-  limit: LimitTerm;
+  isTypeNegated: boolean;
+  notFlat: boolean;
+  limit: PatternTerm;
 }
 
 export abstract class D3ngChart implements OnChanges, OnInit {
@@ -79,7 +77,38 @@ export abstract class D3ngChart implements OnChanges, OnInit {
 
   @Input() private customLabel: Function = null;
 
-  protected abstract onSelectedChanged(selected: Array<any>):void;
+  private addMatchingSelectedItem(selectedItem:any, list:Array<any>): boolean {
+    for(let index = 0; index < this.parsedPattern.length; index++) {
+      if (this.typeMatches(selectedItem, this.parsedPattern[index])) {
+        return this.addMatches(selectedItem, list, index, false);
+      }
+    }
+    return false;
+  }
+
+  private onSelectedChanged(selected: Array<any>):void {
+    if (selected) {
+      const indirect = [];
+      selected.forEach(selectedItem => {
+        // indicates that something within the content (including itself) matches the selected item
+        const hasDownMatch = this.addMatchingSelectedItem(selectedItem, indirect);
+        if (!hasDownMatch) {
+          let e = selectedItem.parent;
+          while(e) {
+            if (this.addMatchingSelectedItem(e, indirect)) {
+              break;
+            } else {
+              e = e.parent;
+            }
+          }
+        }
+      });
+
+      this.drawSelected(indirect);
+    }
+  }
+
+  protected abstract drawSelected(selected: Array<any>): void;
 
   protected abstract clear():void;
   protected abstract draw():void;
@@ -143,6 +172,54 @@ export abstract class D3ngChart implements OnChanges, OnInit {
     }
   }
 
+  private typeMatches(element:any, patternTerm:PatternTerm):boolean {
+    if (patternTerm.isTypeNegated) {
+      return !(patternTerm.type == "." || this.getType(element) == patternTerm.type);
+    } else {
+      return patternTerm.type == "." || this.getType(element) == patternTerm.type;
+    }
+  }
+
+  private addMatches(element:any, results:Array<any>, index:number, findAll:boolean):boolean {
+    const patternTerm = this.parsedPattern[index];
+    const isLast = index + 1 == this.parsedPattern.length;
+    let hasMatch = false;
+    if (this.typeMatches(element, patternTerm)) {
+      const children = this.getChildren(element);
+      if (isLast) {
+        if (patternTerm.limit) {
+          const limitMatches = !children.every(c => !this.typeMatches(c,patternTerm.limit));
+          if (patternTerm.limit.isNegated && !limitMatches) {
+            hasMatch = true;
+            results.push(element);
+          } else if (!patternTerm.limit.isNegated && limitMatches) {
+            hasMatch = true;
+            results.push(element);
+          }
+        } else {
+          hasMatch = true;
+          results.push(element);
+        }
+      } else {
+        this.getChildren(element).forEach(c => {
+          if (this.addMatches(c, results, index+1, findAll)) {
+            hasMatch = true;
+          }
+        })
+      }
+
+      if (!hasMatch || findAll || patternTerm.notFlat) {
+        children.forEach(c => {
+          if (this.addMatches(c, results, index, findAll)) {
+            hasMatch = true;
+          };
+        });
+      }
+
+      return hasMatch;
+    }
+  }
+
   /**
    * Updates the `data` property by applying the current `parsedPattern` to
    * `source`.
@@ -150,42 +227,11 @@ export abstract class D3ngChart implements OnChanges, OnInit {
   protected onSourceChanged():void {
     if (this.source && this.parsedPattern) {
       this.ensureParents();
-      const self = this;
-      const result = [];
+      const results = [];
 
-      const typeMatches = function(d, patternTerm) {
-        if (patternTerm.isTypeNegated) {
-          return !(patternTerm.type == "." || self.getType(d) == patternTerm.type);
-        } else {
-          return patternTerm.type == "." || self.getType(d) == patternTerm.type;
-        }
-      };
+      this.addMatches(this.source, results, 0, true);
 
-      const visit = function(d, index) {
-        const patternTerm = self.parsedPattern[index];
-        const isLast = index + 1 == self.parsedPattern.length;
-        if (typeMatches(d, patternTerm)) {
-          const children = self.getChildren(d);
-          children.forEach(function(c) { visit(c, index)});
-          if (isLast) {
-            if (patternTerm.limit) {
-              const limitMatches = !children.every(function(c) { return !typeMatches(c,patternTerm.limit); });
-              if (patternTerm.limit.isNegated && !limitMatches) {
-                result.push(d);
-              } else if (!patternTerm.limit.isNegated && limitMatches) {
-                result.push(d);
-              }
-            } else {
-              result.push(d);
-            }
-          } else {
-            self.getChildren(d).forEach(function(c) { visit(c, index+1); })
-          }
-        }
-      };
-      visit(this.source, 0);
-
-      this.data = result;
+      this.data = results;
       this.onDataChanged();
     }
   }
