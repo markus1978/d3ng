@@ -147,6 +147,11 @@ export class D3ngTreeMapComponent extends D3ngHierarchicalChart implements OnCha
       .text(function(d) { return self.getLabel(d); })
       .style("opacity", function(d) { d.w = this.getComputedTextLength(); return d.dx > d.w ? 1 : 0; });
 
+    // Add a mouseover title.
+    cell.append("title").text(function(d) {
+      return self.getLabel(d);
+    });
+
     d3.select(window).on("click", function() {
       if (self.doZoom) {
         zoom(root);

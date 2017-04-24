@@ -122,6 +122,10 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
       .attr("d", path);
     self.lines = foreground;
 
+    foreground.append("title").text(function(d) {
+      return self.getLabel(d);
+    });
+
     let i = 0;
 
     // Add a group element for each dimension.
