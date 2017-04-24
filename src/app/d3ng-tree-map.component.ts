@@ -149,7 +149,7 @@ export class D3ngTreeMapComponent extends D3ngHierarchicalChart implements OnCha
 
     // Add a mouseover title.
     cell.append("title").text(function(d) {
-      return self.getLabel(d);
+      return self.getQualifiedLabel(d);
     });
 
     d3.select(window).on("click", function() {

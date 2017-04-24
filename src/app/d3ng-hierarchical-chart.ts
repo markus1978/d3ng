@@ -14,15 +14,6 @@ export abstract class D3ngHierarchicalChart extends D3ngChart {
     return 1;
   }
 
-  /**
-   * Retrieves the parent node for a given node. The default implementation uses "parent" as key.
-   * @param node
-   * @returns {any} null if there is no parent.
-   */
-  protected getParent(node: Object): Object {
-    return node["parent"];
-  }
-
   protected computeHiearchyRoot(): Object {
     if (!this.data || this.data.length == 0) {
       return undefined;

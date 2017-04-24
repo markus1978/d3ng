@@ -150,6 +150,16 @@ export abstract class D3ngChart implements OnChanges, OnInit {
     }
   }
 
+  protected getQualifiedLabel(node): string {
+    var result: string = null;
+    while(node) {
+      var label = this.getLabel(node);
+      result = (label ? label : "") + (result && label ? "." : "") + (result ? result : "");
+      node = this.getParent(node);
+    }
+    return result;
+  }
+
   /**
    * Returns the type of the given `source` data node.
    * The default implementation uses `typeKey`.
@@ -170,6 +180,15 @@ export abstract class D3ngChart implements OnChanges, OnInit {
     } else {
       return [];
     }
+  }
+
+  /**
+   * Retrieves the parent node for a given node. The default implementation uses "parent" as key.
+   * @param node
+   * @returns {any} null if there is no parent.
+   */
+  protected getParent(node: Object): Object {
+    return node["parent"];
   }
 
   private typeMatches(element:any, patternTerm:PatternTerm):boolean {

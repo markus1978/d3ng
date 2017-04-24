@@ -123,7 +123,7 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
     self.lines = foreground;
 
     foreground.append("title").text(function(d) {
-      return self.getLabel(d);
+      return self.getQualifiedLabel(d);
     });
 
     let i = 0;
