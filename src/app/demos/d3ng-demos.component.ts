@@ -10,6 +10,7 @@ import {D3ngChart} from "../d3ng-chart";
     <a routerLink="/demos/parallel-coordinates">Parallel Coordinates</a>
     <a routerLink="/demos/tree-map">Tree Map</a>
     <a routerLink="/demos/chord-diagram">Chord Diagram</a>
+    <a routerLink="/demos/collapsible-indented-tree">Collapsible Indented Tree</a>
   `,
   styles: [ 'a { display: block; }' ]
 })

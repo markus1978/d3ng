@@ -17,6 +17,8 @@ import {D3ngTreeMapDemoComponent} from "./demos/d3ng-tree-map-demo.component";
 import {D3ngChordDiagramComponent} from "./d3ng-chord-diagram.component";
 import {D3ngChordDiagramDemoComponent} from "./demos/d3ng-chord-diagram-demo.component";
 import {D3ngCodeVizComponent} from "./code-viz/d3ng-code-viz.component";
+import {D3ngCollapsibleIndentedTreeComponent} from "./d3ng-collapsible-indented-tree.component";
+import {D3ngCollapsibleIndentedTreeDemoComponent} from "./demos/d3ng-collapsible-indented-tree-demo.component";
 
 @NgModule({
   declarations: [
@@ -25,12 +27,14 @@ import {D3ngCodeVizComponent} from "./code-viz/d3ng-code-viz.component";
     D3ngParallelCoordinatesComponent,
     D3ngTreeMapComponent,
     D3ngChordDiagramComponent,
+    D3ngCollapsibleIndentedTreeComponent,
     D3ngDemosComponent,
     D3ngListDemoComponent,
     D3ngPatternDemoComponent,
     D3ngParallelCoordinatesDemoComponent,
     D3ngTreeMapDemoComponent,
     D3ngChordDiagramDemoComponent,
+    D3ngCollapsibleIndentedTreeDemoComponent,
     D3ngCodeVizComponent,
   ],
   imports: [
@@ -61,6 +65,10 @@ import {D3ngCodeVizComponent} from "./code-viz/d3ng-code-viz.component";
       {
         path: 'demos/tree-map',
         component: D3ngTreeMapDemoComponent
+      },
+      {
+        path: 'demos/collapsible-indented-tree',
+        component: D3ngCollapsibleIndentedTreeDemoComponent
       },
       {
         path: 'demos/chord-diagram',

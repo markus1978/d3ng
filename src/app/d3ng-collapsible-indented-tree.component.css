@@ -1,0 +1,30 @@
+:host, :host div {
+  height: 100%;
+  display: block;
+}
+
+:host /deep/ ul {
+  margin: 0;
+  list-style-type: none;
+  padding-left:10px;
+}
+
+:host /deep/ .closed > ul {
+  display: none;
+}
+
+:host /deep/ .open > ul {
+  display: block;
+}
+
+:host /deep/ .closed, :host /deep/ .open {
+  font-weight: bold;
+}
+
+:host /deep/ .empty {
+  font-weight: normal;
+}
+
+:host /deep/ .selected {
+  color: blue;
+}
