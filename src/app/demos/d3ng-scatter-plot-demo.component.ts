@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
     <h2>D3ng Scatter Plot Demo</h2>
     <d3ng-scatter-plot [data]="data" x="a" y="b" [(selected)]="selection"></d3ng-scatter-plot>
   `,
-  styles: [ 'd3ng-scatter-plot { height : 300px; }' ]
+  styles: [ 'd3ng-scatter-plot { height : 300px; display:block; }' ]
 })
 
 export class D3ngScatterPlotDemoComponent {

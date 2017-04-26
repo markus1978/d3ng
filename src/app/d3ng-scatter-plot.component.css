@@ -1,0 +1,13 @@
+:host {
+  display:block;
+  height: 100%;
+}
+
+:host div { height:100%; }
+:host /deep/ .selected { fill: blue; }
+:host /deep/ .extent { fill-opacity: 0.2; }
+:host /deep/ .axis path, :host /deep/ .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}

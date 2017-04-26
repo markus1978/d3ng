@@ -7,24 +7,22 @@ import 'rxjs/Rx';
   template: `
     <h2>D3ng Code Viz</h2>
     
-    <div style="height: 300px">
-      <d3ng-parallel-coordinates [source]="data" pattern="root/package/type+" 
-                                 [(selected)]="selection" 
-                                 [dimensions]='["WMC-1", "WMC-CC", "WMC-HV", "DIT", "NOC", "CBO", "RFC", "LCOM"]'></d3ng-parallel-coordinates>
-    </div>
-    <div style="height: 300px">
-      <d3ng-scatter-plot [source]="data" pattern="root/package/type+"
-                                 [(selected)]="selection"
-                                 x="WMC-CC" y="RFC"></d3ng-scatter-plot>
-    </div>
+    <d3ng-parallel-coordinates style="height: 300px"
+                               [source]="data" pattern="root/package/type+" 
+                               [(selected)]="selection" 
+                               [dimensions]='["WMC-1", "WMC-CC", "WMC-HV", "DIT", "NOC", "CBO", "RFC", "LCOM"]'></d3ng-parallel-coordinates>
+    <d3ng-scatter-plot style="height: 300px;"
+                       [source]="data" pattern="root/package/type+"
+                       [(selected)]="selection"
+                       x="WMC-CC" y="RFC"></d3ng-scatter-plot>
     
-    <div style="width: 450px">
-      <d3ng-chord-diagram [source]="data" pattern="root/package[type]" [(selected)]="selection"></d3ng-chord-diagram>
-    </div>
-    
-    <div style="height: 400px">
-      <d3ng-tree-map [source]="data" pattern="root/package+/type" [(selected)]="selection"></d3ng-tree-map>
-    </div>
+    <d3ng-chord-diagram style="width: 450px" 
+                        [source]="data" pattern="root/package[type]" 
+                        [(selected)]="selection"></d3ng-chord-diagram>
+
+    <d3ng-tree-map style="height: 400px"
+                   [source]="data" pattern="root/package+/type" 
+                   [(selected)]="selection"></d3ng-tree-map>
     
     <d3ng-list [source]="data" pattern="root/package/type" [(selected)]="selection"></d3ng-list>
   `,

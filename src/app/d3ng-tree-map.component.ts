@@ -10,7 +10,7 @@ import {D3ngHierarchicalChart} from "./d3ng-hierarchical-chart";
   template: `
     <div #chart></div>`,
   styles: [
-    ":host { height: 100%; }",
+    ":host { height: 100%; display: block; }",
     ":host div { height: 100%; }",
     ":host /deep/ .selected rect { fill: blue !important; }",
     ":host /deep/ .selected text { fill: white; }" ]

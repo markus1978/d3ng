@@ -8,12 +8,7 @@ import {D3ngChart} from "./d3ng-chart";
   selector: 'd3ng-scatter-plot',
   template: `
     <div #chart></div>`,
-  styles: [
-    ':host { height: 100%;}',
-    ':host /deep/ .selected { fill: blue; }',
-    ':host /deep/ .extent { fill-opacity: 0.2; }',
-    ':host /deep/ .axis path, :host /deep/ .axis line { fill: none; stroke: #000; shape-rendering: crispEdges; }'
-  ]
+  styleUrls: [ './d3ng-scatter-plot.component.css' ]
 })
 
 export class D3ngScatterPlotComponent extends D3ngChart implements OnChanges {
@@ -61,7 +56,7 @@ export class D3ngScatterPlotComponent extends D3ngChart implements OnChanges {
     self.normalizeData();
     const margin = {top: 20, right: 20, bottom: 30, left: 40},
       width = this.chart.nativeElement.offsetWidth  - margin.left - margin.right,
-      height = 300  - margin.top - margin.bottom; // this.chart.nativeElement.offsetHeight
+      height = this.chart.nativeElement.offsetHeight  - margin.top - margin.bottom;
 
     const scales: any = {};
     scales.x = d3.scale.linear().range([0, width]);
