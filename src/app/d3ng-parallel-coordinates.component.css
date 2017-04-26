@@ -23,7 +23,7 @@
   shape-rendering: crispEdges;
 }
 
-:host /deep/ .axis line, .axis path {
+:host /deep/ .axis path {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;

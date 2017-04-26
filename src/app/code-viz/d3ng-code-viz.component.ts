@@ -12,6 +12,11 @@ import 'rxjs/Rx';
                                  [(selected)]="selection" 
                                  [dimensions]='["WMC-1", "WMC-CC", "WMC-HV", "DIT", "NOC", "CBO", "RFC", "LCOM"]'></d3ng-parallel-coordinates>
     </div>
+    <div style="height: 300px">
+      <d3ng-scatter-plot [source]="data" pattern="root/package/type+"
+                                 [(selected)]="selection"
+                                 x="WMC-CC" y="RFC"></d3ng-scatter-plot>
+    </div>
     
     <div style="width: 450px">
       <d3ng-chord-diagram [source]="data" pattern="root/package[type]" [(selected)]="selection"></d3ng-chord-diagram>

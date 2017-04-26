@@ -19,12 +19,15 @@ import {D3ngChordDiagramDemoComponent} from "./demos/d3ng-chord-diagram-demo.com
 import {D3ngCodeVizComponent} from "./code-viz/d3ng-code-viz.component";
 import {D3ngCollapsibleIndentedTreeComponent} from "./d3ng-collapsible-indented-tree.component";
 import {D3ngCollapsibleIndentedTreeDemoComponent} from "./demos/d3ng-collapsible-indented-tree-demo.component";
+import {D3ngScatterPlotComponent} from "./d3ng-scatter-plot.component";
+import {D3ngScatterPlotDemoComponent} from "./demos/d3ng-scatter-plot-demo.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     D3ngListComponent,
     D3ngParallelCoordinatesComponent,
+    D3ngScatterPlotComponent,
     D3ngTreeMapComponent,
     D3ngChordDiagramComponent,
     D3ngCollapsibleIndentedTreeComponent,
@@ -32,6 +35,7 @@ import {D3ngCollapsibleIndentedTreeDemoComponent} from "./demos/d3ng-collapsible
     D3ngListDemoComponent,
     D3ngPatternDemoComponent,
     D3ngParallelCoordinatesDemoComponent,
+    D3ngScatterPlotDemoComponent,
     D3ngTreeMapDemoComponent,
     D3ngChordDiagramDemoComponent,
     D3ngCollapsibleIndentedTreeDemoComponent,
@@ -61,6 +65,10 @@ import {D3ngCollapsibleIndentedTreeDemoComponent} from "./demos/d3ng-collapsible
       {
         path: 'demos/parallel-coordinates',
         component: D3ngParallelCoordinatesDemoComponent
+      },
+      {
+        path: 'demos/scatter-plot',
+        component: D3ngScatterPlotDemoComponent
       },
       {
         path: 'demos/tree-map',

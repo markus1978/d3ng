@@ -168,7 +168,6 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
       .selectAll("rect")
       .attr("x", -8)
       .attr("width", 16);
-
   }
 
 }
