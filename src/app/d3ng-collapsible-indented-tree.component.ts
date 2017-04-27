@@ -1,5 +1,5 @@
 import {
-  Component, OnChanges, ViewChild
+  Component, Input, OnChanges, ViewChild
 } from '@angular/core';
 import * as d3 from "d3";
 import {D3ngChart} from "./d3ng-chart";
@@ -15,6 +15,7 @@ import {D3ngHierarchicalChart} from "./d3ng-hierarchical-chart";
 export class D3ngCollapsibleIndentedTreeComponent extends D3ngHierarchicalChart implements OnChanges {
 
   @ViewChild('chart') chart;
+  @Input() rootLabel: string = "ROOT";
 
   private d3Chart = null;
 
@@ -44,10 +45,14 @@ export class D3ngCollapsibleIndentedTreeComponent extends D3ngHierarchicalChart 
     makeElements(chart, data);
 
     function makeElements(element, node){
+      var label = self.getLabel(node);
+      if (!label ||label == "") {
+        label = self.rootLabel;
+      }
       element
         .append("span")
         .datum(node)
-        .text(self.getLabel(node))
+        .text(label)
         .on("dblclick", select)
         .on("click", click);
 

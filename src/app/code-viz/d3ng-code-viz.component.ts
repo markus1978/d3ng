@@ -6,7 +6,8 @@ import 'rxjs/Rx';
   selector: 'd3ng-code-viz',
   template: `
     <h2>D3ng Code Viz</h2>
-    
+    <d3ng-collapsible-indented-tree [source]="data" pattern="." rootLabel="Data" 
+                                    [(selected)]="selection"></d3ng-collapsible-indented-tree>
     <d3ng-parallel-coordinates style="height: 300px"
                                [source]="data" pattern="root/package/type+" 
                                [(selected)]="selection" 
