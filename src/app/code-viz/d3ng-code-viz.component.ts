@@ -20,6 +20,9 @@ import 'rxjs/Rx';
     <d3ng-chord-diagram style="width: 450px" 
                         [source]="data" pattern="root/package[type]" 
                         [(selected)]="selection"></d3ng-chord-diagram>
+    <d3ng-force-graph style="width: 400px; height: 600px"
+                        [source]="data" pattern="root/package/type"
+                        [(selected)]="selection"></d3ng-force-graph>
 
     <d3ng-tree-map style="height: 400px"
                    [source]="data" pattern="root/package+/type" 

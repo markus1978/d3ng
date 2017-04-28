@@ -21,6 +21,8 @@ import {D3ngCollapsibleIndentedTreeComponent} from "./d3ng-collapsible-indented-
 import {D3ngCollapsibleIndentedTreeDemoComponent} from "./demos/d3ng-collapsible-indented-tree-demo.component";
 import {D3ngScatterPlotComponent} from "./d3ng-scatter-plot.component";
 import {D3ngScatterPlotDemoComponent} from "./demos/d3ng-scatter-plot-demo.component";
+import {D3ngForceGraphComponent} from "./d3ng-force-graph.component";
+import {D3ngForceGraphDemoComponent} from "./demos/d3ng-force-graph-demo.component";
 
 @NgModule({
   declarations: [
@@ -30,6 +32,7 @@ import {D3ngScatterPlotDemoComponent} from "./demos/d3ng-scatter-plot-demo.compo
     D3ngScatterPlotComponent,
     D3ngTreeMapComponent,
     D3ngChordDiagramComponent,
+    D3ngForceGraphComponent,
     D3ngCollapsibleIndentedTreeComponent,
     D3ngDemosComponent,
     D3ngListDemoComponent,
@@ -38,6 +41,7 @@ import {D3ngScatterPlotDemoComponent} from "./demos/d3ng-scatter-plot-demo.compo
     D3ngScatterPlotDemoComponent,
     D3ngTreeMapDemoComponent,
     D3ngChordDiagramDemoComponent,
+    D3ngForceGraphDemoComponent,
     D3ngCollapsibleIndentedTreeDemoComponent,
     D3ngCodeVizComponent,
   ],
@@ -81,6 +85,10 @@ import {D3ngScatterPlotDemoComponent} from "./demos/d3ng-scatter-plot-demo.compo
       {
         path: 'demos/chord-diagram',
         component: D3ngChordDiagramDemoComponent
+      },
+      {
+        path: 'demos/force-graph',
+        component: D3ngForceGraphDemoComponent
       },
     ])
   ],
