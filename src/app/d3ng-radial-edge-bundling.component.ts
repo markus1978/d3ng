@@ -8,14 +8,18 @@ import {D3ngDependencyChart} from "./d3ng-dependency-chart";
 
 @Component({
   selector: 'd3ng-radial-edge-bundling',
-  template: `
-    <div #chart></div>`,
+  template: `    
+    <div #container>
+      <input style="position:relative;top:3px;" type="range" min="0" max="100" value="85">
+      <div #chart></div>
+    </div>`,
   styleUrls: [ './d3ng-radial-edge-bundling.component.css' ]
 })
 
 export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart implements OnChanges {
 
   @ViewChild('chart') chart;
+  @ViewChild('container') container;
   private svg: any;
   private currentSelection:Array<any> = [];
 
@@ -121,11 +125,9 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
         self.selectedChange.emit(self.selected);
       });
 
-    d3.select("input[type=range]").on("change", function () {
+    d3.select(this.container.nativeElement).select("input[type=range]").on("change", function () {
       line.tension(this.value / 100);
-      path.attr("d", function (d, i) {
-        return line(splines[i]);
-      });
+      path.attr("d", (d, i) => line(splines[i]));
     });
 
     d3.select(window)
