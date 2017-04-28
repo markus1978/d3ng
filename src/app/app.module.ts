@@ -23,6 +23,8 @@ import {D3ngScatterPlotComponent} from "./d3ng-scatter-plot.component";
 import {D3ngScatterPlotDemoComponent} from "./demos/d3ng-scatter-plot-demo.component";
 import {D3ngForceGraphComponent} from "./d3ng-force-graph.component";
 import {D3ngForceGraphDemoComponent} from "./demos/d3ng-force-graph-demo.component";
+import {D3ngRadialEdgeBundlingDemoComponent} from "./demos/d3ng-radial-edge-bundling-demo.component";
+import {D3ngRadialEdgeBundlingComponent} from "./d3ng-radial-edge-bundling.component";
 
 @NgModule({
   declarations: [
@@ -31,6 +33,7 @@ import {D3ngForceGraphDemoComponent} from "./demos/d3ng-force-graph-demo.compone
     D3ngParallelCoordinatesComponent,
     D3ngScatterPlotComponent,
     D3ngTreeMapComponent,
+    D3ngRadialEdgeBundlingComponent,
     D3ngChordDiagramComponent,
     D3ngForceGraphComponent,
     D3ngCollapsibleIndentedTreeComponent,
@@ -40,6 +43,7 @@ import {D3ngForceGraphDemoComponent} from "./demos/d3ng-force-graph-demo.compone
     D3ngParallelCoordinatesDemoComponent,
     D3ngScatterPlotDemoComponent,
     D3ngTreeMapDemoComponent,
+    D3ngRadialEdgeBundlingDemoComponent,
     D3ngChordDiagramDemoComponent,
     D3ngForceGraphDemoComponent,
     D3ngCollapsibleIndentedTreeDemoComponent,
@@ -89,6 +93,10 @@ import {D3ngForceGraphDemoComponent} from "./demos/d3ng-force-graph-demo.compone
       {
         path: 'demos/force-graph',
         component: D3ngForceGraphDemoComponent
+      },
+      {
+        path: 'demos/radial-edge-bundling',
+        component: D3ngRadialEdgeBundlingDemoComponent
       },
     ])
   ],

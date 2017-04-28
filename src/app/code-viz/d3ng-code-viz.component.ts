@@ -20,6 +20,9 @@ import 'rxjs/Rx';
     <d3ng-chord-diagram style="width: 450px" 
                         [source]="data" pattern="root/package[type]" 
                         [(selected)]="selection"></d3ng-chord-diagram>
+    <d3ng-radial-edge-bundling style="width: 550px"
+                        [source]="data" pattern="root/package/type"
+                        [(selected)]="selection"></d3ng-radial-edge-bundling>
     <d3ng-force-graph style="width: 400px; height: 600px"
                         [source]="data" pattern="root/package/type"
                         [(selected)]="selection"></d3ng-force-graph>

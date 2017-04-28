@@ -1,0 +1,50 @@
+:host, :host div {
+  display: block;
+  height: 100%;
+}
+
+:host /deep/ path.arc {
+  cursor: move;
+  fill: #fff;
+}
+
+:host /deep/ .node {
+  font-size: 10px;
+}
+
+:host /deep/ .node:hover {
+  fill: #1f77b4;
+}
+
+:host /deep/ .link {
+  fill: none;
+  stroke: #1f77b4;
+  stroke-opacity: .4;
+  pointer-events: none;
+}
+
+:host /deep/ .link.source, :host /deep/ .link.target {
+  stroke-opacity: 1;
+  stroke-width: 2px;
+}
+
+:host /deep/ .selected {
+  font-weight: bold;
+  fill: blue;
+}
+
+:host /deep/ .node.target {
+  fill: #d62728 !important;
+}
+
+:host /deep/ .link.source {
+  stroke: #d62728;
+}
+
+:host /deep/ .node.source {
+  fill: #2ca02c;
+}
+
+:host /deep/ .link.target {
+  stroke: #2ca02c;
+}

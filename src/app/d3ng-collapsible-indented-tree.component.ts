@@ -32,7 +32,7 @@ export class D3ngCollapsibleIndentedTreeComponent extends D3ngHierarchicalChart 
 
   protected draw() {
     const self = this;
-    const data: any = this.computeHiearchyRoot();
+    const data: any = this.computeHierarchyRoot();
 
     if (!data) {
       return;

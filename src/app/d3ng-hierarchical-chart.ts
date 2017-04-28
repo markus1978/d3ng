@@ -14,12 +14,11 @@ export abstract class D3ngHierarchicalChart extends D3ngChart {
     return 1;
   }
 
-  protected computeHiearchyRoot(): Object {
-    if (!this.data || this.data.length == 0) {
+  public static computeHierarchyRoot(self: D3ngChart, data: Array<any>): Object {
+    if (!data || data.length == 0) {
       return undefined;
     }
 
-    const self = this;
     const knownRoots = {};
     let root = null;
 
@@ -40,8 +39,12 @@ export abstract class D3ngHierarchicalChart extends D3ngChart {
       return knownRoots[dataPoint];
     }
 
-    this.data.forEach(dataPoint => rootOf(dataPoint));
+    data.forEach(dataPoint => rootOf(dataPoint));
 
     return root;
+  }
+
+  protected computeHierarchyRoot(): Object {
+    return D3ngHierarchicalChart.computeHierarchyRoot(this, this.data);
   }
 }

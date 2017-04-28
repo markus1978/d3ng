@@ -138,7 +138,7 @@ export abstract class D3ngChart implements OnChanges, OnInit {
    * also used to compute node colors. The default implementation
    * uses `labelKey`.
    */
-  protected getLabel(node):string {
+  public getLabel(node):string {
     if (this.customLabel) {
       return this.customLabel(node);
     } else {
@@ -150,7 +150,7 @@ export abstract class D3ngChart implements OnChanges, OnInit {
     }
   }
 
-  protected getQualifiedLabel(node): string {
+  public getQualifiedLabel(node): string {
     var result: string = null;
     while(node) {
       var label = this.getLabel(node);
@@ -164,7 +164,7 @@ export abstract class D3ngChart implements OnChanges, OnInit {
    * Returns the type of the given `source` data node.
    * The default implementation uses `typeKey`.
    */
-  protected getType(node):string {
+  public getType(node):string {
     return node[this.typeKey];
   }
 
@@ -173,7 +173,7 @@ export abstract class D3ngChart implements OnChanges, OnInit {
    * assumes each node with children has the `childKey` with an array of
    * child data nodes. Returns empty array, if no children are found.
    */
-  protected getChildren(node):Array<any> {
+  public getChildren(node):Array<any> {
     const result = node[this.childKey];
     if (result) {
       return result;
@@ -187,7 +187,7 @@ export abstract class D3ngChart implements OnChanges, OnInit {
    * @param node
    * @returns {any} null if there is no parent.
    */
-  protected getParent(node: Object): Object {
+  public getParent(node: Object): Object {
     return node["parent"];
   }
 
@@ -257,6 +257,7 @@ export abstract class D3ngChart implements OnChanges, OnInit {
 
   private ensureParents():void {
     const self = this;
+    self.source["parent"] = null;
     function visit(d) {
       self.getChildren(d).forEach(function (c) {
         if (!c.parent) {

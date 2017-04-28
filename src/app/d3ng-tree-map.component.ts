@@ -53,7 +53,7 @@ export class D3ngTreeMapComponent extends D3ngHierarchicalChart implements OnCha
         }
         return childNotSelected && !selfSelected;
       };
-      notSelected(this.computeHiearchyRoot());
+      notSelected(this.computeHierarchyRoot());
 
       this.cell.classed("selected", d => {
         while (d) {
@@ -73,7 +73,7 @@ export class D3ngTreeMapComponent extends D3ngHierarchicalChart implements OnCha
 
   protected draw() {
     const self = this;
-    const data = this.computeHiearchyRoot();
+    const data = this.computeHierarchyRoot();
 
     if (!data) {
       return;
@@ -128,8 +128,7 @@ export class D3ngTreeMapComponent extends D3ngHierarchicalChart implements OnCha
         if (self.doZoom) {
           zoom(node == d.parent ? root : d.parent);
         }
-        const selection = [ d ];
-        self.selected = selection;
+        self.selected = [ d ];
         self.selectedChange.emit(self.selected);
       });
     self.cell = cell;
