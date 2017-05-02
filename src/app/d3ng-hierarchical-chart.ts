@@ -47,4 +47,36 @@ export abstract class D3ngHierarchicalChart extends D3ngChart {
   protected computeHierarchyRoot(): Object {
     return D3ngHierarchicalChart.computeHierarchyRoot(this, this.data);
   }
+
+  public static createUniDirectionalHierarchyView(self: D3ngChart, node:any): any {
+    return D3ngHierarchicalChart.createHierarchyView(self, node, null, null);
+  }
+
+  /**
+   * Creates a tree structure that mirrors the given tree structure. This "view" is to be used in cases where D3 is manipulating
+   * the data it visualizes. Instead of changing the original data, it is ought to be preserved. This allows multiple
+   * components to use the same data without interfering with each other.
+   * @param self The chart component (used to access children of nodes).
+   * @param node The node to be mirrored.
+   * @param mapping The backward mapping that returns the mirror node for a given node.
+   * @parem id Function that gives a unique id for a node.
+   * @returns The mirror/view node. It contains a reference to the original node using the key 'original'.
+   */
+  public static createHierarchyView(self: D3ngChart, node:any, mapping:any, id: (any)=>any): any {
+    const result:any = {};
+    result.original = node;
+    result.children = [];
+    if (mapping && id) {
+      const nodeId = id(node);
+      result.key = nodeId;
+      mapping[nodeId] = result;
+    }
+    self.getChildren(node).forEach(child => {
+      const viewChild = D3ngHierarchicalChart.createHierarchyView(self, child, mapping, id);
+      result.children.push(viewChild);
+      viewChild.parent = result;
+    });
+
+    return result;
+  }
 }

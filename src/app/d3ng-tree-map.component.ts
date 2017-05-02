@@ -57,7 +57,7 @@ export class D3ngTreeMapComponent extends D3ngHierarchicalChart implements OnCha
 
       this.cell.classed("selected", d => {
         while (d) {
-          if (selectedWithNoChildSelected.indexOf(d) != -1) {
+          if (selectedWithNoChildSelected.indexOf(d.original) != -1) {
             return true;
           }
           d = d.parent;
@@ -112,11 +112,11 @@ export class D3ngTreeMapComponent extends D3ngHierarchicalChart implements OnCha
       .attr("transform", "translate(.5,.5)");
 
     node = root = data;
+    const view = D3ngHierarchicalChart.createUniDirectionalHierarchyView(this, root);
 
-    const nodes = treemap.nodes(root)
+    const nodes = treemap.nodes(view)
       .filter(function(d) {
-        // const children = self.getChildren(d);
-        return self.data.indexOf(d) != -1; //!children || children.length == 0;
+        return self.data.indexOf(d.original) != -1;
       });
 
     const cell = svg.selectAll("g")
@@ -126,9 +126,9 @@ export class D3ngTreeMapComponent extends D3ngHierarchicalChart implements OnCha
       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
       .on("click", function(d) {
         if (self.doZoom) {
-          zoom(node == d.parent ? root : d.parent);
+          zoom(node == d.parent ? view : d.parent);
         }
-        self.selected = [ d ];
+        self.selected = [ d.original ];
         self.selectedChange.emit(self.selected);
       });
     self.cell = cell;
@@ -136,24 +136,24 @@ export class D3ngTreeMapComponent extends D3ngHierarchicalChart implements OnCha
     cell.append("svg:rect")
       .attr("width", function(d) { return d.dx - 1; })
       .attr("height", function(d) { return d.dy - 1; })
-      .style("fill", function(d) { return color(self.getLabel(d.parent)); });
+      .style("fill", function(d) { return color(self.getLabel(d.original.parent)); });
 
     cell.append("svg:text")
       .attr("x", function(d) { return d.dx / 2; })
       .attr("y", function(d) { return d.dy / 2; })
       .attr("dy", ".35em")
       .attr("text-anchor", "middle")
-      .text(function(d) { return self.getLabel(d); })
+      .text(function(d) { return self.getLabel(d.original); })
       .style("opacity", function(d) { d.w = this.getComputedTextLength(); return d.dx > d.w ? 1 : 0; });
 
     // Add a mouseover title.
     cell.append("title").text(function(d) {
-      return self.getQualifiedLabel(d);
+      return self.getQualifiedLabel(d.original);
     });
 
     d3.select(window).on("click", function() {
       if (self.doZoom) {
-        zoom(root);
+        zoom(view);
       }
     });
 

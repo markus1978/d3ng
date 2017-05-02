@@ -26,7 +26,7 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
   protected drawSelected(selected:Array<any>) {
     if (this.svg) {
       this.currentSelection.forEach(d=>this.mouseout(d));
-      this.svg.selectAll(".node").classed("selected", d => selected.indexOf(d) != -1);
+      this.svg.selectAll(".node").classed("selected", d => selected.indexOf(d.original) != -1);
       this.currentSelection = [];
       selected.forEach(d=> {
         this.currentSelection.push(d);
@@ -59,19 +59,15 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
 
     const cluster = d3.layout.cluster()
       .size([360, ry - 120])
-      .sort((a, b) => d3.ascending(self.getId(a), self.getId(b)));
+      .sort((a, b) => d3.ascending(self.getId(a.original), self.getId(b.original)));
 
     const bundle = d3.layout.bundle();
 
     const line = d3.svg.line.radial()
       .interpolate("bundle")
       .tension(.85)
-      .radius(function (d) {
-        return d.y;
-      })
-      .angle(function (d) {
-        return d.x / 180 * Math.PI;
-      });
+      .radius(d => viewMapping[self.getId(d)].y)
+      .angle(d => viewMapping[self.getId(d)].x / 180 * Math.PI);
 
     const div = d3.select(this.chart.nativeElement).insert("div", "h2")
       .style("width", w + "px")
@@ -90,7 +86,9 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
       .on("mousedown", mousedown);
 
     const root = D3ngHierarchicalChart.computeHierarchyRoot(self, this.data);
-    const nodes = cluster.nodes(root);
+    const viewMapping = {};
+    const view = D3ngHierarchicalChart.createHierarchyView(self, root, viewMapping, d => self.getId(d));
+    const nodes = cluster.nodes(view);
     const links = this.computeObjectGraphFromData().links;
     const splines = bundle(links);
 
@@ -106,22 +104,22 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
       }))
       .enter().append("svg:g")
       .attr("class", "node")
-      .attr("id", d => d.id)
+      .attr("id", d => d.original.id)
       .attr("transform", d => "rotate(" + (d.x - 90) + ")translate(" + d.y + ")")
       .append("svg:text")
       .attr("dx", d => d.x < 180 ? 8 : -8)
       .attr("dy", ".31em")
       .attr("text-anchor", d => d.x < 180 ? "start" : "end")
       .attr("transform", d => d.x < 180 ? null : "rotate(180)")
-      .text(d => self.getLabel(d))
-      .on("mouseover", d => self.mouseover(d))
+      .text(d => self.getLabel(d.original))
+      .on("mouseover", d => self.mouseover(d.original))
       .on("mouseout", d => {
-        if (this.currentSelection.indexOf(d) == -1) {
-          self.mouseout(d);
+        if (this.currentSelection.indexOf(d.original) == -1) {
+          self.mouseout(d.original);
         }
       })
       .on("click", (d) => {
-        self.selected = [ d ];
+        self.selected = [ d.original ];
         self.selectedChange.emit(self.selected);
       });
 
