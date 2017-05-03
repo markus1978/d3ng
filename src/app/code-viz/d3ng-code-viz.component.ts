@@ -25,7 +25,7 @@ import 'rxjs/Rx';
                         [(selected)]="selection"></d3ng-radial-edge-bundling>
     <d3ng-force-graph style="width: 400px; height: 600px"
                         [source]="data" pattern="root/package/type"
-                        [(selected)]="selection"></d3ng-force-graph>
+                        [(selected)]="selection" nodeValue="WMC-1" [nodeDimensions]="typeMetrics"></d3ng-force-graph>
 
     <d3ng-tree-map style="height: 400px"
                    [source]="data" pattern="root/package+/type" 

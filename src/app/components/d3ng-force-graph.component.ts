@@ -8,16 +8,28 @@ import {D3ngDependencyChart} from "./d3ng-dependency-chart";
 @Component({
   selector: 'd3ng-force-graph',
   template: `
-    <div #chart></div>`,
+    <div class="controls">
+      <md-select [(ngModel)]="nodeValue" (change)="onNodeValueChange($event)">
+        <md-option *ngFor="let dim of nodeDimensions ? nodeDimensions : [nodeValue]" [value]="dim">{{ dim }}</md-option>
+      </md-select>
+    </div>
+    <div #chart class="content"></div>`,
   styleUrls: [ './d3ng-force-graph.component.css']
 })
 
 export class D3ngForceGraphComponent extends D3ngDependencyChart implements OnChanges {
 
   @ViewChild('chart') chart;
-  @Input() size: string;
+  @Input() nodeValue: string;
+  @Input() nodeDimensions: Array<string>;
 
   private d3Chart = null;
+
+  private onNodeValueChange(event:any):void {
+    this.nodeValue = event.value;
+    this.clear();
+    this.draw();
+  }
 
   protected drawSelected(selected:Array<any>) {
     if (this.d3Chart && selected) {
@@ -29,9 +41,18 @@ export class D3ngForceGraphComponent extends D3ngDependencyChart implements OnCh
     this.chart.nativeElement.innerHTML = "";
   }
 
+  protected getNodeValue(node:any):number {
+    if (this.nodeValue) {
+      const result = this.nodeValue ? node[this.nodeValue] : 1;
+      return result ? result : 1;
+    } else {
+      return 1;
+    }
+  }
+
   protected draw() {
     const self = this;
-    if (!self.data) {
+    if (!self.data || self.data.length == 0) {
       return;
     }
     const graph = self.computeIndexGraphFromData();
@@ -45,9 +66,11 @@ export class D3ngForceGraphComponent extends D3ngDependencyChart implements OnCh
       .attr("height", height);
     self.d3Chart = svg;
 
+    const maxValue = d3.extent(this.data, d=>this.getNodeValue(d))[1];
+
     const force = d3.layout.force()
       .gravity(0.05)
-      .distance(50)
+      .distance(80)
       .charge(-50)
       .size([width, height])
       .nodes(graph.nodes)
@@ -59,14 +82,18 @@ export class D3ngForceGraphComponent extends D3ngDependencyChart implements OnCh
       .selectAll("line")
       .data(graph.links)
       .enter().append("line")
-      .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+      .attr("stroke-width", d => {
+        return Math.sqrt(d.value);
+      });
 
     const node = svg.append("g")
       .attr("class", "nodes")
       .selectAll("circle")
       .data(graph.nodes)
       .enter().append("circle")
-      .attr("r", 5  )
+      .attr("r", d => {
+        return 30 * (this.getNodeValue(d.data)/maxValue) + 3;
+      })
       .attr("fill", d => D3ngChart.colors[d.group%D3ngChart.colors.length])
       .call(force.drag)
       .on("click", d => {
