@@ -58,7 +58,8 @@ export abstract class D3ngDependencyChart extends D3ngChart {
 
     this.data.forEach(d => {
       const id = self.getId(d);
-      const group: any = self.getId(self.getParent(d));
+      const parent = self.getParent(d);
+      const group: any = parent ? self.getId(parent) : null;
       if (!groupIds[group]) {
         groupIds[group] = groupIdGenerator++;
       }

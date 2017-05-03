@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import {D3ngChart} from "../d3ng-chart";
 
 @Component({
   selector: 'd3ng-parallel-coordinates-demo',

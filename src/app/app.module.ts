@@ -1,58 +1,33 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-
-import { AppComponent } from './app.component';
-import { D3ngListComponent } from './d3ng-list.component';
-import { D3ngDemosComponent } from "./demos/d3ng-demos.component";
-import { D3ngListDemoComponent } from "./demos/d3ng-list-demo.component";
-import { D3ngPatternDemoComponent } from "./demos/d3ng-pattern-demo.component";
-
-import { RouterModule } from '@angular/router';
-import { D3ngParallelCoordinatesDemoComponent } from "./demos/d3ng-parallel-coordinates-demo.component";
-import { D3ngParallelCoordinatesComponent } from "./d3ng-parallel-coordinates.component";
-import {D3ngTreeMapComponent} from "./d3ng-tree-map.component";
-import {D3ngTreeMapDemoComponent} from "./demos/d3ng-tree-map-demo.component";
-import {D3ngChordDiagramComponent} from "./d3ng-chord-diagram.component";
-import {D3ngChordDiagramDemoComponent} from "./demos/d3ng-chord-diagram-demo.component";
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {HttpModule} from '@angular/http';
+import {AppComponent} from './app.component';
+import {RouterModule} from '@angular/router';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MdTabsModule} from "@angular/material";
+import {D3ngDemosModule} from "./demos/d3ng-demos.module";
+import {D3ngDemosComponent} from "./demos/d3ng-demos.component";
+import {D3ngComponentsModule} from "./components/d3ng-components.module";
 import {D3ngCodeVizComponent} from "./code-viz/d3ng-code-viz.component";
-import {D3ngCollapsibleIndentedTreeComponent} from "./d3ng-collapsible-indented-tree.component";
-import {D3ngCollapsibleIndentedTreeDemoComponent} from "./demos/d3ng-collapsible-indented-tree-demo.component";
-import {D3ngScatterPlotComponent} from "./d3ng-scatter-plot.component";
-import {D3ngScatterPlotDemoComponent} from "./demos/d3ng-scatter-plot-demo.component";
-import {D3ngForceGraphComponent} from "./d3ng-force-graph.component";
-import {D3ngForceGraphDemoComponent} from "./demos/d3ng-force-graph-demo.component";
-import {D3ngRadialEdgeBundlingDemoComponent} from "./demos/d3ng-radial-edge-bundling-demo.component";
-import {D3ngRadialEdgeBundlingComponent} from "./d3ng-radial-edge-bundling.component";
+
+import {demosRouting} from "./demos/d3ng-demos.module";
+
+import 'hammerjs';
 
 @NgModule({
   declarations: [
     AppComponent,
-    D3ngListComponent,
-    D3ngParallelCoordinatesComponent,
-    D3ngScatterPlotComponent,
-    D3ngTreeMapComponent,
-    D3ngRadialEdgeBundlingComponent,
-    D3ngChordDiagramComponent,
-    D3ngForceGraphComponent,
-    D3ngCollapsibleIndentedTreeComponent,
-    D3ngDemosComponent,
-    D3ngListDemoComponent,
-    D3ngPatternDemoComponent,
-    D3ngParallelCoordinatesDemoComponent,
-    D3ngScatterPlotDemoComponent,
-    D3ngTreeMapDemoComponent,
-    D3ngRadialEdgeBundlingDemoComponent,
-    D3ngChordDiagramDemoComponent,
-    D3ngForceGraphDemoComponent,
-    D3ngCollapsibleIndentedTreeDemoComponent,
     D3ngCodeVizComponent,
   ],
   imports: [
-    BrowserModule,
+    BrowserModule, // before other material modules are imported
+    BrowserAnimationsModule, // before other material modules are imported
+    MdTabsModule,
     FormsModule,
     HttpModule,
+    D3ngDemosModule,
+    D3ngComponentsModule,
     RouterModule.forRoot([
       {
         path: 'code-viz',
@@ -60,47 +35,12 @@ import {D3ngRadialEdgeBundlingComponent} from "./d3ng-radial-edge-bundling.compo
       },
       {
         path: 'demos',
-        component: D3ngDemosComponent
-      },
-      {
-        path: 'demos/list',
-        component: D3ngListDemoComponent
-      },
-      {
-        path: 'demos/pattern',
-        component: D3ngPatternDemoComponent
-      },
-      {
-        path: 'demos/parallel-coordinates',
-        component: D3ngParallelCoordinatesDemoComponent
-      },
-      {
-        path: 'demos/scatter-plot',
-        component: D3ngScatterPlotDemoComponent
-      },
-      {
-        path: 'demos/tree-map',
-        component: D3ngTreeMapDemoComponent
-      },
-      {
-        path: 'demos/collapsible-indented-tree',
-        component: D3ngCollapsibleIndentedTreeDemoComponent
-      },
-      {
-        path: 'demos/chord-diagram',
-        component: D3ngChordDiagramDemoComponent
-      },
-      {
-        path: 'demos/force-graph',
-        component: D3ngForceGraphDemoComponent
-      },
-      {
-        path: 'demos/radial-edge-bundling',
-        component: D3ngRadialEdgeBundlingDemoComponent
-      },
+        component: D3ngDemosComponent,
+        children: [...demosRouting]
+      }
     ])
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

@@ -1,0 +1,14 @@
+
+.container {
+  width: 100%;
+  overflow: hidden;
+}
+
+.container .nav {
+  width: 200px;
+  float: left;
+}
+
+.container .content {
+  margin-left: 220px;
+}

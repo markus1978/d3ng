@@ -10,7 +10,7 @@ import {D3ngDependencyChart} from "./d3ng-dependency-chart";
   selector: 'd3ng-radial-edge-bundling',
   template: `    
     <div #container>
-      <input style="position:relative;top:3px;" type="range" min="0" max="100" value="85">
+      <md-slider style="position:relative;top:3px;" min="0" max="100" value="85" (change)="onTensionChange($event)"></md-slider>
       <div #chart></div>
     </div>`,
   styleUrls: [ './d3ng-radial-edge-bundling.component.css' ]
@@ -20,8 +20,14 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
 
   @ViewChild('chart') chart;
   @ViewChild('container') container;
-  private svg: any;
+
   private currentSelection:Array<any> = [];
+
+  private svg: any;
+  private line: any;
+  private path: any;
+  private splines: Array<any>;
+
 
   protected drawSelected(selected:Array<any>) {
     if (this.svg) {
@@ -33,6 +39,11 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
         this.mouseover(d);
       });
     }
+  }
+
+  private onTensionChange(event: any):void {
+    this.line.tension(event.value / 100);
+    this.path.attr("d", (d, i) => this.line(this.splines[i]));
   }
 
   protected clear() {
@@ -63,7 +74,7 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
 
     const bundle = d3.layout.bundle();
 
-    const line = d3.svg.line.radial()
+    this.line = d3.svg.line.radial()
       .interpolate("bundle")
       .tension(.85)
       .radius(d => viewMapping[self.getId(d)].y)
@@ -90,13 +101,13 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
     const view = D3ngHierarchicalChart.createHierarchyView(self, root, viewMapping, d => self.getId(d));
     const nodes = cluster.nodes(view);
     const links = this.computeObjectGraphFromData().links;
-    const splines = bundle(links);
+    this.splines = bundle(links);
 
-    const path = svg.selectAll("path.link")
+    this.path = svg.selectAll("path.link")
       .data(links)
       .enter().append("svg:path")
       .attr("class", d =>  "link source-" + self.getId(d.source) + " target-" + self.getId(d.target))
-      .attr("d", (d, i) => line(splines[i]));
+      .attr("d", (d, i) => this.line(this.splines[i]));
 
     svg.selectAll("g.node")
       .data(nodes.filter(function (n) {
@@ -122,11 +133,6 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
         self.selected = [ d.original ];
         self.selectedChange.emit(self.selected);
       });
-
-    d3.select(this.container.nativeElement).select("input[type=range]").on("change", function () {
-      line.tension(this.value / 100);
-      path.attr("d", (d, i) => line(splines[i]));
-    });
 
     d3.select(window)
       .on("mousemove", mousemove)

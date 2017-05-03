@@ -4,14 +4,34 @@ import { Component } from '@angular/core';
   selector: 'app-root',
   template: `
     <h1>{{title}}</h1>
-    <a routerLink="/demos">Demos</a>
-    <a routerLink="/code-viz">CodeViz</a>
+    <!--<a routerLink="/demos">Demos</a>
+    <a routerLink="/code-viz">CodeViz</a>-->
+    
+    <nav md-tab-nav-bar>
+      <a md-tab-link
+         *ngFor="let link of navLinks"
+         [routerLink]="link.path"
+         routerLinkActive #rla="routerLinkActive"
+         [active]="rla.isActive">
+        {{link.label}}
+      </a>
+    </nav>
+
     <router-outlet></router-outlet>
   `,
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   title = 'D3ng – D3.js chart component library';
-  theData = [ 'A', 'B', 'C' ];
+  navLinks = [
+    {
+      path : '/demos',
+      label : 'Demos'
+    },
+    {
+      path : '/code-viz',
+      label: 'CodeViz'
+    }
+  ];
   selection = [];
 }
