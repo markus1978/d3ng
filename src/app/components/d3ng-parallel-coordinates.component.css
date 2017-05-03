@@ -1,5 +1,6 @@
 :host, :host div {
   height: 100%;
+  position: relative;
 }
 
 :host /deep/ {

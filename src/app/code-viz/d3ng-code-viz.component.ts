@@ -11,11 +11,11 @@ import 'rxjs/Rx';
     <d3ng-parallel-coordinates style="height: 300px"
                                [source]="data" pattern="root/package/type+" 
                                [(selected)]="selection" 
-                               [dimensions]='["WMC-1", "WMC-CC", "WMC-HV", "DIT", "NOC", "CBO", "RFC", "LCOM"]'></d3ng-parallel-coordinates>
+                               [dimensions]='typeMetrics'></d3ng-parallel-coordinates>
     <d3ng-scatter-plot style="height: 300px;"
                        [source]="data" pattern="root/package/type+"
                        [(selected)]="selection"
-                       x="WMC-CC" y="RFC"></d3ng-scatter-plot>
+                       x="WMC-CC" y="RFC" [dimensions]='typeMetrics'></d3ng-scatter-plot>
     
     <d3ng-chord-diagram style="width: 450px" 
                         [source]="data" pattern="root/package[type]" 
@@ -39,6 +39,7 @@ import 'rxjs/Rx';
 @Injectable()
 export class D3ngCodeVizComponent {
   data = {};
+  typeMetrics = ["WMC-1", "WMC-CC", "WMC-HV", "DIT", "NOC", "CBO", "RFC", "LCOM"];
 
   constructor(http:Http) {
     http.get('/assets/de.hub.srcrepo.json')

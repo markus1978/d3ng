@@ -7,7 +7,8 @@ import {D3ngChart} from "./d3ng-chart";
 @Component({
   selector: 'd3ng-parallel-coordinates',
   template: `
-    <div #chart></div>`,
+    <div #chart class="content"></div>
+  `,
   styleUrls: [ './d3ng-parallel-coordinates.component.css' ]
 })
 

@@ -7,7 +7,17 @@ import {D3ngChart} from "./d3ng-chart";
 @Component({
   selector: 'd3ng-scatter-plot',
   template: `
-    <div #chart></div>`,
+    <div class="y-controls">
+      <md-select [(ngModel)]="y" (change)="onYChange($event)">
+        <md-option *ngFor="let dim of dimensions ? dimensions : [y]" [value]="dim">{{ dim }}</md-option>
+      </md-select>
+    </div>
+    <div class="x-controls">
+      <md-select [(ngModel)]="x" (change)="onXChange($event)">
+        <md-option *ngFor="let dim of dimensions ? dimensions : [x]" [value]="dim">{{ dim }}</md-option>
+      </md-select>
+    </div>
+    <div #chart class="content"></div>`,
   styleUrls: [ './d3ng-scatter-plot.component.css' ]
 })
 
@@ -18,7 +28,21 @@ export class D3ngScatterPlotComponent extends D3ngChart implements OnChanges {
   @Input() protected x: string;
   @Input() protected y: string;
 
+  @Input() protected dimensions: Array<string>;
+
   private d3Chart = null;
+
+  private onXChange(event:any): void {
+    this.x = event.value;
+    this.clear();
+    this.draw();
+  }
+
+  private onYChange(event:any): void {
+    this.y = event.value;
+    this.clear();
+    this.draw();
+  }
 
   protected drawSelected(selected:Array<any>) {
     if (this.d3Chart) {
@@ -85,24 +109,11 @@ export class D3ngScatterPlotComponent extends D3ngChart implements OnChanges {
     svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
-      .call(xAxis)
-      .append("text")
-      .attr("class", "label")
-      .attr("x", width)
-      .attr("y", -6)
-      .style("text-anchor", "end")
-      .text(self.x);
+      .call(xAxis);
 
     svg.append("g")
       .attr("class", "y axis")
-      .call(yAxis)
-      .append("text")
-      .attr("class", "label")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text(self.y);
+      .call(yAxis);
 
     svg.selectAll(".dot")
       .data(self.data)
@@ -129,7 +140,6 @@ export class D3ngScatterPlotComponent extends D3ngChart implements OnChanges {
         self.selectedChange.emit(self.selected);
       });
     svg.append("g").call(brush);
-
   }
 
 }

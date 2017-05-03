@@ -9,10 +9,11 @@ import {D3ngDependencyChart} from "./d3ng-dependency-chart";
 @Component({
   selector: 'd3ng-radial-edge-bundling',
   template: `    
-    <div #container>
-      <md-slider style="position:relative;top:3px;" min="0" max="100" value="85" (change)="onTensionChange($event)"></md-slider>
-      <div #chart></div>
-    </div>`,
+    <div class="controls">
+      <md-slider min="0" max="100" value="85" (change)="onTensionChange($event)"></md-slider>
+    </div>
+    <div #chart class="content"></div>
+  `,
   styleUrls: [ './d3ng-radial-edge-bundling.component.css' ]
 })
 

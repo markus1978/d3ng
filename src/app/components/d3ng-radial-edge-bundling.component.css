@@ -3,6 +3,15 @@
   height: 100%;
 }
 
+:host {  position: relative; }
+
+.controls {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
 :host /deep/ path.arc {
   cursor: move;
   fill: #fff;
