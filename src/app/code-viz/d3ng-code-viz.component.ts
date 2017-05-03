@@ -29,7 +29,7 @@ import 'rxjs/Rx';
 
     <d3ng-tree-map style="height: 400px"
                    [source]="data" pattern="root/package+/type" 
-                   [(selected)]="selection"></d3ng-tree-map>
+                   [(selected)]="selection" value="WMC-1" [dimensions]="typeMetrics"></d3ng-tree-map>
     
     <d3ng-list [source]="data" pattern="root/package/type" [(selected)]="selection"></d3ng-list>
   `,

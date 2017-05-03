@@ -8,12 +8,13 @@ import {D3ngHierarchicalChart} from "./d3ng-hierarchical-chart";
 @Component({
   selector: 'd3ng-tree-map',
   template: `
-    <div #chart></div>`,
-  styles: [
-    ":host { height: 100%; display: block; }",
-    ":host div { height: 100%; }",
-    ":host /deep/ .selected rect { fill: blue !important; }",
-    ":host /deep/ .selected text { fill: white; }" ]
+    <div class="controls">
+      <md-select [(ngModel)]="value" (change)="onValueChange($event)">
+        <md-option *ngFor="let dim of dimensions ? dimensions : [value]" [value]="dim">{{ dim }}</md-option>
+      </md-select>
+    </div>
+    <div #chart class="content"></div>`,
+  styleUrls: [ './d3ng-tree-map.component.css' ]
 })
 
 export class D3ngTreeMapComponent extends D3ngHierarchicalChart implements OnChanges {
@@ -21,9 +22,25 @@ export class D3ngTreeMapComponent extends D3ngHierarchicalChart implements OnCha
   @ViewChild('chart') chart;
 
   @Input() doZoom:boolean = false;
+  @Input() value:string;
+  @Input() dimensions:Array<string>;
 
   private cell = null;
 
+  private onValueChange(event:any):void {
+    this.value = event.value;
+    this.clear();
+    this.draw();
+  }
+
+  protected getValue(node:any): number {
+    if (this.value) {
+      const result = node.original[this.value];
+      return result ? result : 1;
+    } else {
+      return 1;
+    }
+  }
 
   protected drawSelected(selected:Array<any>) {
     const self = this;

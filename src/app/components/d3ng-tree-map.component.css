@@ -1,0 +1,22 @@
+:host {
+  height: 100%;
+  display: block;
+  position: relative;
+  font-size: 10px;
+}
+
+.controls {
+  position: absolute !important;
+  top: 5px;
+  right: 5px;
+  z-index: 10;
+  background: white;
+  padding: 3px;
+}
+
+.content {
+  height: 100%;
+}
+
+:host /deep/ .selected rect { fill: blue !important; }
+:host /deep/ .selected text { fill: white; }
