@@ -49,22 +49,27 @@ export class D3ngCollapsibleIndentedTreeComponent extends D3ngHierarchicalChart 
       if (!label ||label == "") {
         label = self.rootLabel;
       }
-      element
-        .append("span")
-        .datum(node)
-        .text(label)
-        .on("dblclick", select)
+      const children = self.getChildren(node);
+
+      const nodeContainer = element
+        .append("div")
+        .attr("class", (children && children.length > 0) ? "closed" : "empty")
+        .datum(node);
+
+      nodeContainer.append("i")
+        .attr("class", "material-icons")
+        .text((children && children.length > 0) ? "add_circle_outline" : "keyboard_arrow_right")
         .on("click", click);
 
-      const children = self.getChildren(node);
+      nodeContainer.append("span")
+        .text(label)
+        .on("click", select);
+
       if (children && children.length > 0) {
-        element.attr("class", "closed");
-        const ul = element.append("ul");
+        const ul = nodeContainer.append("ul");
         children.forEach(function(child) {
           makeElements(ul.append("li"), child);
         });
-      } else {
-        element.attr("class", "empty");
       }
     }
 
@@ -74,11 +79,14 @@ export class D3ngCollapsibleIndentedTreeComponent extends D3ngHierarchicalChart 
     }
 
     function click() {
-      const parent = d3.event.currentTarget.parentNode;
-      if (parent.className == "closed") {
-        parent.className = "open";
-      } else if (parent.className == "open") {
-        parent.className = "closed";
+      const icon = d3.event.currentTarget;
+      const nodeContainer = icon.parentNode;
+      if (nodeContainer.className == "closed") {
+        nodeContainer.className = "open";
+        icon.innerHTML = "remove_circle_outline";
+      } else if (nodeContainer.className == "open") {
+        nodeContainer.className = "closed";
+        icon.innerHTML = "add_circle_outline";
       }
     }
   }

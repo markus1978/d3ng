@@ -9,6 +9,13 @@
   padding-left:10px;
 }
 
+:host /deep/ i {
+  font-size: 14px;
+  margin-right: 5px;
+  line-height: 22px;
+  vertical-align: middle;
+}
+
 :host /deep/ .closed > ul {
   display: none;
 }

@@ -9,7 +9,7 @@ import {D3ngForceGraphComponent} from "./d3ng-force-graph.component";
 import {D3ngCollapsibleIndentedTreeComponent} from "./d3ng-collapsible-indented-tree.component";
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MdSelectModule, MdSliderModule} from "@angular/material";
+import {MdIcon, MdIconModule, MdSelectModule, MdSliderModule} from "@angular/material";
 import {FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 
