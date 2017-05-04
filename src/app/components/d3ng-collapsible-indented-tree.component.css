@@ -28,6 +28,10 @@
   font-weight: bold;
 }
 
+:host /deep/ .closed, :host /deep/ .open, :host /deep/ .empty {
+  white-space: nowrap;
+}
+
 :host /deep/ .empty {
   font-weight: normal;
 }

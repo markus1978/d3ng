@@ -10,10 +10,12 @@ import {D3ngDemosModule} from "./demos/d3ng-demos.module";
 import {D3ngDemosComponent} from "./demos/d3ng-demos.component";
 import {D3ngComponentsModule} from "./components/d3ng-components.module";
 import {D3ngCodeVizComponent} from "./code-viz/d3ng-code-viz.component";
+import {VisualizationComponent} from "./visualization/visualization.component";
 
 import {demosRouting} from "./demos/d3ng-demos.module";
 
 import 'hammerjs';
+import {VisualizationModule} from "./visualization/visualization.module";
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import 'hammerjs';
     HttpModule,
     D3ngDemosModule,
     D3ngComponentsModule,
+    VisualizationModule,
     RouterModule.forRoot([
       {
         path: 'code-viz',
@@ -37,6 +40,10 @@ import 'hammerjs';
         path: 'demos',
         component: D3ngDemosComponent,
         children: [...demosRouting]
+      },
+      {
+        path: 'visualization',
+        component: VisualizationComponent
       }
     ])
   ],

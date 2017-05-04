@@ -4,36 +4,8 @@ import 'rxjs/Rx';
 
 @Component({
   selector: 'd3ng-code-viz',
-  template: `
-    <h2>D3ng Code Viz</h2>
-    <d3ng-collapsible-indented-tree [source]="data" pattern="." rootLabel="Data" 
-                                    [(selected)]="selection"></d3ng-collapsible-indented-tree>
-    <d3ng-parallel-coordinates style="height: 300px"
-                               [source]="data" pattern="root/package/type+" 
-                               [(selected)]="selection" 
-                               [dimensions]='typeMetrics'></d3ng-parallel-coordinates>
-    <d3ng-scatter-plot style="height: 300px;"
-                       [source]="data" pattern="root/package/type+"
-                       [(selected)]="selection"
-                       x="WMC-CC" y="RFC" [dimensions]='typeMetrics'></d3ng-scatter-plot>
-    
-    <d3ng-chord-diagram style="width: 450px" 
-                        [source]="data" pattern="root/package[type]" 
-                        [(selected)]="selection"></d3ng-chord-diagram>
-    <d3ng-radial-edge-bundling style="width: 600px;"
-                        [source]="data" pattern="root/package/type"
-                        [(selected)]="selection"></d3ng-radial-edge-bundling>
-    <d3ng-force-graph style="width: 400px; height: 600px"
-                        [source]="data" pattern="root/package/type"
-                        [(selected)]="selection" nodeValue="WMC-1" [nodeDimensions]="typeMetrics"></d3ng-force-graph>
-
-    <d3ng-tree-map style="height: 400px"
-                   [source]="data" pattern="root/package+/type" 
-                   [(selected)]="selection" value="WMC-1" [dimensions]="typeMetrics"></d3ng-tree-map>
-    
-    <d3ng-list [source]="data" pattern="root/package/type" [(selected)]="selection"></d3ng-list>
-  `,
-  styles: [ ]
+  templateUrl: 'd3ng-code-viz.component.html',
+  styleUrls: [ 'd3ng-code-viz.component.css' ]
 })
 
 @Injectable()

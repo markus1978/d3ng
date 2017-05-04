@@ -1,0 +1,15 @@
+:host {
+  width: 100%;
+  overflow: hidden;
+}
+
+.explorer {
+  width: 300px;
+  overflow: auto;
+  float: left;
+  height: 100%;
+}
+
+.content {
+  margin-left: 320px;
+}

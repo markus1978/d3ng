@@ -31,6 +31,10 @@ export class AppComponent {
     {
       path : '/code-viz',
       label: 'CodeViz'
+    },
+    {
+      path : '/visualization',
+      label: 'Visualization'
     }
   ];
   selection = [];

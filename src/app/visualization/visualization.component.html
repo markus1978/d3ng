@@ -1,0 +1,6 @@
+<div [ngGrid]="gridConfig">
+  <div *ngFor="let item of items" [(ngGridItem)]="item.gridItemConfig" class="item">
+    <div class="title">{{item.name}}</div>
+    <p>{{item.content}}</p>
+  </div>
+</div>
