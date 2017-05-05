@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component, ComponentFactory, ComponentFactoryResolver, OnInit, ViewChild,
+  ViewContainerRef
+} from '@angular/core';
+import {D3ngVisualizationItemComponent} from "./d3ng-visualization-item.component";
 
 @Component({
   selector: 'app-visualization',
@@ -28,11 +32,22 @@ export class VisualizationComponent implements OnInit {
   private createGridItemConfig():any {
     return {
       borderSize: 5,
-      resizeable: true
+      resizeable: true,
+      dragHandle: '.title'
     }
   }
 
-  constructor() { }
+  private addClicked() {
+    this.items.push({
+      gridItemConfig: this.createGridItemConfig(),
+      name: "Base title",
+      content: "Base content"
+    })
+  }
+
+  public removeItem(index:number) {
+    this.items.splice(index, 1);
+  }
 
   ngOnInit() {
   }

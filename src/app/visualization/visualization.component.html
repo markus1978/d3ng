@@ -1,6 +1,8 @@
+<div>
+  <button md-button (click)="addClicked()">Add</button>
+</div>
 <div [ngGrid]="gridConfig">
-  <div *ngFor="let item of items" [(ngGridItem)]="item.gridItemConfig" class="item">
-    <div class="title">{{item.name}}</div>
-    <p>{{item.content}}</p>
-  </div>
+  <d3ng-visualization-item *ngFor="let item of items; let i = index" [(ngGridItem)]="item.gridItemConfig"
+                           class="item" [title]="item.name" [content]="item.content" [index]="i">
+  </d3ng-visualization-item>
 </div>
