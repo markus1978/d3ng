@@ -4,8 +4,9 @@ import {NgGridModule} from "angular2-grid";
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {VisualizationComponent} from "./visualization.component";
-import {MdButtonModule, MdIconModule, MdToolbarModule} from "@angular/material";
+import {MdButtonModule, MdIconModule, MdInputModule, MdSelectModule, MdToolbarModule} from "@angular/material";
 import {D3ngVisualizationItemComponent} from "./d3ng-visualization-item.component";
+import {D3ngComponentsModule} from "../components/d3ng-components.module";
 
 @NgModule({
   declarations: [
@@ -19,11 +20,13 @@ import {D3ngVisualizationItemComponent} from "./d3ng-visualization-item.componen
     MdButtonModule,
     MdIconModule,
     MdToolbarModule,
-    NgGridModule
+    MdSelectModule,
+    MdInputModule,
+    NgGridModule,
+    D3ngComponentsModule
   ],
   bootstrap: [ VisualizationComponent ],
   providers: [],
-  exports: [ VisualizationComponent ],
-  entryComponents: [ D3ngVisualizationItemComponent ]
+  exports: [ VisualizationComponent ]
 })
 export class VisualizationModule { }

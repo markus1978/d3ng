@@ -72,9 +72,13 @@ export class D3ngScatterPlotComponent extends D3ngChart implements OnChanges {
   }
 
   protected draw() {
-    if (!this.data ||!this.x ||!this.y) {
-      return;
+    if (!this.data) return;
+    if (!this.x || !this.y) {
+      if (!this.dimensions || this.dimensions.length <= 1) return
+      this.x = this.dimensions[0];
+      this.y = this.dimensions[1];
     }
+
     const self = this;
 
     self.normalizeData();

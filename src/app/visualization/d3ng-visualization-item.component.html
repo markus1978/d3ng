@@ -1,11 +1,24 @@
 <div class="header">
-  <div class="title">{{title}} ({{index}})</div>
+  <div class="title">{{title}}</div>
   <div class="controls">
     <md-icon (click)="onRemoveClicked()">remove_circle</md-icon>
-    <md-icon (click)="onEditClicked()">edit</md-icon>
   </div>
 </div>
 <div class="content">
-  {{content}}
+  <div #visualizationContainer></div>
+  <d3ng-scatter-plot *ngIf="component=='d3ng-scatter-plot'" #visualizationItem
+                     [selected] = "selected"
+                     (selectedChange) = "selectedChange.emit($event)"
+                     [source]="source"
+                     [pattern]="config.pattern"
+                     [dimensions]="config.dimensions"
+                     [x]="config.x" [y]="config.y"></d3ng-scatter-plot>
+  <d3ng-parallel-coordinates *ngIf="component=='d3ng-parallel-coordinates'" #visualizationItem
+                             [selected] = "selected"
+                             (selectedChange) = "selectedChange.emit($event)"
+                             [source]="source"
+                             [pattern]="config.pattern"
+                             [dimensions]="config.dimensions">
+  </d3ng-parallel-coordinates>
 </div>
 

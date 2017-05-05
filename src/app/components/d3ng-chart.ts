@@ -45,7 +45,7 @@ export abstract class D3ngChart implements OnChanges, OnInit {
    * This is a superset of the data that the chart actually represents.
    * Use `pattern` to choose which data nodes are shown in the chart.
    */
-  @Input() protected source: Object;
+  @Input() source: Object;
 
   /**
    * The `pattern` is used for two things. First, it is used to select a
@@ -60,13 +60,13 @@ export abstract class D3ngChart implements OnChanges, OnInit {
    * segment := '!'? type_ref ('!'? '[' '!'? type_ref ']')? '+'?
    * pattern := segment ('/' segment)*
    */
-  @Input() protected pattern: string = ".";
+  @Input() pattern: string = ".";
 
   /**
    * The set of data points that this chart represents. Can either be set
    * manually, or inderectly via `source` and `pattern`.
    */
-  @Input() protected data: Array<any>;
+  @Input() data: Array<any>;
 
   /**
    * The current selection.
@@ -87,7 +87,7 @@ export abstract class D3ngChart implements OnChanges, OnInit {
   }
 
   private onSelectedChanged(selected: Array<any>):void {
-    if (selected) {
+    if (selected && this.parsedPattern) {
       const indirect = [];
       selected.forEach(selectedItem => {
         // indicates that something within the content (including itself) matches the selected item
@@ -113,9 +113,24 @@ export abstract class D3ngChart implements OnChanges, OnInit {
   protected abstract clear():void;
   protected abstract draw():void;
 
+  public redraw():void {
+    this.clear();
+    this.draw();
+  }
+
   protected onDataChanged() {
     this.clear();
     this.draw();
+  }
+
+  public setSource(source:any):void {
+    this.source = source;
+    this.onSourceChanged();
+  }
+
+  public setPattern(pattern: string): void {
+   this.pattern = pattern;
+   this.updatePattern();
   }
 
   ngOnChanges(changes: SimpleChanges) {

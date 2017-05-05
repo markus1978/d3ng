@@ -1,5 +1,8 @@
-import {Component, Host, Input} from '@angular/core';
+import {
+  Component, EventEmitter, Host, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild,
+} from '@angular/core';
 import {VisualizationComponent} from "./visualization.component";
+import {D3ngChart} from "../components/d3ng-chart";
 
 @Component({
   selector: 'd3ng-visualization-item',
@@ -9,10 +12,17 @@ import {VisualizationComponent} from "./visualization.component";
 
 export class D3ngVisualizationItemComponent {
   @Input() title: string;
-  @Input() content: string;
   @Input() index: number;
+  @Input() source: any;
+  @Input() component: string;
+  @Input() config: any;
 
-  parent: VisualizationComponent;
+  @Input() protected selected: Array<any> = [];
+  @Output() protected selectedChange = new EventEmitter<Array<any>>();
+
+  @ViewChild('visualizationItem') visualisationItem: D3ngChart;
+
+  private parent: VisualizationComponent;
 
   constructor (@Host() parent: VisualizationComponent) {
     this.parent = parent;
@@ -22,8 +32,8 @@ export class D3ngVisualizationItemComponent {
     this.parent.removeItem(this.index);
   }
 
-  private onEditClicked():void {
-    this.title = "huhuh";
+  @HostListener('onResizeStop', []) onResizeStop() {
+    this.visualisationItem.redraw();
   }
 }
 

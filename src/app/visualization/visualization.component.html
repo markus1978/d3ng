@@ -1,8 +1,23 @@
-<div>
-  <button md-button (click)="addClicked()">Add</button>
+<div class="chartForm">
+  <md-select class="chartSelect" (change)="chart=$event.value">
+    <md-option *ngFor="let chart of config.charts" [value]="chart">{{ chart.name }}</md-option>
+  </md-select>
+  <div *ngIf="chart">
+    <md-input-container >
+      <input #pattern mdInput placeholder="Pattern" [value]="chart.pattern" (change)="chart.pattern=pattern.value">
+    </md-input-container>
+    <div class="dim" *ngFor="let property of (chart ? chart.dimensionProperties : [])">
+      <span>{{property.name}}:</span>
+      <md-select class="dimSelect" (change)="property.value=$event.value">
+        <md-option *ngFor="let dim of config.dimensions" [value]="dim">{{dim}}</md-option>
+      </md-select>
+    </div>
+    <button *ngIf="chart" md-button (click)="addClicked()">Add</button>
+  </div>
 </div>
 <div [ngGrid]="gridConfig">
   <d3ng-visualization-item *ngFor="let item of items; let i = index" [(ngGridItem)]="item.gridItemConfig"
-                           class="item" [title]="item.name" [content]="item.content" [index]="i">
+                           class="item" [title]="item.name" [index]="i" [source]="data" [component]="item.config.component"
+                           [config]="item.config" [(selected)]="selection">
   </d3ng-visualization-item>
 </div>
