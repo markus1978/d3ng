@@ -48,9 +48,16 @@ export class D3ngChordDiagramComponent extends D3ngDependencyChart implements On
       return;
     }
 
-    const width = this.chart.nativeElement.offsetWidth,
-      height = this.chart.nativeElement.offsetWidth,
-      outerRadius = Math.min(width, height) / 2 - 10,
+    let width = this.chart.nativeElement.offsetWidth,
+      height = this.chart.nativeElement.offsetHeight;
+
+    if (height < width && height > 0) {
+      width = height;
+    } else {
+      height = width;
+    }
+
+    const outerRadius = Math.min(width, height) / 2 - 10,
       innerRadius = outerRadius - 24;
 
     const formatPercent = d3.format(".1%");

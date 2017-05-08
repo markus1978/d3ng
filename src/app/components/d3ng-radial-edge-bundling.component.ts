@@ -62,10 +62,17 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
       return;
     }
 
-    const w = this.chart.nativeElement.offsetWidth,
-      h = this.chart.nativeElement.offsetWidth,
-      rx = w / 2,
-      ry = h / 2;
+    let width = this.chart.nativeElement.offsetWidth,
+      height = this.chart.nativeElement.offsetHeight;
+
+    if (height < width && height > 0) {
+      width = height;
+    } else {
+      height = width;
+    }
+
+    const rx = width / 2,
+      ry = height / 2;
     let m0,
       rotate = 0;
 
@@ -82,12 +89,12 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
       .angle(d => viewMapping[self.getId(d)].x / 180 * Math.PI);
 
     const div = d3.select(this.chart.nativeElement).insert("div", "h2")
-      .style("width", w + "px")
-      .style("height", w + "px")
+      .style("width", width + "px")
+      .style("height", width + "px")
 
     const svg = div.append("svg:svg")
-      .attr("width", w)
-      .attr("height", w)
+      .attr("width", width)
+      .attr("height", width)
       .append("svg:g")
       .attr("transform", "translate(" + rx + "," + ry + ")");
     this.svg = svg;
