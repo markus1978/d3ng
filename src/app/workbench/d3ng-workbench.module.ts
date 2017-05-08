@@ -7,6 +7,7 @@ import {MdButtonModule, MdIconModule, MdInputModule, MdSelectModule, MdToolbarMo
 import {D3ngComponentsModule} from "../components/d3ng-components.module";
 import {D3ngWorkbenchComponent} from "./d3ng-workbench.component";
 import {D3ngWorkbenchItemComponent} from "./d3ng-workbench-item.component";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {D3ngWorkbenchItemComponent} from "./d3ng-workbench-item.component";
     MdSelectModule,
     MdInputModule,
     NgGridModule,
-    D3ngComponentsModule
+    D3ngComponentsModule,
+    FormsModule
   ],
   bootstrap: [ D3ngWorkbenchComponent ],
   providers: [],
