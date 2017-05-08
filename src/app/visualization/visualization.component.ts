@@ -82,6 +82,8 @@ export class VisualizationComponent {
 
   private createGridItemConfig():any {
     return {
+      sizex: 2,
+      sizey: 2,
       borderSize: 5,
       resizeable: true,
       dragHandle: '.title'
