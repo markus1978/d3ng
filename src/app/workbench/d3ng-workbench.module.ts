@@ -3,15 +3,15 @@ import { CommonModule } from '@angular/common';
 import {NgGridModule} from "angular2-grid";
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {VisualizationComponent} from "./visualization.component";
 import {MdButtonModule, MdIconModule, MdInputModule, MdSelectModule, MdToolbarModule} from "@angular/material";
-import {D3ngVisualizationItemComponent} from "./d3ng-visualization-item.component";
 import {D3ngComponentsModule} from "../components/d3ng-components.module";
+import {D3ngWorkbenchComponent} from "./d3ng-workbench.component";
+import {D3ngWorkbenchItemComponent} from "./d3ng-workbench-item.component";
 
 @NgModule({
   declarations: [
-    VisualizationComponent,
-    D3ngVisualizationItemComponent
+    D3ngWorkbenchComponent,
+    D3ngWorkbenchItemComponent
   ],
   imports: [
     CommonModule,
@@ -25,8 +25,8 @@ import {D3ngComponentsModule} from "../components/d3ng-components.module";
     NgGridModule,
     D3ngComponentsModule
   ],
-  bootstrap: [ VisualizationComponent ],
+  bootstrap: [ D3ngWorkbenchComponent ],
   providers: [],
-  exports: [ VisualizationComponent ]
+  exports: [ D3ngWorkbenchComponent ]
 })
-export class VisualizationModule { }
+export class D3ngWorkbenchModule { }

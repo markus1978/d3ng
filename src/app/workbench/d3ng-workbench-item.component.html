@@ -6,38 +6,38 @@
 </div>
 <div class="content">
   <div #visualizationContainer></div>
-  <d3ng-scatter-plot *ngIf="component=='d3ng-scatter-plot'" #visualizationItem
+  <d3ng-scatter-plot *ngIf="component=='d3ng-scatter-plot'" #item
                      [selected] = "selected"
                      (selectedChange) = "selectedChange.emit($event)"
                      [source]="source"
                      [pattern]="config.pattern"
                      [dimensions]="config.dimensions"
                      [x]="config.x" [y]="config.y"></d3ng-scatter-plot>
-  <d3ng-parallel-coordinates *ngIf="component=='d3ng-parallel-coordinates'" #visualizationItem
+  <d3ng-parallel-coordinates *ngIf="component=='d3ng-parallel-coordinates'" #item
                              [selected] = "selected"
                              (selectedChange) = "selectedChange.emit($event)"
                              [source]="source"
                              [pattern]="config.pattern"
                              [dimensions]="config.dimensions"></d3ng-parallel-coordinates>
 
-  <d3ng-chord-diagram *ngIf="component=='d3ng-chord-diagram'" #visualizationItem
+  <d3ng-chord-diagram *ngIf="component=='d3ng-chord-diagram'" #item
                       [selected] = "selected"
                       (selectedChange) = "selectedChange.emit($event)"
                       [source]="source"
                       [pattern]="config.pattern"></d3ng-chord-diagram>
-  <d3ng-radial-edge-bundling *ngIf="component=='d3ng-radial-edge-bundling'" #visualizationItem
+  <d3ng-radial-edge-bundling *ngIf="component=='d3ng-radial-edge-bundling'" #item
                              [selected] = "selected"
                              (selectedChange) = "selectedChange.emit($event)"
                              [source]="source"
                              [pattern]="config.pattern"></d3ng-radial-edge-bundling>
-  <d3ng-force-graph *ngIf="component=='d3ng-force-graph'" #visualizationItem
+  <d3ng-force-graph *ngIf="component=='d3ng-force-graph'" #item
                     [selected] = "selected"
                     (selectedChange) = "selectedChange.emit($event)"
                     [source]="source"
                     [pattern]="config.pattern"
                     [nodeValue]="config.nodeValue" [nodeDimensions]="config.dimensions"></d3ng-force-graph>
 
-  <d3ng-tree-map *ngIf="component=='d3ng-tree-map'" #visualizationItem
+  <d3ng-tree-map *ngIf="component=='d3ng-tree-map'" #item
                  [selected] = "selected"
                  (selectedChange) = "selectedChange.emit($event)"
                  [source]="source"

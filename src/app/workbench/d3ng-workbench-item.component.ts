@@ -1,16 +1,16 @@
 import {
   Component, EventEmitter, Host, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild,
 } from '@angular/core';
-import {VisualizationComponent} from "./visualization.component";
 import {D3ngChart} from "../components/d3ng-chart";
+import {D3ngWorkbenchComponent} from "./d3ng-workbench.component";
 
 @Component({
-  selector: 'd3ng-visualization-item',
-  templateUrl: 'd3ng-visualization-item.component.html' ,
-  styleUrls: [ 'd3ng-visualization-item.component.css']
+  selector: 'd3ng-workbench-item',
+  templateUrl: 'd3ng-workbench-item.component.html' ,
+  styleUrls: [ 'd3ng-workbench-item.component.css']
 })
 
-export class D3ngVisualizationItemComponent {
+export class D3ngWorkbenchItemComponent {
   @Input() title: string;
   @Input() index: number;
   @Input() source: any;
@@ -20,20 +20,20 @@ export class D3ngVisualizationItemComponent {
   @Input() protected selected: Array<any> = [];
   @Output() protected selectedChange = new EventEmitter<Array<any>>();
 
-  @ViewChild('visualizationItem') visualisationItem: D3ngChart;
+  @ViewChild('item') workbenchItem: D3ngChart;
 
-  private parent: VisualizationComponent;
+  private workbench: D3ngWorkbenchComponent;
 
-  constructor (@Host() parent: VisualizationComponent) {
-    this.parent = parent;
+  constructor (@Host() parent: D3ngWorkbenchComponent) {
+    this.workbench = parent;
   }
 
   private onRemoveClicked():void {
-    this.parent.removeItem(this.index);
+    this.workbench.removeItem(this.index);
   }
 
   @HostListener('onResizeStop', []) onResizeStop() {
-    this.visualisationItem.redraw();
+    this.workbenchItem.redraw();
   }
 }
 

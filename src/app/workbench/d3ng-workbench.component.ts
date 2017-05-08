@@ -5,11 +5,11 @@ import {Http, Response} from "@angular/http";
 import 'rxjs/Rx';
 
 @Component({
-  selector: 'app-visualization',
-  templateUrl: './visualization.component.html',
-  styleUrls: ['./visualization.component.css']
+  selector: 'd3ng-workbench',
+  templateUrl: './d3ng-workbench.component.html',
+  styleUrls: ['./d3ng-workbench.component.css']
 })
-export class VisualizationComponent {
+export class D3ngWorkbenchComponent {
 
   chart:any = null;
   config = {

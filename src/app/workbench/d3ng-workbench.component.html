@@ -16,8 +16,8 @@
   </div>
 </div>
 <div [ngGrid]="gridConfig">
-  <d3ng-visualization-item *ngFor="let item of items; let i = index" [(ngGridItem)]="item.gridItemConfig"
+  <d3ng-workbench-item *ngFor="let item of items; let i = index" [(ngGridItem)]="item.gridItemConfig"
                            class="item" [title]="item.name" [index]="i" [source]="data" [component]="item.config.component"
                            [config]="item.config" [(selected)]="selection">
-  </d3ng-visualization-item>
+  </d3ng-workbench-item>
 </div>

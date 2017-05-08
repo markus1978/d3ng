@@ -33,8 +33,8 @@ export class AppComponent {
       label: 'CodeViz'
     },
     {
-      path : '/visualization',
-      label: 'Visualization'
+      path : '/workbench',
+      label: 'Workbench'
     }
   ];
   selection = [];
