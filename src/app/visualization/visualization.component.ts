@@ -30,6 +30,36 @@ export class VisualizationComponent {
         name: "Parallel coordinates",
         pattern: "root/package/type",
         dimensionProperties: []
+      },
+      {
+        type: "d3ng-chord-diagram",
+        name: "Chord diagram",
+        pattern: "root/package[type]",
+        dimensionProperties: []
+      },
+      {
+        type: "d3ng-radial-edge-bundling",
+        name: "Radial edge bundling",
+        pattern: "root/package/type",
+        dimensionProperties: []
+      },
+      {
+        type: "d3ng-force-graph",
+        name: "Force graph",
+        pattern: "root/package/type",
+        dimensionProperties: [{
+          name:'nodeValue',
+          value: 'WMC-1'
+        }]
+      },
+      {
+        type: "d3ng-tree-map",
+        name: "Tree map",
+        pattern: "root/package+/type",
+        dimensionProperties: [{
+          name:'value',
+          value: 'WMC-1'
+        }]
       }
     ]
   };

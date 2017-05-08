@@ -18,7 +18,30 @@
                              (selectedChange) = "selectedChange.emit($event)"
                              [source]="source"
                              [pattern]="config.pattern"
-                             [dimensions]="config.dimensions">
-  </d3ng-parallel-coordinates>
+                             [dimensions]="config.dimensions"></d3ng-parallel-coordinates>
+
+  <d3ng-chord-diagram *ngIf="component=='d3ng-chord-diagram'" #visualizationItem
+                      [selected] = "selected"
+                      (selectedChange) = "selectedChange.emit($event)"
+                      [source]="source"
+                      [pattern]="config.pattern"></d3ng-chord-diagram>
+  <d3ng-radial-edge-bundling *ngIf="component=='d3ng-radial-edge-bundling'" #visualizationItem
+                             [selected] = "selected"
+                             (selectedChange) = "selectedChange.emit($event)"
+                             [source]="source"
+                             [pattern]="config.pattern"></d3ng-radial-edge-bundling>
+  <d3ng-force-graph *ngIf="component=='d3ng-force-graph'" #visualizationItem
+                    [selected] = "selected"
+                    (selectedChange) = "selectedChange.emit($event)"
+                    [source]="source"
+                    [pattern]="config.pattern"
+                    [nodeValue]="config.nodeValue" [nodeDimensions]="config.dimensions"></d3ng-force-graph>
+
+  <d3ng-tree-map *ngIf="component=='d3ng-tree-map'" #visualizationItem
+                 [selected] = "selected"
+                 (selectedChange) = "selectedChange.emit($event)"
+                 [source]="source"
+                 [pattern]="config.pattern"
+                 [value]="config.value" [dimensions]="config.dimensions"></d3ng-tree-map>
 </div>
 
