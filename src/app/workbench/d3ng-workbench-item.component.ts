@@ -13,7 +13,7 @@ import {D3ngWorkbenchComponent} from "./d3ng-workbench.component";
 export class D3ngWorkbenchItemComponent {
   @Input() title: string;
   @Input() index: number;
-  @Input() source: any;
+  @Input() source: Array<Object>;
   @Input() component: string;
   @Input() config: any;
 

@@ -13,13 +13,13 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class D3ngPatternDemoComponent {
-  source = {};
+  source = [];
 
   constructor(http:Http) {
     http.get('/assets/de.hub.srcrepo.json')
       .map((res: Response) => res.json())
       .subscribe(res => {
-        this.source = res;
+        this.source = [res];
       });
   }
 }

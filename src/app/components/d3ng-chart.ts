@@ -45,7 +45,7 @@ export abstract class D3ngChart implements OnChanges, OnInit {
    * This is a superset of the data that the chart actually represents.
    * Use `pattern` to choose which data nodes are shown in the chart.
    */
-  @Input() source: Object;
+  @Input() source: Array<Object>;
 
   /**
    * The `pattern` is used for two things. First, it is used to select a
@@ -123,7 +123,7 @@ export abstract class D3ngChart implements OnChanges, OnInit {
     this.draw();
   }
 
-  public setSource(source:any):void {
+  public setSource(source:Array<Object>):void {
     this.source = source;
     this.onSourceChanged();
   }
@@ -259,29 +259,38 @@ export abstract class D3ngChart implements OnChanges, OnInit {
    * `source`.
    */
   protected onSourceChanged():void {
-    if (this.source && this.parsedPattern) {
+    if (this.source && this.source.length > 0 && this.parsedPattern) {
       this.ensureParents();
       const results = [];
 
-      this.addMatches(this.source, results, 0, true);
+      this.source.forEach(sourceItem=>{
+        if (sourceItem) {
+          this.addMatches(sourceItem, results, 0, true);
+        }
+      });
 
-      this.data = results;
-      this.onDataChanged();
+      if (results.length > 0) {
+        this.data = results;
+        this.onDataChanged();
+      }
     }
   }
 
   private ensureParents():void {
     const self = this;
-    self.source["parent"] = null;
-    function visit(d) {
-      self.getChildren(d).forEach(function (c) {
-        if (!c.parent) {
-          c.parent = d;
-          visit(c);
-        }
-      });
-    }
-    visit(self.source);
+    this.source.forEach(sourceItem=>{
+      sourceItem["parent"] = null;
+      function visit(d) {
+        self.getChildren(d).forEach(function (c) {
+          if (!c.parent) {
+            c.parent = d;
+            visit(c);
+          }
+        });
+      }
+      visit(sourceItem);
+    });
+
   }
 
   private updatePattern():void {

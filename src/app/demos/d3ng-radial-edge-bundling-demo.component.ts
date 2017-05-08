@@ -6,7 +6,7 @@ import 'rxjs/Rx';
   selector: 'd3ng-radial-edge-bundling-demo',
   template: `
     <h2>D3ng Radial Edge Bundling Demo</h2>
-    <d3ng-radial-edge-bundling [source]="data" pattern="root/package/type" [(selected)]="selection"></d3ng-radial-edge-bundling>
+    <d3ng-radial-edge-bundling [source]="[data]" pattern="root/package/type" [(selected)]="selection"></d3ng-radial-edge-bundling>
   `,
   styles: [ 'd3ng-radial-edge-bundling { width : 600px; }' ]
 })

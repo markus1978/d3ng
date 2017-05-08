@@ -15,13 +15,13 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class D3ngCollapsibleIndentedTreeDemoComponent {
-  source = {};
+  source = [];
 
   constructor(http:Http) {
     http.get('/assets/tree-map-demo.json')
       .map((res: Response) => res.json())
       .subscribe(res => {
-        this.source = res;
+        this.source = [res];
       });
   }
 }
