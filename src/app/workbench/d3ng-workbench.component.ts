@@ -60,6 +60,13 @@ export class D3ngWorkbenchComponent {
           name:'value',
           value: 'WMC-1'
         }]
+      },
+      {
+        type: "d3ng-collapsible-indented-tree",
+        name: "Collapsible tree",
+        pattern: ".",
+        dimensionProperties: [],
+        scroll: true
       }
     ]
   };
@@ -95,6 +102,7 @@ export class D3ngWorkbenchComponent {
       component: this.chart.type,
       pattern: this.chart.pattern,
       dimensions: this.config.dimensions,
+      scroll: this.chart.scroll
     };
     this.chart.dimensionProperties.forEach(dim=>{
       config[dim.name] = dim.value;
