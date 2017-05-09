@@ -10,4 +10,9 @@
 
 .column {
   width: 905px;
+  padding-right: 5px;
+  border-style: none solid none none;
+  border-color: lightgrey;
+  border-width: 1px;
+  margin-right: 5px;
 }
