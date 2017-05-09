@@ -1,8 +1,8 @@
 import {
-  Component, EventEmitter, Host, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild,
+  Component, EventEmitter, Host, HostListener, Input, Output, ViewChild,
 } from '@angular/core';
 import {D3ngChart} from "../components/d3ng-chart";
-import {D3ngWorkbenchComponent} from "./d3ng-workbench.component";
+import {D3ngWorkbenchColumnComponent} from "./d3ng-workbench-column.component";
 
 @Component({
   selector: 'd3ng-workbench-item',
@@ -22,9 +22,9 @@ export class D3ngWorkbenchItemComponent {
 
   @ViewChild('item') workbenchItem: D3ngChart;
 
-  private workbench: D3ngWorkbenchComponent;
+  private workbench: D3ngWorkbenchColumnComponent;
 
-  constructor (@Host() parent: D3ngWorkbenchComponent) {
+  constructor (@Host() parent: D3ngWorkbenchColumnComponent) {
     this.workbench = parent;
   }
 

@@ -8,11 +8,13 @@ import {D3ngComponentsModule} from "../components/d3ng-components.module";
 import {D3ngWorkbenchComponent} from "./d3ng-workbench.component";
 import {D3ngWorkbenchItemComponent} from "./d3ng-workbench-item.component";
 import {FormsModule} from "@angular/forms";
+import { D3ngWorkbenchColumnComponent } from './d3ng-workbench-column.component';
 
 @NgModule({
   declarations: [
     D3ngWorkbenchComponent,
-    D3ngWorkbenchItemComponent
+    D3ngWorkbenchItemComponent,
+    D3ngWorkbenchColumnComponent
   ],
   imports: [
     CommonModule,

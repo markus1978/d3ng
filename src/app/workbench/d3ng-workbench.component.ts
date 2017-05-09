@@ -1,8 +1,9 @@
 import {
-  Component
+  Component, QueryList, ViewChildren
 } from '@angular/core';
 import {Http, Response} from "@angular/http";
 import 'rxjs/Rx';
+import {D3ngWorkbenchColumnComponent} from "./d3ng-workbench-column.component";
 
 @Component({
   selector: 'd3ng-workbench',
@@ -11,7 +12,6 @@ import 'rxjs/Rx';
 })
 export class D3ngWorkbenchComponent {
 
-  chart:any = null;
   config = {
     dimensions: ["WMC-1", "WMC-CC", "WMC-HV", "DIT", "NOC", "CBO", "RFC", "LCOM"],
     charts: [
@@ -71,15 +71,10 @@ export class D3ngWorkbenchComponent {
     ]
   };
 
-  gridConfig = {
-    resizeable: true,
-    margins: [5,5]
-  };
-  items = [];
-  data = {};
+  @ViewChildren('column') columns:QueryList<D3ngWorkbenchColumnComponent>;
+  sources: Array<any> = [];
 
   constructor(http:Http) {
-    this.chart = this.config.charts[0];
     http.get('/assets/de.hub.srcrepo.json')
       .map((res: Response) => res.json())
       .subscribe(res => {
@@ -87,35 +82,15 @@ export class D3ngWorkbenchComponent {
       });
   }
 
-  private createGridItemConfig():any {
-    return {
-      sizex: 2,
-      sizey: 2,
-      borderSize: 5,
-      resizeable: true,
-      dragHandle: '.title'
+  private addClicked():void {
+    const newSource = this.columns.last.selection;
+    this.sources.push(newSource);
+  }
+
+  private onSelectedChanged(event:any, index:number): void {
+    if (index+1 < this.columns.length) {
+      this.columns.find((c,i)=> i==index + 1).selection = event.value;
     }
-  }
-
-  private addClicked() {
-    const config = {
-      component: this.chart.type,
-      pattern: this.chart.pattern,
-      dimensions: this.config.dimensions,
-      scroll: this.chart.scroll
-    };
-    this.chart.dimensionProperties.forEach(dim=>{
-      config[dim.name] = dim.value;
-    });
-    this.items.push({
-      gridItemConfig: this.createGridItemConfig(),
-      config: config,
-      name: this.chart.name
-    })
-  }
-
-  public removeItem(index:number) {
-    this.items.splice(index, 1);
   }
 
   // code viz specific stuff
@@ -124,7 +99,7 @@ export class D3ngWorkbenchComponent {
       // this.types = this.aggregateTypes(this.data);
       const pkgs = this.aggregatePackageDependencies(data);
       this.normalizePackageDependencies(pkgs);
-      this.data = data;
+      this.sources = [[data]];
     }
   }
 

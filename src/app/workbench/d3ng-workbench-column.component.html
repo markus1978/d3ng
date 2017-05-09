@@ -1,0 +1,27 @@
+<form class="chartForm">
+  <md-select class="chartSelect" placeholder="Chart to add"
+             [(ngModel)]="chart" [ngModelOptions]="{standalone: true}">
+    <md-option *ngFor="let chart of config.charts" [value]="chart">{{ chart.name }}</md-option>
+  </md-select>
+  <div *ngIf="chart">
+    <md-input-container >
+      <input #pattern mdInput placeholder="Pattern" [value]="chart.pattern" (change)="chart.pattern=pattern.value">
+    </md-input-container>
+    <div class="dim" *ngFor="let property of (chart ? chart.dimensionProperties : [])">
+      <span *ngIf="chart.dimensionProperties.length > 1">{{property.name}}:</span>
+      <md-select class="dimSelect"
+                 placeholder="Metric"
+                 [(ngModel)]="property.value" [ngModelOptions]="{standalone: true}">
+        <md-option *ngFor="let dim of config.dimensions" [value]="dim">{{dim}}</md-option>
+      </md-select>
+    </div>
+    <button type="button" *ngIf="chart" md-raised-button class="md-primary" (click)="addClicked()">Add</button>
+  </div>
+</form>
+
+<div [ngGrid]="gridConfig">
+  <d3ng-workbench-item *ngFor="let item of items; let i = index" [(ngGridItem)]="item.gridItemConfig"
+                       class="item" [title]="item.name" [index]="i" [source]="source" [component]="item.config.component"
+                       [config]="item.config" [(selected)]="selection" (selectedChange)="selectionChange.emit($event)">
+  </d3ng-workbench-item>
+</div>

@@ -1,26 +1,13 @@
-.chartForm {
-  margin: 5px 0 5px 0;
-  padding: 15px 10px 0 10px;
-  background: #EEE;
+:host {
+  display: inline-block;
+  white-space: nowrap;
 }
 
-.chartForm div {
-  display: inline;
+.column, .controls {
+  display: inline-block;
+  white-space: normal;
 }
 
-.chartForm .chartSelect {
-  width: 200px;
+.column {
+  width: 905px;
 }
-
-.pattern, .dim, .chartSelect {
-  margin-right: 10px;
-}
-
-.dimSelect {
-  width: 100px;
-}
-
-button {
-  margin-left: 20px;
-}
-
