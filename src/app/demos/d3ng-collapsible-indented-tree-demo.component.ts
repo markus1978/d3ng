@@ -21,7 +21,7 @@ export class D3ngCollapsibleIndentedTreeDemoComponent {
     http.get('/assets/tree-map-demo.json')
       .map((res: Response) => res.json())
       .subscribe(res => {
-        this.source = [res];
+        this.source = res;
       });
   }
 }

@@ -10,7 +10,7 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class D3ngCodeVizComponent {
-  data = {};
+  data = [];
   typeMetrics = ["WMC-1", "WMC-CC", "WMC-HV", "DIT", "NOC", "CBO", "RFC", "LCOM"];
 
   constructor(http:Http) {
@@ -21,11 +21,14 @@ export class D3ngCodeVizComponent {
       });
   }
 
-  private setData(data) {
+  private setData(data:Array<any>) {
     if (data) {
-      // this.types = this.aggregateTypes(this.data);
-      const pkgs = this.aggregatePackageDependencies(data);
-      this.normalizePackageDependencies(pkgs);
+      data.forEach(data => {
+          // this.types = this.aggregateTypes(this.data);
+          const pkgs = this.aggregatePackageDependencies(data);
+          this.normalizePackageDependencies(pkgs);
+        }
+      )
       this.data = data;
     }
   }

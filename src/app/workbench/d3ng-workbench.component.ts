@@ -18,7 +18,7 @@ export class D3ngWorkbenchComponent {
       {
         type: "d3ng-scatter-plot",
         name: "Scatter plot",
-        pattern: "root/package/type+",
+        pattern: "package/type+",
         dimensionProperties: [{
           name:'x', value: 'WMC-1'
         }, {
@@ -28,25 +28,25 @@ export class D3ngWorkbenchComponent {
       {
         type: "d3ng-parallel-coordinates",
         name: "Parallel coordinates",
-        pattern: "root/package/type",
+        pattern: "package/type",
         dimensionProperties: []
       },
       {
         type: "d3ng-chord-diagram",
         name: "Chord diagram",
-        pattern: "root/package[type]",
+        pattern: "package[type]",
         dimensionProperties: []
       },
       {
         type: "d3ng-radial-edge-bundling",
         name: "Radial edge bundling",
-        pattern: "root/package/type",
+        pattern: "package/type",
         dimensionProperties: []
       },
       {
         type: "d3ng-force-graph",
         name: "Force graph",
-        pattern: "root/package/type",
+        pattern: "package/type",
         dimensionProperties: [{
           name:'nodeValue',
           value: 'WMC-1'
@@ -55,7 +55,7 @@ export class D3ngWorkbenchComponent {
       {
         type: "d3ng-tree-map",
         name: "Tree map",
-        pattern: "root/package+/type",
+        pattern: "package+/type",
         dimensionProperties: [{
           name:'value',
           value: 'WMC-1'
@@ -96,10 +96,11 @@ export class D3ngWorkbenchComponent {
   // code viz specific stuff
   private setData(data) {
     if (data) {
-      // this.types = this.aggregateTypes(this.data);
-      const pkgs = this.aggregatePackageDependencies(data);
-      this.normalizePackageDependencies(pkgs);
-      this.sources = [[data]];
+      data.forEach(data => {
+        const pkgs = this.aggregatePackageDependencies(data);
+        this.normalizePackageDependencies(pkgs);
+      })
+      this.sources = [data];
     }
   }
 
