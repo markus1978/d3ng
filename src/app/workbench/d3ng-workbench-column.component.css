@@ -1,7 +1,20 @@
-.chartForm {
-  margin: 5px 0 5px 0;
-  padding: 15px 10px 0 10px;
+.header {
   background: #EEE;
+  position: relative;
+  display: block;
+  height: 60px;
+  padding: 10px 10px 0px 10px;
+  margin: 5px 0;
+}
+
+.chartForm {
+  margin-top: 5px;
+  float: left;
+}
+
+.controls {
+  float: right;
+  padding-top: 15px;
 }
 
 .chartForm div {
@@ -22,5 +35,9 @@
 
 button {
   margin-left: 20px;
+}
+
+md-icon:hover {
+  cursor: pointer;
 }
 

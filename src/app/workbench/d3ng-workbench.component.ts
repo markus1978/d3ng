@@ -87,6 +87,11 @@ export class D3ngWorkbenchComponent {
     this.sources.push(newSource);
   }
 
+  public removeColumn(column:D3ngWorkbenchColumnComponent):void {
+    const index = this.sources.indexOf(column.source);
+    this.sources.splice(index, 1);
+  }
+
   private onSelectedChanged(selected:any, index:number): void {
     if (index+1 < this.columns.length) {
       this.columns.find((c,i)=> i==index + 1).source = selected;

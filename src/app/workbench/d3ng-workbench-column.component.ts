@@ -1,4 +1,5 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Host, Input, OnInit, Output} from '@angular/core';
+import {D3ngWorkbenchComponent} from "./d3ng-workbench.component";
 
 @Component({
   selector: 'd3ng-workbench-column',
@@ -9,9 +10,12 @@ export class D3ngWorkbenchColumnComponent implements OnInit {
 
   @Input() config:any;
   @Input() source:Array<Object>;
+  @Input() isLast:boolean = false;
 
   @Input() selection: Array<any> = [];
   @Output() selectionChange = new EventEmitter<Array<any>>();
+
+  workbench:D3ngWorkbenchComponent;
 
   chart:any = null;
 
@@ -26,6 +30,10 @@ export class D3ngWorkbenchColumnComponent implements OnInit {
   items = [];
   data = {};
 
+  constructor (@Host() parent: D3ngWorkbenchComponent) {
+    this.workbench = parent;
+  }
+
   public ngOnInit() {
     this.chart = this.config.charts[0];
   }
@@ -38,6 +46,10 @@ export class D3ngWorkbenchColumnComponent implements OnInit {
       resizeable: true,
       dragHandle: '.title'
     }
+  }
+
+  private removeClicked() {
+    this.workbench.removeColumn(this);
   }
 
   private addClicked() {

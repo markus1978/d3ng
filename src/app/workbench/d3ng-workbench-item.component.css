@@ -41,3 +41,7 @@
   height:100%;
   overflow: hidden;
 }
+
+md-icon:hover {
+  cursor: pointer;
+}

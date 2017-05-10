@@ -4,8 +4,13 @@
 }
 
 .column, .controls {
+  vertical-align: top;
   display: inline-block;
   white-space: normal;
+}
+
+.controls {
+  padding-top: 30px;
 }
 
 .column {
@@ -15,4 +20,8 @@
   border-color: lightgrey;
   border-width: 1px;
   margin-right: 5px;
+}
+
+md-icon:hover {
+  cursor: pointer;
 }
