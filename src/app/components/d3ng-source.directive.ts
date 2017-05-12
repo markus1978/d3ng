@@ -82,17 +82,6 @@ export class D3ngSourceDirective implements OnChanges, OnInit {
     }
   }
 
-
-  public setSource(source:Array<Object>):void {
-    this.source = source;
-    this.onChanged();
-  }
-
-  public setPattern(pattern: string): void {
-    this.pattern = pattern;
-    this.updatePattern();
-  }
-
   ngOnChanges(changes: SimpleChanges) {
     if (changes.hasOwnProperty("pattern")) {
       this.updatePattern();
@@ -191,38 +180,6 @@ export class D3ngSourceDirective implements OnChanges, OnInit {
 
   }
 
-  private addMatchingSelectedItem(selectedItem:any, list:Array<any>): boolean {
-    for(let index = 0; index < this.parsedPattern.length; index++) {
-      if (this.typeMatches(selectedItem, this.parsedPattern[index])) {
-        return this.addMatches(selectedItem, list, index, false);
-      }
-    }
-    return false;
-  }
-
-  public computeIndirectSelection(selected: Array<any>):Array<any> {
-    if (!this.parsedPattern) {
-      return selected;
-    }
-
-    const indirect = [];
-    selected.forEach(selectedItem => {
-      // indicates that something within the content (including itself) matches the selected item
-      const hasDownMatch = this.addMatchingSelectedItem(selectedItem, indirect);
-      if (!hasDownMatch) {
-        let e = selectedItem.parent;
-        while (e) {
-          if (this.addMatchingSelectedItem(e, indirect)) {
-            break;
-          } else {
-            e = e.parent;
-          }
-        }
-      }
-    });
-    return indirect;
-  }
-
   private updatePattern():void {
     try {
       this.parsedPattern = D3ngPatternParser.parse(this.pattern);
@@ -234,7 +191,6 @@ export class D3ngSourceDirective implements OnChanges, OnInit {
     this.updatePattern();
     try {
       this.chart = (<any>this._view)._data.componentView.component;
-      this.chart.sourceDirective = this;
     } catch (e) {
 
     }

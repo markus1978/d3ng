@@ -45,15 +45,57 @@ export abstract class D3ngChart implements OnChanges {
 
   @Input() private customLabel: Function = null;
 
-  public sourceDirective:D3ngSourceDirective = null;
+  /**
+   * Calculates a set of representatives for an original data point. The idea is that a parent or child data point
+   * in the data set can represent data points that are not within the data set.
+   * @param original
+   * @returns {any}
+   */
+  private findRepresentative(original: any): Array<any> {
+    if (this.data.indexOf(original) != -1) {
+      return [original];
+    } else {
+      // original parents first
+      let parent = this.getParent(original);
+      while (parent) {
+        if (this.data.indexOf(parent) != -1) {
+          return [parent];
+        }
+        parent = this.getParent(parent);
+      }
+
+      // data parents now
+      const childRepresentatives = [];
+      this.data.forEach(data=>{
+        let parent = this.getParent(data);
+        while (parent) {
+          if(parent == original && childRepresentatives.indexOf(data) == -1) {
+            childRepresentatives.push(data);
+          }
+
+          // This is not a good idea, since it is just a solution for a specific case.
+          // The following will cause a "flat" selection. The element is only represented if the first parent of the required type is selected.
+          if (this.getType(parent) != this.getType(data) && this.getType(parent) == this.getType(original)) {
+            break;
+          }
+
+          parent = this.getParent(parent);
+        }
+      });
+
+      return childRepresentatives;
+    }
+  }
 
   private onSelectedChanged(selected: Array<any>):void {
     if (selected) {
-      if (this.sourceDirective) {
-        this.drawSelected(this.sourceDirective.computeIndirectSelection(selected));
-      } else {
-        this.drawSelected(selected);
-      }
+      const representatives = [];
+      selected.forEach(s=>{
+        this.findRepresentative(s).forEach(r=>{
+          representatives.push(r);
+        })
+      });
+      this.drawSelected(representatives);
     }
   }
 
