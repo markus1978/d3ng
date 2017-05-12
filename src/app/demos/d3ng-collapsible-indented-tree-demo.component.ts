@@ -7,7 +7,7 @@ import 'rxjs/Rx';
   template: `
     <h2>D3ng collapsible indented tree Demo</h2>
     <div class="chart-container">
-      <d3ng-collapsible-indented-tree [source]="source" pattern="." [(selected)]="selection" labelKey="name"></d3ng-collapsible-indented-tree>
+      <d3ng-collapsible-indented-tree d3ngSource [source]="source" pattern="." [(selected)]="selection" labelKey="name"></d3ng-collapsible-indented-tree>
     </div>
   `,
   styles: [ ]

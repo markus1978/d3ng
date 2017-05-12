@@ -2,16 +2,9 @@ import {EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from "@an
 
 declare let D3ngPatternParser: any;
 import "./d3ng-pattern-parser";
+import {D3ngSourceDirective} from "./d3ng-source.directive";
 
-export interface PatternTerm {
-  type:string;
-  isNegated:boolean;
-  isTypeNegated: boolean;
-  notFlat: boolean;
-  limit: PatternTerm;
-}
-
-export abstract class D3ngChart implements OnChanges, OnInit {
+export abstract class D3ngChart implements OnChanges {
 
   /**
    * The colors used to draw shapes and lines in charts and diagrams.
@@ -37,31 +30,6 @@ export abstract class D3ngChart implements OnChanges, OnInit {
    */
   @Input() childKey: string = "children";
 
-  private parsedPattern: Array<PatternTerm>;
-
-  /**
-   * The data source that this chart gets its data from. This is usually
-   * the root for a tree of data.
-   * This is a superset of the data that the chart actually represents.
-   * Use `pattern` to choose which data nodes are shown in the chart.
-   */
-  @Input() source: Array<Object>;
-
-  /**
-   * The `pattern` is used for two things. First, it is used to select a
-   * subset of data points from the data `source`. This subset of
-   * data points is represented in this chart. Second, the pattern
-   * influences the selection behavior for this chart.
-   * The default pattern is a wildcard pattern that selects all nodes
-   * from the `source` data.
-   *
-   * Syntax:
-   * type_ref := ID|'.'
-   * segment := '!'? type_ref ('!'? '[' '!'? type_ref ']')? '+'?
-   * pattern := segment ('/' segment)*
-   */
-  @Input() pattern: string = ".";
-
   /**
    * The set of data points that this chart represents. Can either be set
    * manually, or inderectly via `source` and `pattern`.
@@ -77,34 +45,15 @@ export abstract class D3ngChart implements OnChanges, OnInit {
 
   @Input() private customLabel: Function = null;
 
-  private addMatchingSelectedItem(selectedItem:any, list:Array<any>): boolean {
-    for(let index = 0; index < this.parsedPattern.length; index++) {
-      if (this.typeMatches(selectedItem, this.parsedPattern[index])) {
-        return this.addMatches(selectedItem, list, index, false);
-      }
-    }
-    return false;
-  }
+  public sourceDirective:D3ngSourceDirective = null;
 
   private onSelectedChanged(selected: Array<any>):void {
-    if (selected && this.parsedPattern) {
-      const indirect = [];
-      selected.forEach(selectedItem => {
-        // indicates that something within the content (including itself) matches the selected item
-        const hasDownMatch = this.addMatchingSelectedItem(selectedItem, indirect);
-        if (!hasDownMatch) {
-          let e = selectedItem.parent;
-          while(e) {
-            if (this.addMatchingSelectedItem(e, indirect)) {
-              break;
-            } else {
-              e = e.parent;
-            }
-          }
-        }
-      });
-
-      this.drawSelected(indirect);
+    if (selected) {
+      if (this.sourceDirective) {
+        this.drawSelected(this.sourceDirective.computeIndirectSelection(selected));
+      } else {
+        this.drawSelected(selected);
+      }
     }
   }
 
@@ -123,16 +72,6 @@ export abstract class D3ngChart implements OnChanges, OnInit {
     this.draw();
   }
 
-  public setSource(source:Array<Object>):void {
-    this.source = source;
-    this.onSourceChanged();
-  }
-
-  public setPattern(pattern: string): void {
-   this.pattern = pattern;
-   this.updatePattern();
-  }
-
   ngOnChanges(changes: SimpleChanges) {
     if (changes.hasOwnProperty("selected")) {
       this.onSelectedChanged(this.selected);
@@ -140,12 +79,11 @@ export abstract class D3ngChart implements OnChanges, OnInit {
     if (changes.hasOwnProperty("data")) {
       this.onDataChanged();
     }
-    if (changes.hasOwnProperty("pattern")) {
-      this.updatePattern();
-    }
-    if (changes.hasOwnProperty("source")) {
-      this.onSourceChanged();
-    }
+  }
+
+  public setData(data:Array<any>):void {
+    this.data = data;
+    this.onDataChanged();
   }
 
   /**
@@ -206,98 +144,4 @@ export abstract class D3ngChart implements OnChanges, OnInit {
     return node["parent"];
   }
 
-  private typeMatches(element:any, patternTerm:PatternTerm):boolean {
-    if (patternTerm.isTypeNegated) {
-      return !(patternTerm.type == "." || this.getType(element) == patternTerm.type);
-    } else {
-      return patternTerm.type == "." || this.getType(element) == patternTerm.type;
-    }
-  }
-
-  private addMatches(element:any, results:Array<any>, index:number, findAll:boolean):boolean {
-    const patternTerm = this.parsedPattern[index];
-    const isLast = index + 1 == this.parsedPattern.length;
-    let hasMatch = false;
-    if (this.typeMatches(element, patternTerm)) {
-      const children = this.getChildren(element);
-      if (isLast) {
-        if (patternTerm.limit) {
-          const limitMatches = !children.every(c => !this.typeMatches(c,patternTerm.limit));
-          if (patternTerm.limit.isNegated && !limitMatches) {
-            hasMatch = true;
-            results.push(element);
-          } else if (!patternTerm.limit.isNegated && limitMatches) {
-            hasMatch = true;
-            results.push(element);
-          }
-        } else {
-          hasMatch = true;
-          results.push(element);
-        }
-      } else {
-        this.getChildren(element).forEach(c => {
-          if (this.addMatches(c, results, index+1, findAll)) {
-            hasMatch = true;
-          }
-        })
-      }
-
-      if (!hasMatch || findAll || patternTerm.notFlat) {
-        children.forEach(c => {
-          if (this.addMatches(c, results, index, findAll)) {
-            hasMatch = true;
-          };
-        });
-      }
-
-      return hasMatch;
-    }
-  }
-
-  /**
-   * Updates the `data` property by applying the current `parsedPattern` to
-   * `source`.
-   */
-  protected onSourceChanged():void {
-    if (this.source && this.source.length > 0 && this.parsedPattern) {
-      this.ensureParents();
-      const results = [];
-
-      this.source.forEach(sourceItem=>{
-        if (sourceItem) {
-          this.addMatches(sourceItem, results, 0, true);
-        }
-      });
-
-      if (results.length > 0) {
-        this.data = results;
-        this.onDataChanged();
-      }
-    }
-  }
-
-  private ensureParents():void {
-    const self = this;
-    this.source.forEach(sourceItem=>{
-      sourceItem["parent"] = null;
-      function visit(d) {
-        self.getChildren(d).forEach(function (c) {
-          if (!c.parent) {
-            c.parent = d;
-            visit(c);
-          }
-        });
-      }
-      visit(sourceItem);
-    });
-
-  }
-
-  private updatePattern():void {
-    this.parsedPattern = D3ngPatternParser.parse(this.pattern);
-  }
-
-  ngOnInit(): void {
-    this.updatePattern();
-  }
 }

@@ -1,6 +1,48 @@
 :host {
   display: inline-block;
   white-space: nowrap;
+  border-style: none none solid none;
+  border-color: lightgrey;
+  border-width: 1px;
+  margin-right: 5px;
+}
+
+.editor {
+  width: 400px;
+  display: inline-block;
+  white-space: normal;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: normal;
+  color: grey;
+}
+
+.json-view .content {
+  height: 200px;
+  margin: 5px;
+  overflow: auto;
+}
+
+.transformation md-input-container {
+  width: 100%;
+}
+
+.visualization md-select, .visualization form {
+  margin-top: 15px;
+}
+
+.visualization, .transformation {
+  padding-bottom: 15px;
+}
+
+.visualization form md-select, .visualization form md-input-container {
+  width: 100%;
+}
+
+.visualization form md-select {
+  margin-bottom: 15px;
 }
 
 .column, .controls {
@@ -15,8 +57,18 @@
 
 .column {
   width: 905px;
+}
+
+.column, .editor {
   padding-right: 5px;
   border-style: none solid none none;
+  border-color: lightgrey;
+  border-width: 1px;
+  margin-right: 5px;
+}
+
+.edit-part:not(:last-child) {
+  border-style: none none solid none;
   border-color: lightgrey;
   border-width: 1px;
   margin-right: 5px;

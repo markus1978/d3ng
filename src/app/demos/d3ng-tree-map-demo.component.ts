@@ -7,7 +7,7 @@ import 'rxjs/Rx';
   template: `
     <h2>D3ng tree map Demo</h2>
     <div class="chart-container">
-      <d3ng-tree-map [source]="source" pattern=".![.]" [(selected)]="selection" labelKey="name"></d3ng-tree-map>
+      <d3ng-tree-map d3ngSource [source]="source" pattern=".![.]" [(selected)]="selection" labelKey="name"></d3ng-tree-map>
     </div>
   `,
   styles: [ '.chart-container { height: 300px; }']

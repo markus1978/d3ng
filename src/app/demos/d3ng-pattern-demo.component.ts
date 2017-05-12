@@ -6,7 +6,7 @@ import 'rxjs/Rx';
   selector: 'd3ng-pattern-demo',
   template: `
     <h2>D3ng pattern Demo</h2>
-    <d3ng-list [source]="source" pattern="package[!type]" [(selected)]="selection"></d3ng-list>
+    <d3ng-list d3ngSource [source]="source" pattern="package[!type]" [(selected)]="selection"></d3ng-list>
   `,
   styles: [ ]
 })

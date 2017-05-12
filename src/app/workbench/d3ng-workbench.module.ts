@@ -9,6 +9,7 @@ import {D3ngWorkbenchComponent} from "./d3ng-workbench.component";
 import {D3ngWorkbenchItemComponent} from "./d3ng-workbench-item.component";
 import {FormsModule} from "@angular/forms";
 import { D3ngWorkbenchColumnComponent } from './d3ng-workbench-column.component';
+import {TJsonViewerModule} from '../t-json-viewer/t-json-viewer.module';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { D3ngWorkbenchColumnComponent } from './d3ng-workbench-column.component'
     MdInputModule,
     NgGridModule,
     D3ngComponentsModule,
-    FormsModule
+    FormsModule,
+    TJsonViewerModule
   ],
   bootstrap: [ D3ngWorkbenchComponent ],
   providers: [],

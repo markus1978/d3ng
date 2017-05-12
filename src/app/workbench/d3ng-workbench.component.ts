@@ -73,6 +73,14 @@ export class D3ngWorkbenchComponent {
 
   @ViewChildren('column') columns:QueryList<D3ngWorkbenchColumnComponent>;
   sources: Array<any> = [];
+  data: any = null;
+
+  code: string = "";
+  target: any;
+
+  onDataChanged(e) {
+    console.log(e);
+  }
 
   constructor(http:Http) {
     http.get('/assets/de.hub.srcrepo.json')
@@ -106,6 +114,7 @@ export class D3ngWorkbenchComponent {
         this.normalizePackageDependencies(pkgs);
       })
       this.sources = [data];
+      this.data = data;
     }
   }
 

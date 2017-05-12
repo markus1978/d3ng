@@ -14,6 +14,7 @@ import {FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 
 import 'hammerjs';
+import { D3ngSourceDirective } from './d3ng-source.directive';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import 'hammerjs';
     D3ngChordDiagramComponent,
     D3ngForceGraphComponent,
     D3ngCollapsibleIndentedTreeComponent,
+    D3ngSourceDirective,
   ],
   imports: [
     BrowserModule, // before other material modules are imported
@@ -42,7 +44,8 @@ import 'hammerjs';
     D3ngRadialEdgeBundlingComponent,
     D3ngChordDiagramComponent,
     D3ngForceGraphComponent,
-    D3ngCollapsibleIndentedTreeComponent
+    D3ngCollapsibleIndentedTreeComponent,
+    D3ngSourceDirective
   ]
 })
 export class D3ngComponentsModule { }
