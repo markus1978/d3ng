@@ -1,9 +1,8 @@
 import {
-  Component, QueryList, ViewChildren
+  Component
 } from '@angular/core';
 import {Http, Response} from "@angular/http";
 import 'rxjs/Rx';
-import {D3ngWorkbenchColumnComponent} from "./d3ng-workbench-column.component";
 
 @Component({
   selector: 'd3ng-workbench',
@@ -12,7 +11,14 @@ import {D3ngWorkbenchColumnComponent} from "./d3ng-workbench-column.component";
 })
 export class D3ngWorkbenchComponent {
 
-  config = {
+  gridConfig = {
+    resizeable: true,
+    margins: [5,5],
+    col_width: 170,
+    row_height: 170,
+  };
+
+  chartsConfig = {
     dimensions: ["WMC-1", "WMC-CC", "WMC-HV", "DIT", "NOC", "CBO", "RFC", "LCOM"],
     charts: [
       {
@@ -71,16 +77,15 @@ export class D3ngWorkbenchComponent {
     ]
   };
 
-  @ViewChildren('column') columns:QueryList<D3ngWorkbenchColumnComponent>;
-  sources: Array<any> = [];
   data: any = null;
-
+  source: Array<any> = [];
   code: string = "";
   target: any;
 
-  onDataChanged(e) {
-    console.log(e);
-  }
+  chartConfig: any;
+  items = [];
+
+  selection: Array<any>;
 
   constructor(http:Http) {
     http.get('/assets/de.hub.srcrepo.json')
@@ -90,20 +95,37 @@ export class D3ngWorkbenchComponent {
       });
   }
 
-  private addClicked():void {
-    const newSource = this.columns.last.selection;
-    this.sources.push(newSource);
+  private addChart():void {
+    const item = {
+      gridItemConfig: this.createGridItemConfig(),
+      chartConfig: {
+        component: this.chartConfig.type,
+        dimensions: this.chartsConfig.dimensions,
+        scroll: this.chartConfig.scroll
+      },
+      name: this.chartConfig.type,
+      data: this.target
+    };
+
+    this.chartConfig.dimensionProperties.forEach(dim=>{
+      item.chartConfig[dim.name] = dim.value;
+    });
+
+    this.items.push(item);
   }
 
-  public removeColumn(column:D3ngWorkbenchColumnComponent):void {
-    const index = this.sources.indexOf(column.source);
-    this.sources.splice(index, 1);
-  }
-
-  private onSelectedChanged(selected:any, index:number): void {
-    if (index+1 < this.columns.length) {
-      this.columns.find((c,i)=> i==index + 1).source = selected;
+  private createGridItemConfig():any {
+    return {
+      sizex: 2,
+      sizey: 2,
+      borderSize: 5,
+      resizeable: true,
+      dragHandle: '.title'
     }
+  }
+
+  public removeItem(index:number) {
+    this.items.splice(index, 1);
   }
 
   // code viz specific stuff
@@ -113,7 +135,7 @@ export class D3ngWorkbenchComponent {
         const pkgs = this.aggregatePackageDependencies(data);
         this.normalizePackageDependencies(pkgs);
       })
-      this.sources = [data];
+      this.source = [data];
       this.data = data;
     }
   }

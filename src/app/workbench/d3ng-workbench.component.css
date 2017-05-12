@@ -45,7 +45,7 @@
   margin-bottom: 15px;
 }
 
-.column, .controls {
+.canvas {
   vertical-align: top;
   display: inline-block;
   white-space: normal;
@@ -55,11 +55,7 @@
   padding-top: 30px;
 }
 
-.column {
-  width: 905px;
-}
-
-.column, .editor {
+.editor {
   padding-right: 5px;
   border-style: none solid none none;
   border-color: lightgrey;

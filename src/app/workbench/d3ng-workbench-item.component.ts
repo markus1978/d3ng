@@ -3,6 +3,7 @@ import {
 } from '@angular/core';
 import {D3ngChart} from "../components/d3ng-chart";
 import {D3ngWorkbenchColumnComponent} from "./d3ng-workbench-column.component";
+import {D3ngWorkbenchComponent} from "./d3ng-workbench.component";
 
 @Component({
   selector: 'd3ng-workbench-item',
@@ -13,7 +14,7 @@ import {D3ngWorkbenchColumnComponent} from "./d3ng-workbench-column.component";
 export class D3ngWorkbenchItemComponent {
   @Input() title: string;
   @Input() index: number;
-  @Input() source: Array<Object>;
+  @Input() data: Array<Object>;
   @Input() component: string;
   @Input() config: any;
 
@@ -22,11 +23,7 @@ export class D3ngWorkbenchItemComponent {
 
   @ViewChild('item') workbenchItem: D3ngChart;
 
-  private workbench: D3ngWorkbenchColumnComponent;
-
-  constructor (@Host() parent: D3ngWorkbenchColumnComponent) {
-    this.workbench = parent;
-  }
+  constructor (@Host() private workbench: D3ngWorkbenchComponent) { }
 
   private onRemoveClicked():void {
     this.workbench.removeItem(this.index);

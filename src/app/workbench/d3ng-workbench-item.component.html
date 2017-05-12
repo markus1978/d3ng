@@ -9,44 +9,37 @@
     <d3ng-scatter-plot *ngIf="component=='d3ng-scatter-plot'" #item
                        [selected] = "selected"
                        (selectedChange) = "selectedChange.emit($event)"
-                       d3ngSource [source]="source"
-                       [pattern]="config.pattern"
+                       [data]="data"
                        [dimensions]="config.dimensions"
                        [x]="config.x" [y]="config.y"></d3ng-scatter-plot>
     <d3ng-parallel-coordinates *ngIf="component=='d3ng-parallel-coordinates'" #item
                                [selected] = "selected"
                                (selectedChange) = "selectedChange.emit($event)"
-                               d3ngSource [source]="source"
-                               [pattern]="config.pattern"
+                               [data]="data"
                                [dimensions]="config.dimensions"></d3ng-parallel-coordinates>
 
     <d3ng-chord-diagram *ngIf="component=='d3ng-chord-diagram'" #item
                         [selected] = "selected"
                         (selectedChange) = "selectedChange.emit($event)"
-                        d3ngSource [source]="source"
-                        [pattern]="config.pattern"></d3ng-chord-diagram>
+                        [data]="data"></d3ng-chord-diagram>
     <d3ng-radial-edge-bundling *ngIf="component=='d3ng-radial-edge-bundling'" #item
                                [selected] = "selected"
                                (selectedChange) = "selectedChange.emit($event)"
-                               d3ngSource [source]="source"
-                               [pattern]="config.pattern"></d3ng-radial-edge-bundling>
+                               [data]="data"></d3ng-radial-edge-bundling>
     <d3ng-force-graph *ngIf="component=='d3ng-force-graph'" #item
                       [selected] = "selected"
                       (selectedChange) = "selectedChange.emit($event)"
-                      d3ngSource [source]="source"
-                      [pattern]="config.pattern"
+                      [data]="data"
                       [nodeValue]="config.nodeValue" [nodeDimensions]="config.dimensions"></d3ng-force-graph>
 
     <d3ng-tree-map *ngIf="component=='d3ng-tree-map'" #item
                    [selected] = "selected"
                    (selectedChange) = "selectedChange.emit($event)"
-                   d3ngSource [source]="source"
-                   [pattern]="config.pattern"
+                   [data]="data"
                    [value]="config.value" [dimensions]="config.dimensions"></d3ng-tree-map>
     <d3ng-collapsible-indented-tree *ngIf="component=='d3ng-collapsible-indented-tree'" #item
                    [selected] = "selected"
-                   (selectedChange) = "selectedChange.emit($event)" d3ngSource [source]="source"
-                   [pattern]="config.pattern"></d3ng-collapsible-indented-tree>
+                   (selectedChange) = "selectedChange.emit($event)" [data]="data"></d3ng-collapsible-indented-tree>
   </div>
 </div>
 

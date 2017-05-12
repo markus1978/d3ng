@@ -24,20 +24,29 @@
     <span class="label">Visualization</span>
     <form class="chartForm">
       <md-select class="chartSelect" placeholder="Chart to add"
-                 [(ngModel)]="chart" [ngModelOptions]="{standalone: true}">
-        <md-option *ngFor="let chart of config.charts" [value]="chart">{{ chart.name }}</md-option>
+                 [(ngModel)]="chartConfig" [ngModelOptions]="{standalone: true}">
+        <md-option *ngFor="let chart of chartsConfig.charts" [value]="chart">{{ chart.name }}</md-option>
       </md-select>
-      <div *ngIf="chart">
-        <div class="dim" *ngFor="let property of (chart ? chart.dimensionProperties : [])">
+      <div *ngIf="chartConfig">
+        <div class="dim" *ngFor="let property of (chartConfig ? chartConfig.dimensionProperties : [])">
           <md-select class="dimSelect"
-                     [placeholder]="chart.dimensionProperties.length > 1 ? property.name : 'metric'"
+                     [placeholder]="chartConfig.dimensionProperties.length > 1 ? property.name : 'metric'"
                      [(ngModel)]="property.value" [ngModelOptions]="{standalone: true}">
-            <md-option *ngFor="let dim of config.dimensions" [value]="dim">{{dim}}</md-option>
+            <md-option *ngFor="let dim of chartsConfig.dimensions" [value]="dim">{{dim}}</md-option>
           </md-select>
         </div>
-        <button type="button" *ngIf="chart" md-raised-button (click)="addClicked()"><md-icon>add</md-icon></button>
+        <button type="button" *ngIf="chartConfig" md-raised-button (click)="addChart()"><md-icon>add</md-icon></button>
       </div>
     </form>
+  </div>
+</div>
+
+<div class="canvas">
+  <div [ngGrid]="gridConfig">
+    <d3ng-workbench-item *ngFor="let item of items; let i = index" [(ngGridItem)]="item.gridItemConfig"
+                         class="item" [title]="item.name" [index]="i" [data]="item.data" [component]="item.chartConfig.component"
+                         [config]="item.chartConfig" [(selected)]="selection">
+    </d3ng-workbench-item>
   </div>
 </div>
 
