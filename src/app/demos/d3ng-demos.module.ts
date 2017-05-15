@@ -15,6 +15,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MdListModule, MdSidenavModule} from "@angular/material";
 import 'hammerjs';
 import {D3ngComponentsModule} from "../components/d3ng-components.module";
+import {D3ngHistogramDemoComponent} from "./d3ng-histogram-demo.component";
 
 export const demosRouting: Routes = [
   {
@@ -52,6 +53,10 @@ export const demosRouting: Routes = [
   {
     path: 'radial-edge-bundling',
     component: D3ngRadialEdgeBundlingDemoComponent
+  },
+  {
+    path: 'histogram',
+    component: D3ngHistogramDemoComponent
   }
 ];
 
@@ -66,7 +71,8 @@ export const demosRouting: Routes = [
     D3ngPatternDemoComponent,
     D3ngRadialEdgeBundlingDemoComponent,
     D3ngScatterPlotDemoComponent,
-    D3ngTreeMapDemoComponent
+    D3ngTreeMapDemoComponent,
+    D3ngHistogramDemoComponent
   ],
   imports: [
     BrowserModule, // before other material modules are imported

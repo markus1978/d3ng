@@ -16,6 +16,28 @@ export abstract class D3ngChart implements OnChanges {
   static highlighColors: Array<string> = [ "#e53935", "#d81b60", "#8e24aa", "#5e35b1", "#3949ab", "#1e88e5", "#039be5", "#00acc1", "#00897b", "#43a047", "#7cb342", "#c0ca33", "#fdd835", "#ffb300", "#fb8c00", "#f4511e", "#6d4c41", "#757575", "#546e7a" ];
 
   /**
+   * Colors supposed to use for selections, both direct and indirect. Index determines selection group.
+   */
+  static selectionColors = [
+    {
+      direct: "#9E2622",
+      indirect: "#CC8574"
+    },
+    {
+      direct: "#005A9C",
+      indirect: "#B3C1DF"
+    },
+    {
+      direct: "#E8DEC0",
+      indirect: "#D4C48E"
+    },
+    {
+      direct: "#76A58E",
+      indirect: "#006C45"
+    },
+  ]
+
+  /**
    * The key used to determine the label of `data` nodes.
    */
   @Input() labelKey: string = "label";
@@ -101,7 +123,7 @@ export abstract class D3ngChart implements OnChanges {
           representatives.push(r);
         })
       });
-      this.drawSelected(representatives, 0, true); // TODO
+      this.drawSelected(representatives, 0, true); // TOD
     }
   }
 

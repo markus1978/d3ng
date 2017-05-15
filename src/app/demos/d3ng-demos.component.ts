@@ -15,6 +15,7 @@ import { Component } from '@angular/core';
           <md-list-item><a routerLink="radial-edge-bundling">Radial Edge Bundling</a></md-list-item>
           <md-list-item><a routerLink="force-graph">Force Graph</a></md-list-item>
           <md-list-item><a routerLink="collapsible-indented-tree">Collapsible Indented Tree</a></md-list-item>
+          <md-list-item><a routerLink="histogram">Histogram</a></md-list-item>
         </md-list>
       </div>
       <div class="content">

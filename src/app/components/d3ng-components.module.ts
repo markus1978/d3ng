@@ -15,6 +15,7 @@ import {HttpModule} from "@angular/http";
 
 import 'hammerjs';
 import { D3ngSourceDirective } from './d3ng-source.directive';
+import { D3ngHistogramComponent } from './d3ng-histogram.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { D3ngSourceDirective } from './d3ng-source.directive';
     D3ngForceGraphComponent,
     D3ngCollapsibleIndentedTreeComponent,
     D3ngSourceDirective,
+    D3ngHistogramComponent,
   ],
   imports: [
     BrowserModule, // before other material modules are imported
@@ -45,7 +47,8 @@ import { D3ngSourceDirective } from './d3ng-source.directive';
     D3ngChordDiagramComponent,
     D3ngForceGraphComponent,
     D3ngCollapsibleIndentedTreeComponent,
-    D3ngSourceDirective
+    D3ngSourceDirective,
+    D3ngHistogramComponent
   ]
 })
 export class D3ngComponentsModule { }
