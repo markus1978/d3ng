@@ -37,11 +37,17 @@ export abstract class D3ngChart implements OnChanges {
   @Input() data: Array<any>;
 
   /**
-   * The current selection.
+   * Number of the current selection group. Selections for each groupd
+   * are highlighted with different colors.
+   */
+  @Input() currentSelectionGroup: number;
+
+  /**
+   * The current selection. (Only based on the current selection group).
    * @type {Array}
    */
-  @Input() protected selected: Array<any> = [];
-  @Output() protected selectedChange = new EventEmitter<Array<any>>();
+  @Input() selected: Array<any> = [];
+  @Output() selectedChange = new EventEmitter<Array<any>>();
 
   @Input() private customLabel: Function = null;
 
@@ -99,6 +105,7 @@ export abstract class D3ngChart implements OnChanges {
     }
   }
 
+  // protected abstract drawSelected(selected: Array<any>, group:number, direct:boolean): void;
   protected abstract drawSelected(selected: Array<any>): void;
 
   protected abstract clear():void;
