@@ -101,12 +101,11 @@ export abstract class D3ngChart implements OnChanges {
           representatives.push(r);
         })
       });
-      this.drawSelected(representatives);
+      this.drawSelected(representatives, 0, true); // TODO
     }
   }
 
-  // protected abstract drawSelected(selected: Array<any>, group:number, direct:boolean): void;
-  protected abstract drawSelected(selected: Array<any>): void;
+  protected abstract drawSelected(selected: Array<any>, group:number, direct:boolean): void;
 
   protected abstract clear():void;
   protected abstract draw():void;

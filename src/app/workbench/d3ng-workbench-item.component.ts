@@ -2,7 +2,6 @@ import {
   Component, EventEmitter, Host, HostListener, Input, Output, ViewChild,
 } from '@angular/core';
 import {D3ngChart} from "../components/d3ng-chart";
-import {D3ngWorkbenchColumnComponent} from "./d3ng-workbench-column.component";
 import {D3ngWorkbenchComponent} from "./d3ng-workbench.component";
 
 @Component({
@@ -33,4 +32,3 @@ export class D3ngWorkbenchItemComponent {
     this.workbenchItem.redraw();
   }
 }
-
