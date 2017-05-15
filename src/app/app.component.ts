@@ -32,6 +32,10 @@ export class AppComponent {
       label: 'CodeViz'
     },
     {
+      path: '/stories',
+      label: 'Stories'
+    },
+    {
       path : '/workbench',
       label: 'Workbench'
     }

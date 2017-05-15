@@ -15,6 +15,8 @@ import {demosRouting} from "./demos/d3ng-demos.module";
 import 'hammerjs';
 import {D3ngWorkbenchComponent} from "./workbench/d3ng-workbench.component";
 import {D3ngWorkbenchModule} from "./workbench/d3ng-workbench.module";
+import {D3ngStoriesModule, storiesRouting} from "./stories/d3ng-stories.module";
+import {D3ngStoriesComponent} from "./stories/d3ng-stories/d3ng-stories.component";
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import {D3ngWorkbenchModule} from "./workbench/d3ng-workbench.module";
     FormsModule,
     HttpModule,
     D3ngDemosModule,
+    D3ngStoriesModule,
     D3ngComponentsModule,
     D3ngWorkbenchModule,
     RouterModule.forRoot([
@@ -39,6 +42,11 @@ import {D3ngWorkbenchModule} from "./workbench/d3ng-workbench.module";
         path: 'demos',
         component: D3ngDemosComponent,
         children: [...demosRouting]
+      },
+      {
+        path: 'stories',
+        component: D3ngStoriesComponent,
+        children: [...storiesRouting]
       },
       {
         path: 'workbench',

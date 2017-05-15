@@ -1,0 +1,25 @@
+.container {
+  width: 100%;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.nav {
+  display: inline;
+  width: 250px;
+  float: left;
+}
+
+.nav a {
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+:host /deep/ .mat-list-text {
+  padding: 0 8px !important;
+}
+
+.content {
+
+}
