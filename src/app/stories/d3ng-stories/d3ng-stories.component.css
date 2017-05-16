@@ -17,9 +17,9 @@
 }
 
 :host /deep/ .mat-list-text {
-  padding: 0 8px !important;
+  padding: 0 16px !important;
 }
 
 .content {
-
+  margin-left: 250px;
 }

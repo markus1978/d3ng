@@ -1,0 +1,11 @@
+
+.example {
+  width: 100%; overflow: hidden;
+  display: block;
+}
+
+.example d3ng-scatter-plot {
+  float: left;
+  width: 50%;
+  height: 200px;
+}

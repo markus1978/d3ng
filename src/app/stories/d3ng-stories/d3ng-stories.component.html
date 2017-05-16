@@ -2,7 +2,7 @@
   <div class="nav">
     <md-list>
       <md-list-item *ngFor="let story of mstories; let i = index">
-        <h2 md-list-icon="">{{i+1}}</h2>
+        <h2 md-list-icon="">{{story.id}}</h2>
         <h4 md-line><a [routerLink]="story.path">{{story.title}}</a></h4>
         <p md-line>{{story.subtitle}}</p>
       </md-list-item>

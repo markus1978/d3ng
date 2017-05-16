@@ -11,15 +11,38 @@ export class D3ngStoriesComponent implements OnInit {
 
   static stories = [
     {
+      id: "A",
       path: "selection-group",
-      title: "Simple Selection Group",
-      subtitle: "Multiple charts show and synchronize selections.",
+      title: "Selection Group",
+      subtitle: "Multiple charts share selections.",
       component: D3ngSelectionGroupStoryComponent
     },
     {
+      id: "B",
+      path: "overlapping-groups",
+      title: "Overlapping groups",
+      subtitle: "A chart within multiple groups.",
+      component: D3ngInputSelectionStoryComponent
+    },
+    {
+      id: "C",
       path: "input-selection",
-      title: "Input from Selection Group",
-      subtitle: "Chart input from the selection of another chart or group.",
+      title: "Input from a Group",
+      subtitle: "Chart input from the selection of a group.",
+      component: D3ngInputSelectionStoryComponent
+    },
+    {
+      id: "D",
+      path: "hierarchy",
+      title: "Hierarchies within Groups",
+      subtitle: "Grouped charts with data on different levels.",
+      component: D3ngInputSelectionStoryComponent
+    },
+    {
+      id: "BC",
+      path: "comparison",
+      title: "Comparisons",
+      subtitle: "Use groups and input to compare data.",
       component: D3ngInputSelectionStoryComponent
     }
   ];

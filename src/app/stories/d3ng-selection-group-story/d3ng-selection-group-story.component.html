@@ -1,3 +1,15 @@
-<p>
-  d3ng-selection-group-story works!
-</p>
+<d3ng-story title="Simple Selection Group">
+  <story-description>
+    Interactive selection in one chart is reflected in the selection of other charts.
+    Charts that interact via selections form <i>selection groups</i>.
+  </story-description>
+
+  <story-body>
+    <div class="example">
+      <d3ng-scatter-plot [data]="data" [dimensions]="dimensions" x="a" y="b" [(selected)]="selection"></d3ng-scatter-plot>
+      <d3ng-scatter-plot [data]="data" [dimensions]="dimensions" x="a" y="c" [(selected)]="selection"></d3ng-scatter-plot>
+    </div>
+  </story-body>
+
+</d3ng-story>
+
