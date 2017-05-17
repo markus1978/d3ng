@@ -3,6 +3,7 @@ import {D3ngSelectionGroupStoryComponent} from "../d3ng-selection-group-story/d3
 import {D3ngInputSelectionStoryComponent} from "../d3ng-input-selection-story/d3ng-input-selection-story.component";
 import {D3ngOverlappingGroupsStoryComponent} from "../d3ng-overlapping-groups-story/d3ng-overlapping-groups-story.component";
 import {D3ngMixedLevelsStoryComponent} from "../d3ng-mixed-levels-story/d3ng-mixed-levels-story.component";
+import {D3ngComparisonStoryComponent} from "../d3ng-comparison-story/d3ng-comparison-story.component";
 
 @Component({
   selector: 'd3ng-stories',
@@ -36,7 +37,7 @@ export class D3ngStoriesComponent implements OnInit {
     {
       id: "D",
       path: "input-selection",
-      title: "Child Groups",
+      title: "Input from Selections",
       subtitle: "Chart input from the selection of a group.",
       component: D3ngInputSelectionStoryComponent
     },
@@ -45,7 +46,7 @@ export class D3ngStoriesComponent implements OnInit {
       path: "comparison",
       title: "Comparisons",
       subtitle: "Use groups and input to compare data.",
-      component: D3ngInputSelectionStoryComponent
+      component: D3ngComparisonStoryComponent
     }
   ];
 

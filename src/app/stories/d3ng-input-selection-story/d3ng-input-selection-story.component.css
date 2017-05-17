@@ -1,0 +1,11 @@
+
+.example {
+  width: 100%; overflow: hidden;
+  display: block;
+}
+
+.example .chart {
+  width: 50%;
+  height: 200px;
+  margin: auto;
+}

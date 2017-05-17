@@ -1,0 +1,20 @@
+<d3ng-story title="Comparison">
+  <story-description>
+    We can use the selections from two selection groups as input for different charts to compare data from two selections.
+  </story-description>
+
+  <story-body>
+    <div class="selector">
+      <d3ng-groups class="chart" [groups]="[0,1]" (selectedChanged)="onSelectedChanged($event)">
+        <d3ng-scatter-plot d3ngSource [data]="data" [dimensions]="dimensions" x="x" y="y" [config]="scatterPlotConfig"></d3ng-scatter-plot>
+      </d3ng-groups>
+    </div>
+    <div class="comparison">
+      <d3ng-scatter-plot class="chart" d3ngSource [source]="one" pattern="container/contents" [allowEmpty]="true"
+                           [dimensions]="dimensions" x="x" y="y" [config]="scatterPlotConfig"></d3ng-scatter-plot>
+      <d3ng-scatter-plot class="chart" d3ngSource [source]="two" pattern="container/contents" [allowEmpty]="true"
+                           [dimensions]="dimensions" x="x" y="y" [config]="scatterPlotConfig"></d3ng-scatter-plot>
+    </div>
+  </story-body>
+
+</d3ng-story>

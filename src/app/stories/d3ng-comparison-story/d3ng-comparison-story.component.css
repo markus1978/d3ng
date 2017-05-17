@@ -1,0 +1,17 @@
+
+.comparison, .selector {
+  width: 100%; overflow: hidden;
+  display: block;
+}
+
+.comparison .chart {
+  float: left;
+  width: 50%;
+  height: 200px;
+}
+
+.selector .chart {
+  width: 50%;
+  height: 200px;
+  margin: auto;
+}

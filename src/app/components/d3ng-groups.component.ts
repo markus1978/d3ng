@@ -1,6 +1,6 @@
 import {
   AfterContentInit,
-  Component, ContentChild, ContentChildren, Input, OnChanges, OnInit, QueryList, SimpleChanges
+  Component, ContentChild, ContentChildren, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges
 } from '@angular/core';
 import {D3ngChart} from "./d3ng-chart";
 
@@ -42,6 +42,8 @@ export class D3ngGroupsComponent implements AfterContentInit {
   @ContentChild(D3ngChart) chart: D3ngChart;
   @Input() groups: number[] = [0];
 
+  @Output() selectedChanged = new EventEmitter<{group:number,selected:any[]}>();
+
   constructor() {}
 
   public ngAfterContentInit() {
@@ -56,6 +58,7 @@ export class D3ngGroupsComponent implements AfterContentInit {
 
   private onIndirectSelectedChanged(group:number, selected:Array<any>) {
     this.chart.onIndirectSelectionChanged(selected, group);
+    this.selectedChanged.emit({group:group, selected: selected});
   }
 
   private onDirectSelectedChanged(selected: Array<any>) {

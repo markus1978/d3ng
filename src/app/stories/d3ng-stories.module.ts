@@ -10,6 +10,7 @@ import { D3ngInputSelectionStoryComponent } from './d3ng-input-selection-story/d
 import { D3ngStoryComponent } from './d3ng-story/d3ng-story.component';
 import { D3ngOverlappingGroupsStoryComponent } from './d3ng-overlapping-groups-story/d3ng-overlapping-groups-story.component';
 import { D3ngMixedLevelsStoryComponent } from './d3ng-mixed-levels-story/d3ng-mixed-levels-story.component';
+import { D3ngComparisonStoryComponent } from './d3ng-comparison-story/d3ng-comparison-story.component';
 
 export const storiesRouting: Routes = D3ngStoriesComponent.stories;
 
@@ -28,7 +29,8 @@ export const storiesRouting: Routes = D3ngStoriesComponent.stories;
     D3ngInputSelectionStoryComponent,
     D3ngStoryComponent,
     D3ngOverlappingGroupsStoryComponent,
-    D3ngMixedLevelsStoryComponent
+    D3ngMixedLevelsStoryComponent,
+    D3ngComparisonStoryComponent
   ],
   exports: [
     RouterModule,

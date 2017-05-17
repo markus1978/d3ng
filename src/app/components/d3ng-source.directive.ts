@@ -55,6 +55,12 @@ export class D3ngSourceDirective implements OnChanges, OnInit {
 
   @Output() dataChange = new EventEmitter<Array<any>>();
 
+  /**
+   * Also updates the associated chart if the filtered data is empty.
+   * @type {boolean}
+   */
+  @Input() allowEmpty: boolean = false;
+
   chart: D3ngChart;
 
   constructor(private _view: ViewContainerRef) {
@@ -144,7 +150,7 @@ export class D3ngSourceDirective implements OnChanges, OnInit {
    * `source`.
    */
   protected onChanged():void {
-    if (this.source && this.source.length > 0 && this.parsedPattern) {
+    if (this.source && (this.source.length > 0 || this.allowEmpty) && this.parsedPattern) {
       this.ensureParents();
       const results = [];
 
@@ -154,7 +160,7 @@ export class D3ngSourceDirective implements OnChanges, OnInit {
         }
       });
 
-      if (results.length > 0) {
+      if (results.length > 0 ||this.allowEmpty) {
         if (this.chart) {
           this.chart.setData(results);
         }
