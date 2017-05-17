@@ -2,7 +2,7 @@ import {
   Component, Input, OnChanges, ViewChild
 } from '@angular/core';
 import * as d3 from "d3";
-import {D3ngChart} from "./d3ng-chart";
+import {D3ngChart, D3ngSelection} from "./d3ng-chart";
 
 @Component({
   selector: 'd3ng-parallel-coordinates',
@@ -24,11 +24,11 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
 
   private lines = null;
 
-  protected drawSelected(selected:Array<any>) {
+  protected drawSelection(selection: D3ngSelection): void {
     if (this.lines) {
-      this.lines.classed("selected", function(d) {
-        return selected.indexOf(d) != -1;
-      });
+      this.lines
+        .style("stroke", dataPoint => selection.selectionColor(dataPoint))
+        .classed("selected", dataPoint => selection.isSelected(dataPoint));
     }
   }
 
@@ -52,7 +52,7 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
   }
 
   protected draw() {
-    if (!this.data ||!this.dimensions) {
+    if (!this.data || !this.dimensions) {
       return;
     }
     const self = this;
@@ -80,6 +80,8 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
       .append("svg:g")
       .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
+    let foreground: any = null;
+
     // Create a scale and brush for each dimension.
     self.dimensions.forEach(d => {
       self.data.forEach(p => { p[d] = +p[d]; });
@@ -87,8 +89,8 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
       // Calculate domain with 5% extra space
       const extent = d3.extent(self.data, p => p[d]);
       const size = extent[1] - extent[0];
-      extent[0] = extent[0] - size*.05;
-      extent[1] = extent[1] + size*.05;
+      extent[0] = extent[0] - size * .05;
+      extent[1] = extent[1] + size * .05;
 
       // Create the scale
       y[d] = d3.scale.linear()
@@ -104,18 +106,17 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
           const extents = actives.map(p => y[p].brush.extent());
           const selection = [];
           foreground.each(d => {
-            const selected = actives.length != 0 && actives.every((p,i) => extents[i][0] <= d[p] && d[p] <= extents[i][1]);
+            const selected = actives.length != 0 && actives.every((p, i) => extents[i][0] <= d[p] && d[p] <= extents[i][1]);
             if (selected) {
               selection.push(d);
             }
           });
-          self.selected = selection;
-          self.selectedChange.emit(self.selected);
+          self.setDirectSelection(selection);
         });
     });
 
     // Add foreground lines.
-    const foreground = svg.append("svg:g")
+    foreground = svg.append("svg:g")
       .attr("class", "foreground")
       .selectAll("path")
       .data(self.data)
