@@ -12,3 +12,9 @@
 .container .content {
   margin-left: 220px;
 }
+
+.nav a {
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+}

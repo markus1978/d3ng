@@ -25,20 +25,21 @@ export class AppComponent {
   navLinks = [
     {
       path : '/demos',
-      label : 'Demos'
-    },
-    {
-      path : '/code-viz',
-      label: 'CodeViz'
+      label : 'Components'
     },
     {
       path: '/stories',
-      label: 'Stories'
+      label: 'Interactions'
     },
     {
       path : '/workbench',
       label: 'Workbench'
-    }
+    },
+    {
+      path : '/code-viz',
+      label: 'Example'
+    },
+
   ];
   selection = [];
 }
