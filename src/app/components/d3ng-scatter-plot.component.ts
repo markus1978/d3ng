@@ -33,6 +33,11 @@ export class D3ngScatterPlotComponent extends D3ngChart implements OnChanges {
 
   private d3Chart = null;
 
+  @Input() config: {
+    extent?: number[][],
+    ticks?: number[]
+  } = {};
+
   private onXChange(event:any): void {
     this.x = event.value;
     this.clear();
@@ -113,6 +118,10 @@ export class D3ngScatterPlotComponent extends D3ngChart implements OnChanges {
 
     const xAxis = d3.svg.axis().scale(scales.x).orient("bottom");
     const yAxis = d3.svg.axis().scale(scales.y).orient("left");
+    if (this.config.ticks) {
+      xAxis.ticks(this.config.ticks[0]);
+      yAxis.ticks(this.config.ticks[1]);
+    }
 
     const d_chart = d3.select(self.chart.nativeElement);
     const svg = d_chart.append("svg")
@@ -122,13 +131,18 @@ export class D3ngScatterPlotComponent extends D3ngChart implements OnChanges {
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     this.d3Chart = svg;
 
-    ["x", "y"].forEach(function(dim) {
-      const extent = d3.extent(self.data, d => d[self[dim]]);
-      const size = extent[1] - extent[0];
-      extent[0] = extent[0] - size*.05;
-      extent[1] = extent[1] + size*.05;
-      scales[dim].domain(extent).nice();
-    });
+    if (this.config.extent) {
+      scales['x'].domain(this.config.extent[0]).nice();
+      scales['y'].domain(this.config.extent[1]).nice();
+    } else {
+      ["x", "y"].forEach(function (dim) {
+        const extent = d3.extent(self.data, d => d[self[dim]]);
+        const size = extent[1] - extent[0];
+        extent[0] = extent[0] - size * .05;
+        extent[1] = extent[1] + size * .05;
+        scales[dim].domain(extent).nice();
+      });
+    }
 
 
     svg.append("g")

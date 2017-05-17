@@ -4,27 +4,6 @@ import {D3ngInputSelectionStoryComponent} from "../d3ng-input-selection-story/d3
 import {D3ngOverlappingGroupsStoryComponent} from "../d3ng-overlapping-groups-story/d3ng-overlapping-groups-story.component";
 import {D3ngMixedLevelsStoryComponent} from "../d3ng-mixed-levels-story/d3ng-mixed-levels-story.component";
 
-export class D3ngStoriesDataUtils {
-  public static createDummyData(t, x, y, size, childrenFunction?:(x,y)=>any) {
-    return [
-      { x: -1, y: -1 },
-      { x: 1, y: -1 },
-      { x: -1, y: 1 },
-      { x: 1, y: 1 },
-    ].map(o => {
-      const result = {
-        type: t,
-        x: (o.x * size + x),
-        y: (o.y * size + y),
-      };
-      if (childrenFunction) {
-        result['children'] = childrenFunction(result.x, result.y);
-      }
-      return result;
-    });
-  }
-}
-
 @Component({
   selector: 'd3ng-stories',
   templateUrl: './d3ng-stories.component.html',
