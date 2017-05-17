@@ -188,12 +188,12 @@ export class D3ngSourceDirective implements OnChanges, OnInit {
   }
 
   ngOnInit(): void {
-    this.updatePattern();
     try {
       this.chart = (<any>this._view)._data.componentView.component;
     } catch (e) {
 
     }
+    this.updatePattern();
   }
 
 }

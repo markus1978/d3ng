@@ -1,11 +1,12 @@
 import {
-  Component, Input, OnChanges, ViewChild
+  Component, forwardRef, InjectionToken, Input, OnChanges, OpaqueToken, ViewChild
 } from '@angular/core';
 import * as d3 from "d3";
-import {D3ngChart} from "./d3ng-chart";
+import {D3ngChart, D3ngSelection} from "./d3ng-chart";
 
 @Component({
   selector: 'd3ng-scatter-plot',
+  providers: [{provide: D3ngChart, useExisting: forwardRef(() => D3ngScatterPlotComponent)}],
   template: `
     <div class="y-controls">
       <md-select [(ngModel)]="y" (change)="onYChange($event)">
@@ -42,6 +43,26 @@ export class D3ngScatterPlotComponent extends D3ngChart implements OnChanges {
     this.y = event.value;
     this.clear();
     this.draw();
+  }
+
+  protected drawSelection(selection:D3ngSelection): void {
+    if (this.d3Chart) {
+      this.d3Chart.selectAll("circle").style("fill", d => {
+        let color = "black";
+        selection.items.forEach(i=> {
+          if (i.selected.indexOf(d) != -1) {
+            if (i.direct) {
+              color = D3ngChart.selectionColors[i.group].direct;
+            } else {
+              if (color == "black") {
+                color = D3ngChart.selectionColors[i.group].indirect;
+              }
+            }
+          }
+        });
+        return color;
+      });
+    }
   }
 
   protected drawSelected(selected:Array<any>) {
@@ -140,8 +161,7 @@ export class D3ngScatterPlotComponent extends D3ngChart implements OnChanges {
             selection.push(d);
           }
         });
-        self.selected = selection;
-        self.selectedChange.emit(self.selected);
+        self.setDirectSelection(selection);
       });
     svg.append("g").call(brush);
   }

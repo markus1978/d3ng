@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'd3ng-selection-group-story',
-  templateUrl: './d3ng-selection-group-story.component.html',
-  styleUrls: ['./d3ng-selection-group-story.component.css']
+  selector: 'd3ng-overlapping-groups-story',
+  templateUrl: './d3ng-overlapping-groups-story.component.html',
+  styleUrls: ['./d3ng-overlapping-groups-story.component.css']
 })
-export class D3ngSelectionGroupStoryComponent {
+export class D3ngOverlappingGroupsStoryComponent {
 
   constructor() { }
 
@@ -17,5 +17,4 @@ export class D3ngSelectionGroupStoryComponent {
   ]
 
   dimensions = [ 'a', 'b', 'c' ]
-
 }

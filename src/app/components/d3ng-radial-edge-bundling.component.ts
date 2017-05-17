@@ -22,7 +22,7 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
   @ViewChild('chart') chart;
   @ViewChild('container') container;
 
-  private currentSelection:Array<any> = [];
+  private currentLocalSelection:Array<any> = [];
 
   private svg: any;
   private line: any;
@@ -32,11 +32,11 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
 
   protected drawSelected(selected:Array<any>) {
     if (this.svg) {
-      this.currentSelection.forEach(d=>this.mouseout(d));
+      this.currentLocalSelection.forEach(d=>this.mouseout(d));
       this.svg.selectAll(".node").classed("selected", d => selected.indexOf(d.original) != -1);
-      this.currentSelection = [];
+      this.currentLocalSelection = [];
       selected.forEach(d=> {
-        this.currentSelection.push(d);
+        this.currentLocalSelection.push(d);
         this.mouseover(d);
       });
     }
@@ -133,7 +133,7 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
       .text(d => self.getLabel(d.original))
       .on("mouseover", d => self.mouseover(d.original))
       .on("mouseout", d => {
-        if (this.currentSelection.indexOf(d.original) == -1) {
+        if (this.currentLocalSelection.indexOf(d.original) == -1) {
           self.mouseout(d.original);
         }
       })

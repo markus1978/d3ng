@@ -1,8 +1,40 @@
 import {EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from "@angular/core";
 
-declare let D3ngPatternParser: any;
-import "./d3ng-pattern-parser";
-import {D3ngSourceDirective} from "./d3ng-source.directive";
+export class D3ngSelectionItem {
+  group:number = 0;
+  direct: boolean;
+  selected: Array<any> = [];
+}
+
+export class D3ngSelection  {
+  public items: Array<D3ngSelectionItem> = [];
+  public getSelection(group:number, direct:boolean, create = false):D3ngSelectionItem {
+    const selection = this.items.find(s=>s.group==group && s.direct==direct);
+    if (selection) {
+      return selection;
+    } else {
+      if (create) {
+        const newSelection = new D3ngSelectionItem();
+        newSelection.group = group;
+        newSelection.direct = direct;
+        this.items.push(newSelection);
+        return newSelection;
+      } else {
+        return null;
+      }
+    }
+  }
+
+  public getSelected(group:number, direct:boolean, create = false):Array<any> {
+    const selection = this.getSelection(group, direct, create);
+    if (selection) {
+      return selection.selected;
+    } else {
+      return [];
+    }
+  }
+}
+
 
 export abstract class D3ngChart implements OnChanges {
 
@@ -62,13 +94,16 @@ export abstract class D3ngChart implements OnChanges {
    * Number of the current selection group. Selections for each groupd
    * are highlighted with different colors.
    */
-  @Input() currentSelectionGroup: number;
+  @Input() currentSelectionGroup: number = 0;
+  private currentSelection: D3ngSelection = new D3ngSelection();
 
   /**
    * The current selection. (Only based on the current selection group).
    * @type {Array}
    */
-  @Input() selected: Array<any> = [];
+  @Input('selected') set selected(value: Array<any>) {
+    this.onIndirectSelectionChanged(value, this.currentSelectionGroup);
+  };
   @Output() selectedChange = new EventEmitter<Array<any>>();
 
   @Input() private customLabel: Function = null;
@@ -115,19 +150,43 @@ export abstract class D3ngChart implements OnChanges {
     }
   }
 
-  private onSelectedChanged(selected: Array<any>):void {
-    if (selected) {
-      const representatives = [];
-      selected.forEach(s=>{
-        this.findRepresentative(s).forEach(r=>{
-          representatives.push(r);
-        })
-      });
-      this.drawSelected(representatives, 0, true); // TOD
-    }
+  public onIndirectSelectionChanged(selected:Array<any>, group:number) {
+    this.updateSelection(selected, group, false);
   }
 
-  protected abstract drawSelected(selected: Array<any>, group:number, direct:boolean): void;
+  private computeSelectedRepresentatives(selected:Array<any>):Array<any> {
+    const representatives = [];
+    selected.forEach(s=>{
+      this.findRepresentative(s).forEach(r=>{
+        representatives.push(r);
+      })
+    });
+    return representatives;
+  }
+
+  private updateSelection(selected: Array<any>, group:number, direct: boolean) {
+    if (!selected) {
+      selected = [];
+    }
+
+    const selection = this.currentSelection.getSelection(group, direct, true);
+
+    selection.selected = this.computeSelectedRepresentatives(selected);
+
+    this.drawSelection(this.currentSelection);
+  }
+
+  protected setDirectSelection(selected: Array<any>) {
+    this.updateSelection(selected, this.currentSelectionGroup, true);
+    this.selectedChange.emit(selected);
+  }
+
+  protected drawSelection(selection: D3ngSelection): void {
+    const selected = selection.getSelected(this.currentSelectionGroup, true).concat(selection.getSelected(this.currentSelectionGroup, false));
+    this.drawSelected(selected);
+  }
+
+  protected abstract drawSelected(selected: Array<any>): void;
 
   protected abstract clear():void;
   protected abstract draw():void;
@@ -143,9 +202,6 @@ export abstract class D3ngChart implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.hasOwnProperty("selected")) {
-      this.onSelectedChanged(this.selected);
-    }
     if (changes.hasOwnProperty("data")) {
       this.onDataChanged();
     }

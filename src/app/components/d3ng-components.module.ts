@@ -9,13 +9,17 @@ import {D3ngForceGraphComponent} from "./d3ng-force-graph.component";
 import {D3ngCollapsibleIndentedTreeComponent} from "./d3ng-collapsible-indented-tree.component";
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MdIcon, MdIconModule, MdSelectModule, MdSliderModule} from "@angular/material";
+import {
+  MdButtonToggleModule, MdIcon, MdIconModule, MdRadioModule, MdSelectModule,
+  MdSliderModule
+} from "@angular/material";
 import {FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 
 import 'hammerjs';
 import { D3ngSourceDirective } from './d3ng-source.directive';
 import { D3ngHistogramComponent } from './d3ng-histogram.component';
+import {D3ngGroupsComponent} from "./d3ng-groups.component";
 
 @NgModule({
   declarations: [
@@ -29,12 +33,15 @@ import { D3ngHistogramComponent } from './d3ng-histogram.component';
     D3ngCollapsibleIndentedTreeComponent,
     D3ngSourceDirective,
     D3ngHistogramComponent,
+    D3ngGroupsComponent,
   ],
   imports: [
     BrowserModule, // before other material modules are imported
     BrowserAnimationsModule, // before other material modules are imported
     MdSliderModule,
     MdSelectModule,
+    MdRadioModule,
+    MdButtonToggleModule,
     FormsModule,
     HttpModule
   ],
@@ -48,7 +55,8 @@ import { D3ngHistogramComponent } from './d3ng-histogram.component';
     D3ngForceGraphComponent,
     D3ngCollapsibleIndentedTreeComponent,
     D3ngSourceDirective,
-    D3ngHistogramComponent
+    D3ngHistogramComponent,
+    D3ngGroupsComponent
   ]
 })
 export class D3ngComponentsModule { }

@@ -1,0 +1,23 @@
+<d3ng-story title="Overlapping Selection Groups">
+  <story-description>
+    Each selection group is associated with a color to distinguish selection groups and selections belonging to
+    different groups.
+  </story-description>
+
+  <story-body>
+    <div class="example">
+      <d3ng-groups class="chart" [groups]="[0]">
+        <d3ng-scatter-plot [data]="data" [dimensions]="dimensions" x="a" y="b"></d3ng-scatter-plot>
+      </d3ng-groups>
+
+      <d3ng-groups class="chart" [groups]="[1,0]">
+        <d3ng-scatter-plot [data]="data" [dimensions]="dimensions" x="a" y="c"></d3ng-scatter-plot>
+      </d3ng-groups>
+
+      <d3ng-groups class="chart" [groups]="[1]">
+        <d3ng-scatter-plot [data]="data" [dimensions]="dimensions" x="a" y="c"></d3ng-scatter-plot>
+      </d3ng-groups>
+    </div>
+  </story-body>
+
+</d3ng-story>
