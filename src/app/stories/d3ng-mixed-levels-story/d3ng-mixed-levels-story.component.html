@@ -6,11 +6,11 @@
 
   <story-body>
     <div class="example">
-      <d3ng-groups class="chart">
+      <d3ng-groups class="chart" [context]="context">
         <d3ng-scatter-plot d3ngSource [source]="data" pattern="container" [dimensions]="dimensions" x="x" y="y" [config]="scatterPlotConfig"></d3ng-scatter-plot>
       </d3ng-groups>
 
-      <d3ng-groups class="chart">
+      <d3ng-groups class="chart" [context]="context">
         <d3ng-scatter-plot d3ngSource [source]="data" pattern="container/contents" [dimensions]="dimensions" x="x" y="y" [config]="scatterPlotConfig"></d3ng-scatter-plot>
       </d3ng-groups>
     </div>

@@ -5,7 +5,7 @@
 
   <story-body>
     <div class="selector">
-      <d3ng-groups class="chart" [groups]="[0,1]" (selectedChanged)="onSelectedChanged($event)">
+      <d3ng-groups class="chart" [groups]="[0,1]" (selectedChanged)="onSelectedChanged($event)" [context]="context">
         <d3ng-scatter-plot d3ngSource [data]="data" [dimensions]="dimensions" x="x" y="y" [config]="scatterPlotConfig"></d3ng-scatter-plot>
       </d3ng-groups>
     </div>

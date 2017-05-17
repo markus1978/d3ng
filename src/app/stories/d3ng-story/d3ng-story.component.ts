@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {D3ngGroupContext} from "../../components/d3ng-groups.component";
 
 @Component({
   selector: 'd3ng-story',
@@ -17,6 +18,7 @@ export class D3ngStoryComponent implements OnInit {
 }
 
 export abstract class D3ngStoryBase {
+  public context = new D3ngGroupContext;
   public data = this.createDummyData('container', 1.5, 1.5, 0.5, (x,y)=>this.createDummyData('contents', x,y,0.15));
   public scatterPlotConfig = {
     extent: [[0.5,2.5],[0.5,2.5]],

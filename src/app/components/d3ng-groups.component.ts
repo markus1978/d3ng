@@ -4,6 +4,10 @@ import {
 } from '@angular/core';
 import {D3ngChart} from "./d3ng-chart";
 
+export class D3ngGroupContext {
+  public groups: D3ngGroup[] = [new D3ngGroup(), new D3ngGroup(), new D3ngGroup(), new D3ngGroup() ];
+}
+
 @Component({
   selector: 'd3ng-groups',
   template: `
@@ -36,21 +40,23 @@ import {D3ngChart} from "./d3ng-chart";
     '.group-btn-3:not(.mat-button-toggle-checked) {background-color: #006C45; }',
   ]
 })
-
 export class D3ngGroupsComponent implements AfterContentInit {
 
   @ContentChild(D3ngChart) chart: D3ngChart;
+  @Input() context:D3ngGroupContext = null;
   @Input() groups: number[] = [0];
-
   @Output() selectedChanged = new EventEmitter<{group:number,selected:any[]}>();
 
   constructor() {}
 
   public ngAfterContentInit() {
+    if (!this.context) {
+      throw new Error("No group context set.");
+    }
     this.chart.selectedChange.subscribe(selected => this.onDirectSelectedChanged(selected));
     this.chart.currentSelectionGroup = this.groups[0];
     this.groups.forEach(group=>{
-      D3ngGroup.groups[group].subscribe(selected => {
+      this.context.groups[group].subscribe(selected => {
         this.onIndirectSelectedChanged(group, selected);
       });
     });
@@ -62,12 +68,11 @@ export class D3ngGroupsComponent implements AfterContentInit {
   }
 
   private onDirectSelectedChanged(selected: Array<any>) {
-    D3ngGroup.groups[this.chart.currentSelectionGroup].onDirectSelectedChanged(this.chart, selected);
+    this.context.groups[this.chart.currentSelectionGroup].onDirectSelectedChanged(this.chart, selected);
   }
 }
 
 class D3ngGroup {
-  public static groups: D3ngGroup[] = [new D3ngGroup(), new D3ngGroup(), new D3ngGroup(), new D3ngGroup() ];
   private selections:Map<D3ngChart, Array<any>> = new Map<D3ngChart, Array<any>>();
   private handler: Array<(selected:any[])=>void> = [];
 
