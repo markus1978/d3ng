@@ -39,7 +39,6 @@
 
 :host /deep/ .selected {
   font-weight: bold;
-  fill: blue;
 }
 
 :host /deep/ .node.target {

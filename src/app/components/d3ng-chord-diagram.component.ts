@@ -2,8 +2,7 @@ import {
   Component, Input, OnChanges, ViewChild
 } from '@angular/core';
 import * as d3 from "d3";
-import {D3ngChart} from "./d3ng-chart";
-import {D3ngHierarchicalChart} from "./d3ng-hierarchical-chart";
+import {D3ngChart, D3ngSelection} from "./d3ng-chart";
 import {D3ngDependencyChart} from "./d3ng-dependency-chart";
 
 @Component({
@@ -21,24 +20,40 @@ export class D3ngChordDiagramComponent extends D3ngDependencyChart implements On
   private group = null;
   private chord = null;
 
-
-  protected drawSelected(selected:Array<any>) {
-    const self = this;
+  protected drawSelection(selection: D3ngSelection): void {
     if (this.group && this.chord) {
-      this.group.classed("selected", p => {
-        return !selected.every(d => p.index != self.indexes[self.getId(d)]);
-      });
-      this.chord.classed("selected", function(p) {
-        return !selected.every(function(d) {
-          var selectedIndex = self.indexes[self.getId(d)];
-          return !(p.source.index == selectedIndex || p.target.index == selectedIndex);
+      this.group.select("path").style("fill", group => {
+        const color = selection.selectionColor(group, (selected, group) => {
+          return !selected.every(dataPoint => group.index != this.indexes[this.getId(dataPoint)]);
         });
+        if (color != "black") {
+          return color;
+        } else {
+          return this.color(group.index);
+        }
+      });
+      this.chord.style("fill", chord => {
+        const color = selection.selectionColor(chord, (selected, chord) => {
+          return !selected.every(dataPoint => {
+            const selectedIndex = this.indexes[this.getId(dataPoint)];
+            return !(chord.source.index == selectedIndex || chord.target.index == selectedIndex);
+          });
+        });
+        if (color != "black") {
+          return color;
+        } else {
+          return this.color(chord.source.index);
+        }
       });
     }
   }
 
   protected clear() {
     this.chart.nativeElement.innerHTML = "";
+  }
+
+  private color(index: number) {
+    return D3ngChart.colors[index % D3ngChart.colors.length];
   }
 
   protected draw() {
@@ -93,7 +108,7 @@ export class D3ngChordDiagramComponent extends D3ngDependencyChart implements On
     }
     const matrix = [];
     self.data.forEach(function(it) {
-      const values = Array.apply(null, Array(self.data.length)).map(Number.prototype.valueOf,0);
+      const values = Array.apply(null, Array(self.data.length)).map(Number.prototype.valueOf, 0);
       const dependencies = self.getDependencies(it);
       if (dependencies) {
         dependencies.forEach(function(dep) {
@@ -125,7 +140,7 @@ export class D3ngChordDiagramComponent extends D3ngDependencyChart implements On
     const groupPath = group.append("path")
       .attr("id", function(d, i) { return "group" + i; })
       .attr("d", arc)
-      .style("fill", function(d, i) { return D3ngChart.colors[i%D3ngChart.colors.length]; });
+      .style("fill", function(d, i) { return self.color(i); });
 
     // Add a text label.
     const groupText = group.append("text")
@@ -145,7 +160,7 @@ export class D3ngChordDiagramComponent extends D3ngDependencyChart implements On
       .data(layout.chords)
       .enter().append("path")
       .attr("class", "chord")
-      .style("fill", function(d) { return D3ngChart.colors[d.source.index%D3ngChart.colors.length]; })
+      .style("fill", function(d) { return self.color(d.source.index); })
       .attr("d", path);
     self.chord = chord;
 

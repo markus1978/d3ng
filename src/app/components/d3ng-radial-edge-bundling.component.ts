@@ -2,7 +2,7 @@ import {
   Component, Input, OnChanges, ViewChild
 } from '@angular/core';
 import * as d3 from "d3";
-import {D3ngChart} from "./d3ng-chart";
+import {D3ngChart, D3ngSelection} from "./d3ng-chart";
 import {D3ngHierarchicalChart} from "./d3ng-hierarchical-chart";
 import {D3ngDependencyChart} from "./d3ng-dependency-chart";
 
@@ -22,27 +22,32 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
   @ViewChild('chart') chart;
   @ViewChild('container') container;
 
-  private currentLocalSelection:Array<any> = [];
+  private currentLocalSelection: Array<any> = [];
 
   private svg: any;
   private line: any;
   private path: any;
   private splines: Array<any>;
 
-
-  protected drawSelected(selected:Array<any>) {
+  protected drawSelection(selection: D3ngSelection): void {
     if (this.svg) {
-      this.currentLocalSelection.forEach(d=>this.mouseout(d));
-      this.svg.selectAll(".node").classed("selected", d => selected.indexOf(d.original) != -1);
+      this.currentLocalSelection.forEach(d => this.mouseout(d));
+      this.svg.selectAll(".node")
+        .classed("selected", dataPoint => selection.isSelected(dataPoint.original))
+        .style("fill", dataPoint => selection.selectionColor(dataPoint.original));
       this.currentLocalSelection = [];
-      selected.forEach(d=> {
-        this.currentLocalSelection.push(d);
-        this.mouseover(d);
+      selection.items.forEach(item => {
+        item.selected.forEach(dataPoint => {
+          if (this.currentLocalSelection.indexOf(dataPoint) == -1) {
+            this.currentLocalSelection.push(dataPoint);
+            this.mouseover(dataPoint);
+          }
+        });
       });
     }
   }
 
-  private onTensionChange(event: any):void {
+  private onTensionChange(event: any): void {
     this.line.tension(event.value / 100);
     this.path.attr("d", (d, i) => this.line(this.splines[i]));
   }
@@ -71,6 +76,8 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
       height = width;
     }
 
+    const viewMapping = {};
+
     const rx = width / 2,
       ry = height / 2;
     let m0,
@@ -90,7 +97,7 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
 
     const div = d3.select(this.chart.nativeElement).insert("div", "h2")
       .style("width", width + "px")
-      .style("height", width + "px")
+      .style("height", width + "px");
 
     const svg = div.append("svg:svg")
       .attr("width", width)
@@ -105,7 +112,6 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
       .on("mousedown", mousedown);
 
     const root = D3ngHierarchicalChart.computeHierarchyRoot(self, this.data);
-    const viewMapping = {};
     const view = D3ngHierarchicalChart.createHierarchyView(self, root, viewMapping, d => self.getId(d));
     const nodes = cluster.nodes(view);
     const links = this.computeObjectGraphFromData().links;
@@ -138,8 +144,7 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
         }
       })
       .on("click", (d) => {
-        self.selected = [ d.original ];
-        self.selectedChange.emit(self.selected);
+        self.setDirectSelection([ d.original ]);
       });
 
     d3.select(window)
@@ -167,8 +172,11 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
       if (m0) {
         const m1 = mouse(d3.event);
         rotate += Math.atan2(cross(m0, m1), dot(m0, m1)) * 180 / Math.PI;
-        if (rotate > 360) rotate -= 360;
-        else if (rotate < 0) rotate += 360;
+        if (rotate > 360) {
+          rotate -= 360;
+        } else if (rotate < 0) {
+          rotate += 360;
+        }
         m0 = null;
 
         div.style("-webkit-transform", null);
@@ -220,7 +228,9 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
   private updateNodes(name, value) {
     const self = this;
     return function (d) {
-      if (value) this.parentNode.appendChild(this);
+      if (value) {
+        this.parentNode.appendChild(this);
+      }
       self.svg.select("#node-" + self.getId(d[name])).classed(name, value);
     };
   }

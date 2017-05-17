@@ -1,5 +1,5 @@
 import {
-  Component, forwardRef, InjectionToken, Input, OnChanges, OpaqueToken, ViewChild
+  Component, forwardRef, Input, OnChanges, ViewChild
 } from '@angular/core';
 import * as d3 from "d3";
 import {D3ngChart, D3ngSelection} from "./d3ng-chart";
@@ -38,43 +38,21 @@ export class D3ngScatterPlotComponent extends D3ngChart implements OnChanges {
     ticks?: number[]
   } = {};
 
-  private onXChange(event:any): void {
+  private onXChange(event: any): void {
     this.x = event.value;
     this.clear();
     this.draw();
   }
 
-  private onYChange(event:any): void {
+  private onYChange(event: any): void {
     this.y = event.value;
     this.clear();
     this.draw();
   }
 
-  protected drawSelection(selection:D3ngSelection): void {
+  protected drawSelection(selection: D3ngSelection): void {
     if (this.d3Chart) {
-      this.d3Chart.selectAll("circle").style("fill", d => {
-        let color = "black";
-        selection.items.forEach(i=> {
-          if (i.selected.indexOf(d) != -1) {
-            if (i.direct) {
-              color = D3ngChart.selectionColors[i.group].direct;
-            } else {
-              if (color == "black") {
-                color = D3ngChart.selectionColors[i.group].indirect;
-              }
-            }
-          }
-        });
-        return color;
-      });
-    }
-  }
-
-  protected drawSelected(selected:Array<any>) {
-    if (this.d3Chart) {
-      this.d3Chart.selectAll("circle").classed("selected", function(d) {
-        return selected.indexOf(d) != -1;
-      });
+      this.d3Chart.selectAll("circle").style("fill", dataPoint => selection.selectionColor(dataPoint));
     }
   }
 
@@ -98,9 +76,13 @@ export class D3ngScatterPlotComponent extends D3ngChart implements OnChanges {
   }
 
   protected draw() {
-    if (!this.data) return;
+    if (!this.data) {
+      return;
+    }
     if (!this.x || !this.y) {
-      if (!this.dimensions || this.dimensions.length <= 1) return
+      if (!this.dimensions || this.dimensions.length <= 1) {
+        return;
+      }
       this.x = this.dimensions[0];
       this.y = this.dimensions[1];
     }

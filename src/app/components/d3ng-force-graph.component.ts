@@ -2,7 +2,7 @@ import {
   Component, Input, OnChanges, ViewChild
 } from '@angular/core';
 import * as d3 from "d3";
-import {D3ngChart} from "./d3ng-chart";
+import {D3ngChart, D3ngSelection} from "./d3ng-chart";
 import {D3ngDependencyChart} from "./d3ng-dependency-chart";
 
 @Component({
@@ -25,15 +25,17 @@ export class D3ngForceGraphComponent extends D3ngDependencyChart implements OnCh
 
   private d3Chart = null;
 
-  private onNodeValueChange(event:any):void {
+  private onNodeValueChange(event: any): void {
     this.nodeValue = event.value;
     this.clear();
     this.draw();
   }
 
-  protected drawSelected(selected:Array<any>) {
-    if (this.d3Chart && selected) {
-      this.d3Chart.selectAll("circle").classed("selected", d => selected.indexOf(d.data) != -1);
+  protected drawSelection(selection: D3ngSelection): void {
+    if (this.d3Chart) {
+      this.d3Chart.selectAll("circle")
+        .classed("selected", dataPoint => selection.isSelected(dataPoint.data))
+        .style("stroke", dataPoint => selection.selectionColor(dataPoint.data));
     }
   }
 
@@ -41,13 +43,17 @@ export class D3ngForceGraphComponent extends D3ngDependencyChart implements OnCh
     this.chart.nativeElement.innerHTML = "";
   }
 
-  protected getNodeValue(node:any):number {
+  protected getNodeValue(node: any): number {
     if (this.nodeValue) {
       const result = this.nodeValue ? node[this.nodeValue] : 1;
       return result ? result : 1;
     } else {
       return 1;
     }
+  }
+
+  private color(index: number): string {
+    return D3ngChart.colors[index % D3ngChart.colors.length];
   }
 
   protected draw() {
@@ -66,7 +72,7 @@ export class D3ngForceGraphComponent extends D3ngDependencyChart implements OnCh
       .attr("height", height);
     self.d3Chart = svg;
 
-    const maxValue = d3.extent(this.data, d=>this.getNodeValue(d))[1];
+    const maxValue = d3.extent(this.data, d => this.getNodeValue(d))[1];
 
     const force = d3.layout.force()
       .gravity(0.05)
@@ -92,13 +98,12 @@ export class D3ngForceGraphComponent extends D3ngDependencyChart implements OnCh
       .data(graph.nodes)
       .enter().append("circle")
       .attr("r", d => {
-        return 30 * (this.getNodeValue(d.data)/maxValue) + 3;
+        return 30 * (this.getNodeValue(d.data) / maxValue) + 3;
       })
-      .attr("fill", d => D3ngChart.colors[d.group%D3ngChart.colors.length])
+      .attr("fill", d => self.color(d.group))
       .call(force.drag)
       .on("click", d => {
-        self.selected = [ d.data ];
-        self.selectedChange.emit(self.selected);
+        self.setDirectSelection([ d.data ]);
       });
 
     node.append("title").text(d => self.getQualifiedLabel(d.data));

@@ -23,10 +23,9 @@
 }
 
 :host /deep/ .nodes circle {
-  stroke-width: 1.5px;
+  stroke-width: 0px;
 }
 
 :host /deep/ .nodes .selected {
-  stroke: blue;
   stroke-width: 4px;
 }

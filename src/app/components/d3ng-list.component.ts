@@ -2,13 +2,13 @@ import {
   Component, OnChanges, ViewChild
 } from '@angular/core';
 import * as d3 from "d3";
-import {D3ngChart} from "./d3ng-chart";
+import {D3ngChart, D3ngSelection} from "./d3ng-chart";
 
 @Component({
   selector: 'd3ng-list',
   template: `
     <div #chart></div>`,
-  styles: [ ':host /deep/ .selected { color: blue; }']
+  styles: []
 })
 
 export class D3ngListComponent extends D3ngChart implements OnChanges {
@@ -17,9 +17,9 @@ export class D3ngListComponent extends D3ngChart implements OnChanges {
 
   private d3Chart = null;
 
-  protected drawSelected(selected:Array<any>) {
+  protected drawSelection(selection: D3ngSelection): void {
     if (this.d3Chart) {
-      this.d3Chart.classed("selected", d => selected.indexOf(d) != -1);
+      this.d3Chart.style("color", dataPoint => selection.selectionColor(dataPoint));
     }
   }
 
@@ -35,8 +35,7 @@ export class D3ngListComponent extends D3ngChart implements OnChanges {
       .enter().append("p")
       .text(d => "# " + self.getLabel(d))
       .on("click", d => {
-        self.selected = [ d ];
-        self.selectedChange.emit(self.selected);
+        self.setDirectSelection([ d ]);
       });
   }
 

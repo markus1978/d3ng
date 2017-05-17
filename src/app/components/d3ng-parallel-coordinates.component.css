@@ -14,7 +14,6 @@
 }
 
 :host /deep/ .foreground path.selected {
-  stroke: blue;
   stroke-opacity: 1;
 }
 

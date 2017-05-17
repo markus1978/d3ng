@@ -2,7 +2,7 @@ import {
   Component, Input, OnChanges, ViewChild
 } from '@angular/core';
 import * as d3 from "d3";
-import {D3ngChart} from "./d3ng-chart";
+import {D3ngSelection} from "./d3ng-chart";
 import {D3ngHierarchicalChart} from "./d3ng-hierarchical-chart";
 
 @Component({
@@ -15,14 +15,14 @@ import {D3ngHierarchicalChart} from "./d3ng-hierarchical-chart";
 export class D3ngCollapsibleIndentedTreeComponent extends D3ngHierarchicalChart implements OnChanges {
 
   @ViewChild('chart') chart;
-  @Input() rootLabel: string = "ROOT";
+  @Input() rootLabel = "ROOT";
 
   private d3Chart = null;
 
-  protected drawSelected(selected:Array<any>) {
+  protected drawSelection(selection: D3ngSelection): void {
     if (this.d3Chart) {
       this.d3Chart.selectAll("span")
-        .classed("selected", d => selected.indexOf(d) != -1);
+        .style("color", dataPoint => selection.selectionColor(dataPoint));
     }
   }
 
@@ -38,15 +38,15 @@ export class D3ngCollapsibleIndentedTreeComponent extends D3ngHierarchicalChart 
       return;
     }
 
-    var chart = d3.select(this.chart.nativeElement);
+    const chart = d3.select(this.chart.nativeElement);
 
     this.d3Chart = chart;
 
     makeElements(chart, data);
 
-    function makeElements(element, node){
-      var label = self.getLabel(node);
-      if (!label ||label == "") {
+    function makeElements(element, node) {
+      let label = self.getLabel(node);
+      if (!label || label == "") {
         label = self.rootLabel;
       }
       const children = self.getChildren(node);
@@ -63,7 +63,7 @@ export class D3ngCollapsibleIndentedTreeComponent extends D3ngHierarchicalChart 
 
       nodeContainer.append("span")
         .text(label)
-        .on("click", select);
+        .on("click", d => self.setDirectSelection([ d ]));
 
       if (children && children.length > 0) {
         const ul = nodeContainer.append("ul");
@@ -71,11 +71,6 @@ export class D3ngCollapsibleIndentedTreeComponent extends D3ngHierarchicalChart 
           makeElements(ul.append("li"), child);
         });
       }
-    }
-
-    function select(d) {
-      self.selected = [ d ];
-      self.selectedChange.emit(self.selected);
     }
 
     function click() {

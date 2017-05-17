@@ -35,7 +35,3 @@
 :host /deep/ .empty {
   font-weight: normal;
 }
-
-:host /deep/ .selected {
-  color: blue;
-}

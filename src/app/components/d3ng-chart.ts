@@ -1,15 +1,15 @@
 import {EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from "@angular/core";
 
 export class D3ngSelectionItem {
-  group:number = 0;
+  group = 0;
   direct: boolean;
   selected: Array<any> = [];
 }
 
 export class D3ngSelection  {
   public items: Array<D3ngSelectionItem> = [];
-  public getSelection(group:number, direct:boolean, create = false):D3ngSelectionItem {
-    const selection = this.items.find(s=>s.group==group && s.direct==direct);
+  public getSelection(group: number, direct: boolean, create = false): D3ngSelectionItem {
+    const selection = this.items.find(s => s.group == group && s.direct == direct);
     if (selection) {
       return selection;
     } else {
@@ -25,13 +25,39 @@ export class D3ngSelection  {
     }
   }
 
-  public getSelected(group:number, direct:boolean, create = false):Array<any> {
+  public getSelected(group: number, direct: boolean, create = false): Array<any> {
     const selection = this.getSelection(group, direct, create);
     if (selection) {
       return selection.selected;
     } else {
       return [];
     }
+  }
+
+  public selectionColor(dataPoint: any, predicate?: (selected: any[], dataPoint: any) => boolean): string {
+    if (!predicate) {
+      predicate = (selected, dataPoint) => selected.indexOf(dataPoint) != -1;
+    }
+    let color = "black";
+    this.items.forEach(item => {
+      if (predicate(item.selected, dataPoint)) {
+        if (item.direct) {
+          color = D3ngChart.selectionColors[item.group].direct;
+        } else {
+          if (color === "black") {
+            color = D3ngChart.selectionColors[item.group].indirect;
+          }
+        }
+      }
+    });
+    return color;
+  }
+
+  public isSelected(dataPoint: any, predicate?: (selected: any[], dataPoint: any) => boolean): boolean {
+    if (!predicate) {
+      predicate = (selected, dataPoint) => selected.indexOf(dataPoint) != -1;
+    }
+    return this.items.findIndex(item => predicate(item.selected, dataPoint)) != -1;
   }
 }
 
@@ -41,11 +67,17 @@ export abstract class D3ngChart implements OnChanges {
   /**
    * The colors used to draw shapes and lines in charts and diagrams.
    */
-  static colors: Array<string> = [  "#ffcdd2", "#f8bbd0", "#e1bee7", "#d1c4e9", "#c5cae9", "#bbdefb", "#b3e5fc", "#b2ebf2", "#b2dfdb", "#c8e6c9", "#dcedc8", "#f0f4c3", "#fff9c4", "#ffecb3", "#ffe0b2", "#ffccbc", "#d7ccc8", "#f5f5f5", "#cfd8dc" ];
+  static colors: Array<string> = [
+    "#ffcdd2", "#f8bbd0", "#e1bee7", "#d1c4e9", "#c5cae9", "#bbdefb", "#b3e5fc", "#b2ebf2", "#b2dfdb", "#c8e6c9",
+    "#dcedc8", "#f0f4c3", "#fff9c4", "#ffecb3", "#ffe0b2", "#ffccbc", "#d7ccc8", "#f5f5f5", "#cfd8dc"
+  ];
   /**
    * The colors used to draw highlighted shapes and lines in charts and diagrams.
    */
-  static highlighColors: Array<string> = [ "#e53935", "#d81b60", "#8e24aa", "#5e35b1", "#3949ab", "#1e88e5", "#039be5", "#00acc1", "#00897b", "#43a047", "#7cb342", "#c0ca33", "#fdd835", "#ffb300", "#fb8c00", "#f4511e", "#6d4c41", "#757575", "#546e7a" ];
+  static highlighColors: Array<string> = [
+    "#e53935", "#d81b60", "#8e24aa", "#5e35b1", "#3949ab", "#1e88e5", "#039be5", "#00acc1", "#00897b", "#43a047",
+    "#7cb342", "#c0ca33", "#fdd835", "#ffb300", "#fb8c00", "#f4511e", "#6d4c41", "#757575", "#546e7a"
+  ];
 
   /**
    * Colors supposed to use for selections, both direct and indirect. Index determines selection group.
@@ -67,22 +99,22 @@ export abstract class D3ngChart implements OnChanges {
       direct: "#76A58E",
       indirect: "#006C45"
     },
-  ]
+  ];
 
   /**
    * The key used to determine the label of `data` nodes.
    */
-  @Input() labelKey: string = "label";
+  @Input() labelKey = "label";
 
   /**
    * The key used to determine the type of a `source` data node.
    */
-  @Input() typeKey: string = "type";
+  @Input() typeKey = "type";
 
   /**
    * The key used to determine the children of a `source` data node.
    */
-  @Input() childKey: string = "children";
+  @Input() childKey = "children";
 
   /**
    * The set of data points that this chart represents. Can either be set
@@ -94,7 +126,7 @@ export abstract class D3ngChart implements OnChanges {
    * Number of the current selection group. Selections for each groupd
    * are highlighted with different colors.
    */
-  @Input() currentSelectionGroup: number = 0;
+  @Input() currentSelectionGroup = 0;
   private currentSelection: D3ngSelection = new D3ngSelection();
 
   /**
@@ -115,34 +147,35 @@ export abstract class D3ngChart implements OnChanges {
    * @returns {any}
    */
   private findRepresentative(original: any): Array<any> {
-    if (this.data.indexOf(original) != -1) {
+    if (this.data.indexOf(original) !== -1) {
       return [original];
     } else {
       // original parents first
-      let parent = this.getParent(original);
-      while (parent) {
-        if (this.data.indexOf(parent) != -1) {
-          return [parent];
+      let originalParent = this.getParent(original);
+      while (originalParent) {
+        if (this.data.indexOf(originalParent) !== -1) {
+          return [originalParent];
         }
-        parent = this.getParent(parent);
+        originalParent = this.getParent(originalParent);
       }
 
       // data parents now
       const childRepresentatives = [];
-      this.data.forEach(data=>{
-        let parent = this.getParent(data);
-        while (parent) {
-          if(parent == original && childRepresentatives.indexOf(data) == -1) {
+      this.data.forEach(data => {
+        let representativeParent = this.getParent(data);
+        while (representativeParent) {
+          if (representativeParent == original && childRepresentatives.indexOf(data) == -1) {
             childRepresentatives.push(data);
           }
 
           // This is not a good idea, since it is just a solution for a specific case.
-          // The following will cause a "flat" selection. The element is only represented if the first parent of the required type is selected.
-          if (this.getType(parent) != this.getType(data) && this.getType(parent) == this.getType(original)) {
+          // The following will cause a "flat" selection. The element is only represented if the first parent of
+          // the required type is selected.
+          if (this.getType(representativeParent) != this.getType(data) && this.getType(representativeParent) == this.getType(original)) {
             break;
           }
 
-          parent = this.getParent(parent);
+          representativeParent = this.getParent(representativeParent);
         }
       });
 
@@ -150,21 +183,21 @@ export abstract class D3ngChart implements OnChanges {
     }
   }
 
-  public onIndirectSelectionChanged(selected:Array<any>, group:number) {
+  public onIndirectSelectionChanged(selected: Array<any>, group: number) {
     this.updateSelection(selected, group, false);
   }
 
-  private computeSelectedRepresentatives(selected:Array<any>):Array<any> {
+  private computeSelectedRepresentatives(selected: Array<any>): Array<any> {
     const representatives = [];
-    selected.forEach(s=>{
-      this.findRepresentative(s).forEach(r=>{
+    selected.forEach(s => {
+      this.findRepresentative(s).forEach(r => {
         representatives.push(r);
-      })
+      });
     });
     return representatives;
   }
 
-  private updateSelection(selected: Array<any>, group:number, direct: boolean) {
+  private updateSelection(selected: Array<any>, group: number, direct: boolean) {
     if (!selected) {
       selected = [];
     }
@@ -182,16 +215,20 @@ export abstract class D3ngChart implements OnChanges {
   }
 
   protected drawSelection(selection: D3ngSelection): void {
-    const selected = selection.getSelected(this.currentSelectionGroup, true).concat(selection.getSelected(this.currentSelectionGroup, false));
+    const selected = selection
+      .getSelected(this.currentSelectionGroup, true)
+      .concat(selection.getSelected(this.currentSelectionGroup, false));
     this.drawSelected(selected);
   }
 
-  protected abstract drawSelected(selected: Array<any>): void;
+  protected drawSelected(selected: Array<any>): void {
+    throw new Error("drawSelected must be overridden, if drawSelection is not overridden.");
+  }
 
-  protected abstract clear():void;
-  protected abstract draw():void;
+  protected abstract clear(): void;
+  protected abstract draw(): void;
 
-  public redraw():void {
+  public redraw(): void {
     this.clear();
     this.draw();
   }
@@ -207,7 +244,7 @@ export abstract class D3ngChart implements OnChanges {
     }
   }
 
-  public setData(data:Array<any>):void {
+  public setData(data: Array<any>): void {
     this.data = data;
     this.onDataChanged();
   }
@@ -217,7 +254,7 @@ export abstract class D3ngChart implements OnChanges {
    * also used to compute node colors. The default implementation
    * uses `labelKey`.
    */
-  public getLabel(node):string {
+  public getLabel(node): string {
     if (this.customLabel) {
       return this.customLabel(node);
     } else {
@@ -230,9 +267,9 @@ export abstract class D3ngChart implements OnChanges {
   }
 
   public getQualifiedLabel(node): string {
-    var result: string = null;
-    while(node) {
-      var label = this.getLabel(node);
+    let result: string = null;
+    while (node) {
+      const label = this.getLabel(node);
       result = (label ? label : "") + (result && label ? "." : "") + (result ? result : "");
       node = this.getParent(node);
     }
@@ -243,7 +280,7 @@ export abstract class D3ngChart implements OnChanges {
    * Returns the type of the given `source` data node.
    * The default implementation uses `typeKey`.
    */
-  public getType(node):string {
+  public getType(node): string {
     return node[this.typeKey];
   }
 
@@ -252,7 +289,7 @@ export abstract class D3ngChart implements OnChanges {
    * assumes each node with children has the `childKey` with an array of
    * child data nodes. Returns empty array, if no children are found.
    */
-  public getChildren(node):Array<any> {
+  public getChildren(node): Array<any> {
     const result = node[this.childKey];
     if (result) {
       return result;
