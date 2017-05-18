@@ -73,3 +73,13 @@
 md-icon:hover {
   cursor: pointer;
 }
+
+.editor .source {
+  position: relative;
+}
+
+.editor .source d3ng-group-selection {
+  position: absolute;
+  right: 0px;
+  top: 5px;
+}

@@ -1,8 +1,10 @@
 import {
-  Component
+  Component, ViewChild, ViewContainerRef
 } from '@angular/core';
 import {Http, Response} from "@angular/http";
 import 'rxjs/Rx';
+import {D3ngGroupSelectionComponent} from "../components/d3ng-groups-selection.component";
+import {D3ngGroupContext} from "../components/d3ng-groups.component";
 
 @Component({
   selector: 'd3ng-workbench',
@@ -77,15 +79,24 @@ export class D3ngWorkbenchComponent {
     ]
   };
 
-  data: any = null;
-  source: Array<any> = [];
-  code: string = "";
-  target: any;
+  data: any = null;  // the global remote data
+  source: Array<any> = []; // the current source shown as JSON
+  sourceGroup = -1; // the group used for the current source, -1 for the remote/global data as source
+  code: string = ""; // the current value of the pattern
+  target: any; // the current data calculated from current source and pattern. only to show the JSON
 
   chartConfig: any;
-  items = [];
+  items = []; // the items on the workbench
 
-  selection: Array<any>;
+  availableGroups: number[] = []; // the groups shown as a source
+  groups = [0,1,2,3]; // the groups that exist at all
+  groupChildren: any[][] = [[],[],[],[]]; // the items with data based on a groups selection
+  groupMember: any[][] = [[],[],[],[]]; // the items that belong to a group
+  selectableGroups = [0,1,2,3]; // the groups available to add an item to based on the currently selected source
+
+  context = new D3ngGroupContext();
+
+  @ViewChild('groupSelection') groupSelection: D3ngGroupSelectionComponent;
 
   constructor(http:Http) {
     http.get('/assets/de.hub.srcrepo.json')
@@ -93,9 +104,18 @@ export class D3ngWorkbenchComponent {
       .subscribe(res => {
         this.setData(res);
       });
+
+    let index = 0;
+    this.context.groups.forEach(group => {
+      const groupIndex = index++;
+      group.subscribe(selected => {
+        this.onSelectedChanged(groupIndex, selected);
+      });
+    })
   }
 
   private addChart():void {
+    const groups = Array.from(this.groupSelection.values);
     const item = {
       gridItemConfig: this.createGridItemConfig(),
       chartConfig: {
@@ -104,14 +124,30 @@ export class D3ngWorkbenchComponent {
         scroll: this.chartConfig.scroll
       },
       name: this.chartConfig.type,
-      data: this.target
+      groups: groups, // the groups this item belongs to
+      parentGroup: this.sourceGroup, // the group this items data is based on (the selection of that group is the data)
+      source: this.source, // the data source for this item (based on parentGroup or global)
+      pattern: this.code, // the pattern for this item
     };
 
-    this.chartConfig.dimensionProperties.forEach(dim=>{
+    this.chartConfig.dimensionProperties.forEach(dim => {
       item.chartConfig[dim.name] = dim.value;
     });
 
     this.items.push(item);
+
+    // compute groups available for source and add to group members
+    groups.forEach(group => {
+      if (this.availableGroups.indexOf(group) == -1) {
+        this.availableGroups.push(group);
+      }
+      this.groupMember[group].push(item);
+    })
+
+    // update group children
+    if (item.parentGroup != -1) {
+      this.groupChildren[this.sourceGroup].push(item);
+    }
   }
 
   private createGridItemConfig():any {
@@ -125,7 +161,44 @@ export class D3ngWorkbenchComponent {
   }
 
   public removeItem(index:number) {
+    const item = this.items[index];
     this.items.splice(index, 1);
+
+    // update group children
+    if (item.parentGroup != -1) {
+      this.groupChildren[item.parentGroup].splice(this.groupChildren[item.parentGroup].indexOf(item), 1);
+    }
+
+    // update group member and groups available as source
+    item.groups.forEach(group => {
+      const member = this.groupMember[group];
+      member.splice(member.indexOf(item), 1);
+      if (member.length == 0) {
+        this.availableGroups.splice(this.availableGroups.indexOf(group), 1);
+      }
+    });
+  }
+
+  private onSelectedChanged(group: number, selected: any[]) {
+    if (this.sourceGroup == group) {
+      this.source = selected;
+    }
+
+    this.groupChildren[group].forEach(item => {
+      item.source = selected;
+    });
+  }
+
+  private onSourceGroupChanged(group: number) {
+    this.sourceGroup = group;
+    const selectableGroups = Array.from(this.groups);
+    if (group == -1) {
+      this.source = this.data;
+    } else {
+      this.source = this.context.groups[group].getSelected();
+      selectableGroups.splice(group, 1);
+    }
+    this.selectableGroups = selectableGroups;
   }
 
   // code viz specific stuff
@@ -135,7 +208,7 @@ export class D3ngWorkbenchComponent {
         const pkgs = this.aggregatePackageDependencies(data);
         this.normalizePackageDependencies(pkgs);
       })
-      this.source = [data];
+      this.source = data;
       this.data = data;
     }
   }

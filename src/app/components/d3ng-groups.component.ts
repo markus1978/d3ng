@@ -1,6 +1,6 @@
 import {
   AfterContentInit,
-  Component, ContentChild, EventEmitter, Input, Output
+  Component, ContentChild, EventEmitter, Input, OnDestroy, Output
 } from '@angular/core';
 import {D3ngChart} from "./d3ng-chart";
 
@@ -14,11 +14,7 @@ export class D3ngGroupContext {
     <div class="container">
       <div class="controls">
         <div class="group-controls">
-          <md-button-toggle-group #group="mdButtonToggleGroup" [(ngModel)]="this.chart.currentSelectionGroup">
-            <md-button-toggle *ngFor="let group of groups" [value]="group" [class]="'group-btn-'+group">
-              &nbsp;
-            </md-button-toggle>
-          </md-button-toggle-group>  
+          <d3ng-group-selection [(value)]="chart.currentSelectionGroup" [groups]="groups"></d3ng-group-selection>
         </div>
         <div class="selection-controls">
           <!--<md-slide-toggle color="warn" [(checked)]="isHold"></md-slide-toggle>-->
@@ -47,7 +43,7 @@ export class D3ngGroupContext {
     '.group-btn-3:not(.mat-button-toggle-checked) {background-color: #006C45; }',
   ]
 })
-export class D3ngGroupsComponent implements AfterContentInit {
+export class D3ngGroupsComponent implements AfterContentInit, OnDestroy {
 
   @ContentChild(D3ngChart) chart: D3ngChart;
   @Input() context:D3ngGroupContext = null;
@@ -55,8 +51,11 @@ export class D3ngGroupsComponent implements AfterContentInit {
   @Output() selectedChanged = new EventEmitter<{group:number,selected:any[]}>();
 
   private isHold = false;
+  private groupEventHandlers = [];
 
-  constructor() {}
+  constructor() {
+
+  }
 
   public ngAfterContentInit() {
     if (!this.context) {
@@ -65,9 +64,11 @@ export class D3ngGroupsComponent implements AfterContentInit {
     this.chart.selectedChange.subscribe(selected => this.onDirectSelectedChanged(selected));
     this.chart.currentSelectionGroup = this.groups[0];
     this.groups.forEach(group=>{
-      this.context.groups[group].subscribe(selected => {
+      const handler = selected => {
         this.onIndirectSelectedChanged(group, selected);
-      });
+      };
+      this.groupEventHandlers.push(handler);
+      this.context.groups[group].subscribe(handler);
     });
   }
 
@@ -78,6 +79,12 @@ export class D3ngGroupsComponent implements AfterContentInit {
 
   private onDirectSelectedChanged(selected: Array<any>) {
     this.context.groups[this.chart.currentSelectionGroup].onDirectSelectedChanged(this.chart, selected);
+  }
+
+  ngOnDestroy() {
+    this.groups.forEach(group=>{
+      this.context.groups[group].cancelSubscription(this.groupEventHandlers[group]);
+    });
   }
 }
 
@@ -92,19 +99,31 @@ class D3ngGroup {
       throw new Error("Selected must be defined.");
     }
     this.selections.set(chart, selected);
-    const indirectSelected = [];
-    for (let selection of this.selections.values()) {
-      selection.forEach(s=>{
-        if (indirectSelected.indexOf(s) != 1) {
-          indirectSelected.push(s);
-        }
-      });
-    }
+    const indirectSelected = this.getSelected();
 
     this.handler.forEach(handler=> handler(indirectSelected));
   }
 
+  public getSelected() {
+    const selected = [];
+    for (let selection of this.selections.values()) {
+      selection.forEach(s=>{
+        if (selected.indexOf(s) != 1) {
+          selected.push(s);
+        }
+      });
+    }
+    return selected;
+  }
+
   public subscribe(handler:(selected:Array<any>)=>void) {
     this.handler.push(handler);
+  }
+
+  public cancelSubscription(handler: any) {
+    const index = this.handler.indexOf(handler);
+    if (index != -1) {
+      this.handler.splice(index, 1);
+    }
   }
 }

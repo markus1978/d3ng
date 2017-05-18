@@ -3,6 +3,7 @@ import {
 } from '@angular/core';
 import {D3ngChart} from "../components/d3ng-chart";
 import {D3ngWorkbenchComponent} from "./d3ng-workbench.component";
+import {D3ngGroupContext} from "../components/d3ng-groups.component";
 
 @Component({
   selector: 'd3ng-workbench-item',
@@ -13,12 +14,12 @@ import {D3ngWorkbenchComponent} from "./d3ng-workbench.component";
 export class D3ngWorkbenchItemComponent {
   @Input() title: string;
   @Input() index: number;
-  @Input() data: Array<Object>;
+  @Input() source: Array<Object>;
+  @Input() pattern: string;
   @Input() component: string;
   @Input() config: any;
-
-  @Input() protected selected: Array<any> = [];
-  @Output() protected selectedChange = new EventEmitter<Array<any>>();
+  @Input() groups: number[];
+  @Input() context: D3ngGroupContext;
 
   @ViewChild('item') workbenchItem: D3ngChart;
 

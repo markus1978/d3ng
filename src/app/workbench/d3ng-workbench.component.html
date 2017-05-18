@@ -1,11 +1,12 @@
 <div class="editor">
   <div class="source json-view edit-part">
     <span class="label">Source</span>
+    <d3ng-group-selection [multi]="false" [allowEmpty]="true" [groups]="availableGroups" (valueChange)="onSourceGroupChanged($event)"></d3ng-group-selection>
     <div class="content">
-      <t-json-viewer *ngIf="data" [json]="{data: data}"></t-json-viewer>
+      <t-json-viewer *ngIf="data" [json]="source"></t-json-viewer>
     </div>
   </div>
-  <div class="transformation edit-part" d3ngSource [source]="data" [pattern]="code" (dataChange)="target=$event">
+  <div class="transformation edit-part" d3ngSource [source]="source" [pattern]="code" (dataChange)="target=$event" [allowEmpty]="true">
     <span class="label">Transformation</span>
     <form>
       <md-input-container>
@@ -28,6 +29,7 @@
         <md-option *ngFor="let chart of chartsConfig.charts" [value]="chart">{{ chart.name }}</md-option>
       </md-select>
       <div *ngIf="chartConfig">
+        <d3ng-group-selection #groupSelection [groups]="selectableGroups" [multi]="true" [allowEmpty]="false"></d3ng-group-selection>
         <div class="dim" *ngFor="let property of (chartConfig ? chartConfig.dimensionProperties : [])">
           <md-select class="dimSelect"
                      [placeholder]="chartConfig.dimensionProperties.length > 1 ? property.name : 'metric'"
@@ -44,8 +46,9 @@
 <div class="canvas">
   <div [ngGrid]="gridConfig">
     <d3ng-workbench-item *ngFor="let item of items; let i = index" [(ngGridItem)]="item.gridItemConfig"
-                         class="item" [title]="item.name" [index]="i" [data]="item.data" [component]="item.chartConfig.component"
-                         [config]="item.chartConfig" [(selected)]="selection">
+                         class="item" [title]="item.name" [index]="i" [source]="item.source" [pattern]="item.pattern"
+                         [component]="item.chartConfig.component"
+                         [config]="item.chartConfig" [groups]="item.groups" [context]="context">
     </d3ng-workbench-item>
   </div>
 </div>

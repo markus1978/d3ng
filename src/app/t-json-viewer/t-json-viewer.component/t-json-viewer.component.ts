@@ -29,9 +29,9 @@ export class TJsonViewerComponent implements OnInit, OnChanges {
   }
 
   private onChanged() {
-    // Do nothing without data
     if (!_.isObject(this.json) && !_.isArray(this.json)) {
-      return;
+      this.json = {};
+      // return;
     }
 
     /**

@@ -36,6 +36,11 @@
   overflow: auto;
 }
 
+d3ng-groups {
+  width: 100%;
+  height: 100%;
+}
+
 .chartWithoutScroll {
   width: 100%;
   height:100%;

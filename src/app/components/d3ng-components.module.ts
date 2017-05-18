@@ -10,16 +10,21 @@ import {D3ngCollapsibleIndentedTreeComponent} from "./d3ng-collapsible-indented-
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {
-  MdButtonToggleModule, MdIcon, MdIconModule, MdInputModule, MdRadioModule, MdSelectModule,
-  MdSliderModule, MdSlideToggleModule
+  MdButtonToggleModule,
+  MdInputModule,
+  MdRadioModule,
+  MdSelectModule,
+  MdSliderModule,
+  MdSlideToggleModule
 } from "@angular/material";
 import {FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 
-import 'hammerjs';
-import { D3ngSourceDirective } from './d3ng-source.directive';
-import { D3ngHistogramComponent } from './d3ng-histogram.component';
+import "hammerjs";
+import {D3ngSourceDirective} from "./d3ng-source.directive";
+import {D3ngHistogramComponent} from "./d3ng-histogram.component";
 import {D3ngGroupsComponent} from "./d3ng-groups.component";
+import {D3ngGroupSelectionComponent} from "./d3ng-groups-selection.component";
 
 @NgModule({
   declarations: [
@@ -34,6 +39,7 @@ import {D3ngGroupsComponent} from "./d3ng-groups.component";
     D3ngSourceDirective,
     D3ngHistogramComponent,
     D3ngGroupsComponent,
+    D3ngGroupSelectionComponent,
   ],
   imports: [
     BrowserModule, // before other material modules are imported
@@ -58,7 +64,8 @@ import {D3ngGroupsComponent} from "./d3ng-groups.component";
     D3ngCollapsibleIndentedTreeComponent,
     D3ngSourceDirective,
     D3ngHistogramComponent,
-    D3ngGroupsComponent
+    D3ngGroupsComponent,
+    D3ngGroupSelectionComponent
   ]
 })
 export class D3ngComponentsModule { }
