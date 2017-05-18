@@ -1,6 +1,6 @@
 import {
   AfterContentInit,
-  Component, ContentChild, ContentChildren, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges
+  Component, ContentChild, EventEmitter, Input, Output
 } from '@angular/core';
 import {D3ngChart} from "./d3ng-chart";
 
