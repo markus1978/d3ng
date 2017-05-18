@@ -1,5 +1,5 @@
 import {
-  Component, Input, OnChanges, ViewChild
+  Component, forwardRef, Input, OnChanges, ViewChild
 } from '@angular/core';
 import * as d3 from "d3";
 import {D3ngChart, D3ngSelection} from "./d3ng-chart";
@@ -8,6 +8,7 @@ import {D3ngDependencyChart} from "./d3ng-dependency-chart";
 
 @Component({
   selector: 'd3ng-radial-edge-bundling',
+  providers: [{provide: D3ngChart, useExisting: forwardRef(() => D3ngRadialEdgeBundlingComponent)}],
   template: `    
     <div class="controls">
       <md-slider min="0" max="100" value="85" (change)="onTensionChange($event)"></md-slider>

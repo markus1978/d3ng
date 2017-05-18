@@ -13,11 +13,16 @@ export class D3ngGroupContext {
   template: `
     <div class="container">
       <div class="controls">
-        <md-button-toggle-group #group="mdButtonToggleGroup" [(ngModel)]="this.chart.currentSelectionGroup">
-          <md-button-toggle *ngFor="let group of groups" [value]="group" [class]="'group-btn-'+group">
-            &nbsp;
-          </md-button-toggle>
-        </md-button-toggle-group>
+        <div class="group-controls">
+          <md-button-toggle-group #group="mdButtonToggleGroup" [(ngModel)]="this.chart.currentSelectionGroup">
+            <md-button-toggle *ngFor="let group of groups" [value]="group" [class]="'group-btn-'+group">
+              &nbsp;
+            </md-button-toggle>
+          </md-button-toggle-group>  
+        </div>
+        <div class="selection-controls">
+          <!--<md-slide-toggle color="warn" [(checked)]="isHold"></md-slide-toggle>-->
+        </div>
       </div>
       <div class="content">
         <ng-content></ng-content>  
@@ -27,7 +32,9 @@ export class D3ngGroupContext {
   styles: [
     ':host { display: block; }',
     '.container, .content { height: 100%; }',
-    '.controls { position: absolute; z-index: 1000; }',
+    '.controls { position: relative; }',
+    '.selection-controls { position: absolute; left: 0px; z-index: 1000; }',
+    '.group-controls { position: absolute; right: 10px; z-index: 1000;}',
     'md-button-toggle-group { height: 15px; }',
     '.mat-button-toggle-checked { border: solid grey 1px; }',
     '.group-btn-0.mat-button-toggle-checked { background-color: #9E2622; }',
@@ -46,6 +53,8 @@ export class D3ngGroupsComponent implements AfterContentInit {
   @Input() context:D3ngGroupContext = null;
   @Input() groups: number[] = [0];
   @Output() selectedChanged = new EventEmitter<{group:number,selected:any[]}>();
+
+  private isHold = false;
 
   constructor() {}
 
@@ -79,6 +88,9 @@ class D3ngGroup {
   constructor() {}
 
   public onDirectSelectedChanged(chart:D3ngChart, selected: Array<any>) {
+    if (!selected) {
+      throw new Error("Selected must be defined.");
+    }
     this.selections.set(chart, selected);
     const indirectSelected = [];
     for (let selection of this.selections.values()) {

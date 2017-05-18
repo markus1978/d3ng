@@ -1,6 +1,7 @@
 import {Component, Injectable} from '@angular/core';
 import {Http, Response} from "@angular/http";
 import 'rxjs/Rx';
+import {D3ngGroupContext} from "../components/d3ng-groups.component";
 
 @Component({
   selector: 'd3ng-code-viz',
@@ -12,6 +13,7 @@ import 'rxjs/Rx';
 export class D3ngCodeVizComponent {
   data = [];
   typeMetrics = ["WMC-1", "WMC-CC", "WMC-HV", "DIT", "NOC", "CBO", "RFC", "LCOM"];
+  context = new D3ngGroupContext();
 
   constructor(http:Http) {
     http.get('/assets/de.hub.srcrepo.json')

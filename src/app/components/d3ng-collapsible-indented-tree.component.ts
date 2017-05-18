@@ -1,12 +1,13 @@
 import {
-  Component, Input, OnChanges, ViewChild
+  Component, forwardRef, Input, OnChanges, ViewChild
 } from '@angular/core';
 import * as d3 from "d3";
-import {D3ngSelection} from "./d3ng-chart";
+import {D3ngChart, D3ngSelection} from "./d3ng-chart";
 import {D3ngHierarchicalChart} from "./d3ng-hierarchical-chart";
 
 @Component({
   selector: 'd3ng-collapsible-indented-tree',
+  providers: [{provide: D3ngChart, useExisting: forwardRef(() => D3ngCollapsibleIndentedTreeComponent)}],
   template: `
     <div #chart></div>`,
   styleUrls: [ './d3ng-collapsible-indented-tree.component.css' ]

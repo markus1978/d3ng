@@ -10,8 +10,8 @@ import {D3ngCollapsibleIndentedTreeComponent} from "./d3ng-collapsible-indented-
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {
-  MdButtonToggleModule, MdIcon, MdIconModule, MdRadioModule, MdSelectModule,
-  MdSliderModule
+  MdButtonToggleModule, MdIcon, MdIconModule, MdInputModule, MdRadioModule, MdSelectModule,
+  MdSliderModule, MdSlideToggleModule
 } from "@angular/material";
 import {FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
@@ -42,6 +42,8 @@ import {D3ngGroupsComponent} from "./d3ng-groups.component";
     MdSelectModule,
     MdRadioModule,
     MdButtonToggleModule,
+    MdSlideToggleModule,
+    MdInputModule,
     FormsModule,
     HttpModule
   ],

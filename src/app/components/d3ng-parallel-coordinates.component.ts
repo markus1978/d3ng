@@ -1,11 +1,12 @@
 import {
-  Component, Input, OnChanges, ViewChild
+  Component, forwardRef, Input, OnChanges, ViewChild
 } from '@angular/core';
 import * as d3 from "d3";
 import {D3ngChart, D3ngSelection} from "./d3ng-chart";
 
 @Component({
   selector: 'd3ng-parallel-coordinates',
+  providers: [{provide: D3ngChart, useExisting: forwardRef(() => D3ngParallelCoordinatesComponent)}],
   template: `
     <div #chart class="content"></div>
   `,

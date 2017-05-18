@@ -1,5 +1,5 @@
 import {
-  Component, Input, OnChanges, ViewChild
+  Component, forwardRef, Input, OnChanges, ViewChild
 } from '@angular/core';
 import * as d3 from "d3";
 import {D3ngChart, D3ngSelection} from "./d3ng-chart";
@@ -7,6 +7,7 @@ import {D3ngDependencyChart} from "./d3ng-dependency-chart";
 
 @Component({
   selector: 'd3ng-chord-diagram',
+  providers: [{provide: D3ngChart, useExisting: forwardRef(() => D3ngChordDiagramComponent)}],
   template: `
     <div #chart></div>`,
   styleUrls: [ './d3ng-chord-diagram.component.css' ]
@@ -173,15 +174,16 @@ export class D3ngChordDiagramComponent extends D3ngDependencyChart implements On
 
     function click(d, i) {
       const isDeselect = self.selected && self.selected.length == 1 && indexes[self.selected[0]] == i;
+      let selected;
       if (isDeselect) {
-        self.selected = [];
+        selected = [];
       } else {
-        self.selected = self.data
+        selected = self.data
           .filter(function(f) {
             return indexes[self.getId(f)] == i;
           });
       }
-      self.selectedChange.emit(self.selected);
+      self.setDirectSelection(selected);
     }
   }
 
