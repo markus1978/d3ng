@@ -5,14 +5,20 @@
 
   <story-body>
     <div class="example">
-      <d3ng-groups class="chart" (selectedChanged)="selection=$event.selected" [context]="context">
-        <d3ng-scatter-plot d3ngSource [source]="data" pattern="container" [dimensions]="dimensions" x="x" y="y" [config]="scatterPlotConfig"></d3ng-scatter-plot>
+      <d3ng-groups class="chart" (selectedChanged)="selection=$event.selected"
+                   [groups]="[0]" [context]="context">
+        <d3ng-scatter-plot d3ngSource [source]="data"
+                           pattern="container"
+                           [dimensions]="dimensions" x="x" y="y"
+                           [config]="scatterPlotConfig">
+        </d3ng-scatter-plot>
       </d3ng-groups>
 
-      <!--<d3ng-groups class="chart" [groups]="[1]" [context]="context">-->
-        <d3ng-scatter-plot class="chart" d3ngSource [source]="selection" pattern="container/contents" [allowEmpty]="true"
-                           [dimensions]="dimensions" x="x" y="y" [config]="scatterPlotConfig"></d3ng-scatter-plot>
-      <!--</d3ng-groups>-->
+      <d3ng-scatter-plot class="chart" d3ngSource
+                         [source]="selection"
+                         pattern="container/contents" [allowEmpty]="true"
+                         [dimensions]="dimensions" x="x" y="y" [config]="scatterPlotConfig">
+      </d3ng-scatter-plot>
     </div>
   </story-body>
 
