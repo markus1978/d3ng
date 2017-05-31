@@ -8,6 +8,10 @@ export class D3ngSelectionItem {
 
 export class D3ngSelection  {
   public items: Array<D3ngSelectionItem> = [];
+
+  private directSelectionColors = D3ngChart.selectionColors.map(e => e.direct);
+  private indirectSelectionColors = D3ngChart.selectionColors.map(e => e.indirect);
+
   public getSelection(group: number, direct: boolean, create = false): D3ngSelectionItem {
     const selection = this.items.find(s => s.group == group && s.direct == direct);
     if (selection) {
@@ -44,8 +48,11 @@ export class D3ngSelection  {
         if (item.direct) {
           color = D3ngChart.selectionColors[item.group].direct;
         } else {
-          if (color === "black") {
-            color = D3ngChart.selectionColors[item.group].indirect;
+          if (this.directSelectionColors.indexOf(color) == -1) {
+            const oldColor = this.indirectSelectionColors.indexOf(color);
+            if (oldColor < item.group) {
+              color = D3ngChart.selectionColors[item.group].indirect;
+            }
           }
         }
       }

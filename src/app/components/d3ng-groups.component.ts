@@ -46,9 +46,9 @@ export class D3ngGroupContext {
 export class D3ngGroupsComponent implements AfterContentInit, OnDestroy {
 
   @ContentChild(D3ngChart) chart: D3ngChart;
-  @Input() context:D3ngGroupContext = null;
+  @Input() context: D3ngGroupContext = null;
   @Input() groups: number[] = [0];
-  @Output() selectedChanged = new EventEmitter<{group:number,selected:any[]}>();
+  @Output() selectedChanged = new EventEmitter<{group: number, selected: any[]}>();
 
   private isHold = false;
   private groupEventHandlers = [];
@@ -63,7 +63,7 @@ export class D3ngGroupsComponent implements AfterContentInit, OnDestroy {
     }
     this.chart.selectedChange.subscribe(selected => this.onDirectSelectedChanged(selected));
     this.chart.currentSelectionGroup = this.groups[0];
-    this.groups.forEach(group=>{
+    this.groups.forEach(group => {
       const handler = selected => {
         this.onIndirectSelectedChanged(group, selected);
       };
@@ -72,9 +72,9 @@ export class D3ngGroupsComponent implements AfterContentInit, OnDestroy {
     });
   }
 
-  private onIndirectSelectedChanged(group:number, selected:Array<any>) {
+  private onIndirectSelectedChanged(group: number, selected: Array<any>) {
     this.chart.onIndirectSelectionChanged(selected, group);
-    this.selectedChanged.emit({group:group, selected: selected});
+    this.selectedChanged.emit({group: group, selected: selected});
   }
 
   private onDirectSelectedChanged(selected: Array<any>) {
@@ -82,32 +82,32 @@ export class D3ngGroupsComponent implements AfterContentInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.groups.forEach(group=>{
+    this.groups.forEach(group => {
       this.context.groups[group].cancelSubscription(this.groupEventHandlers[group]);
     });
   }
 }
 
 class D3ngGroup {
-  private selections:Map<D3ngChart, Array<any>> = new Map<D3ngChart, Array<any>>();
-  private handler: Array<(selected:any[])=>void> = [];
+  private selections: Map<D3ngChart, Array<any>> = new Map<D3ngChart, Array<any>>();
+  private handler: Array<(selected: any[]) => void> = [];
 
   constructor() {}
 
-  public onDirectSelectedChanged(chart:D3ngChart, selected: Array<any>) {
+  public onDirectSelectedChanged(chart: D3ngChart, selected: Array<any>) {
     if (!selected) {
       throw new Error("Selected must be defined.");
     }
     this.selections.set(chart, selected);
     const indirectSelected = this.getSelected();
 
-    this.handler.forEach(handler=> handler(indirectSelected));
+    this.handler.forEach(handler => handler(indirectSelected));
   }
 
   public getSelected() {
     const selected = [];
-    for (let selection of this.selections.values()) {
-      selection.forEach(s=>{
+    for (const selection of this.selections.values()) {
+      selection.forEach(s => {
         if (selected.indexOf(s) != 1) {
           selected.push(s);
         }
@@ -116,7 +116,7 @@ class D3ngGroup {
     return selected;
   }
 
-  public subscribe(handler:(selected:Array<any>)=>void) {
+  public subscribe(handler: (selected: Array<any>) => void) {
     this.handler.push(handler);
   }
 

@@ -15,7 +15,10 @@ export class D3ngCodeVizComponent {
   typeMetrics = ["WMC-1", "WMC-CC", "WMC-HV", "DIT", "NOC", "CBO", "RFC", "LCOM"];
   context = new D3ngGroupContext();
 
-  constructor(http:Http) {
+  packages: any[];
+  classes: any[];
+
+  constructor(http: Http) {
     http.get('/assets/de.hub.srcrepo.json')
       .map((res: Response) => res.json())
       .subscribe(res => {
@@ -23,24 +26,39 @@ export class D3ngCodeVizComponent {
       });
   }
 
-  private setData(data:Array<any>) {
+  private setData(data: Array<any>) {
     if (data) {
       data.forEach(data => {
           // this.types = this.aggregateTypes(this.data);
           const pkgs = this.aggregatePackageDependencies(data);
           this.normalizePackageDependencies(pkgs);
         }
-      )
+      );
       this.data = data;
+      this.onPackagesChanged(data);
     }
   }
 
-  private aggregatePackageDependencies(data):Array<any> {
+  private onPackagesChanged(packages: any[]) {
+    if (packages.length == 0) {
+      this.packages = this.data;
+    } else {
+      this.packages = packages;
+    }
+  }
+
+  private onClassesChanged(event: any) {
+    if (event.group == 1) {
+      this.classes = event.selected as any[];
+    }
+  }
+
+  private aggregatePackageDependencies(data): Array<any> {
     const pkgs = [];
     function visit(element) {
       if (element.type == "package" && element.children) {
         const dMap = {};
-        element.children.filter(function(c) { return c.type == "type"}).forEach(function(c) {
+        element.children.filter(function(c) { return c.type == "type"; }).forEach(function(c) {
           if (c.dependencies) {
             c.dependencies.forEach(function(d) {
               const pkgId = d.id.substring(0, d.id.lastIndexOf("/"));
@@ -54,7 +72,7 @@ export class D3ngCodeVizComponent {
         });
         if (Object.keys(dMap).length != 0) {
           element.dependencies = [];
-          for (let key in dMap) {
+          for (const key in dMap) {
             if (dMap.hasOwnProperty(key)) {
               element.dependencies.push({
                 "id": key,
@@ -69,14 +87,14 @@ export class D3ngCodeVizComponent {
       if (element.children) {
         element.children.forEach(function(child) {
           visit(child);
-        })
+        });
       }
     }
     visit(data);
     return pkgs;
   }
 
-  private normalizePackageDependencies(pkgs:Array<any>) {
+  private normalizePackageDependencies(pkgs: Array<any>) {
     const pMap = {};
     pkgs.forEach(function(p) {
       pMap[p.id] = p;
@@ -86,7 +104,7 @@ export class D3ngCodeVizComponent {
         p.dependencies.forEach(function(d) {
           if (pMap[d.id]) {
             if (!pMap[d.id].dependencies) {
-              pMap[d.id].dependencies = []
+              pMap[d.id].dependencies = [];
             }
             let otherD = pMap[d.id].dependencies.find(function(dd) { return dd.id == p.id; });
             if (!otherD) {

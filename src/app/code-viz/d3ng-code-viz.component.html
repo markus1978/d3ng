@@ -1,42 +1,58 @@
-<h2>D3ng Code Viz</h2>
-<div class="explorer">
-  <d3ng-groups [context]="context">
-    <d3ng-collapsible-indented-tree d3ngSource [source]="data" pattern="."></d3ng-collapsible-indented-tree>
-  </d3ng-groups>
-</div>
-<div class="content">
-  <d3ng-groups [context]="context">
-    <d3ng-parallel-coordinates style="height: 300px" d3ngSource
-                               [source]="data" pattern="package/type+"
-                               [dimensions]='typeMetrics'></d3ng-parallel-coordinates>
-  </d3ng-groups>
+<div class="body">
+  <div class="explorer">
+    <d3ng-groups [context]="context" [groups]="[0]" (selectedChanged)="onPackagesChanged($event.selected)">
+      <d3ng-collapsible-indented-tree d3ngSource [source]="data" pattern="."></d3ng-collapsible-indented-tree>
+    </d3ng-groups>
+  </div>
+  <div class="content">
+    <d3ng-groups [context]="context" [groups]="[1]" (selectedChanged)="onClassesChanged($event)">
+      <d3ng-parallel-coordinates style="height: 300px" d3ngSource
+                                 [source]="packages" pattern="package/type+"
+                                 [dimensions]='typeMetrics'></d3ng-parallel-coordinates>
+    </d3ng-groups>
 
-  <d3ng-groups [context]="context">
-    <d3ng-scatter-plot style="height: 300px;" d3ngSource
-                       [source]="data" pattern="package/type+"
-                       x="WMC-CC" y="RFC" [dimensions]='typeMetrics'></d3ng-scatter-plot>
-  </d3ng-groups>
+    <div class="scatterPlots">
+      <d3ng-groups [context]="context" [groups]="[0,1]">
+        <d3ng-chord-diagram style="width: 450px;" d3ngSource
+                            [source]="data" pattern="package[type]">
+        </d3ng-chord-diagram>
+      </d3ng-groups>
 
-  <d3ng-groups [context]="context">
-    <d3ng-chord-diagram style="width: 450px;" d3ngSource
-                        [source]="data" pattern="package[type]"></d3ng-chord-diagram>
-  </d3ng-groups>
+      <d3ng-groups [context]="context" [groups]="[0,1]">
+        <d3ng-tree-map d3ngSource [source]="data" pattern="package+/type"
+                       value="WMC-1" [dimensions]="typeMetrics">
+        </d3ng-tree-map>
+      </d3ng-groups>
+    </div>
 
-  <d3ng-groups [context]="context">
-    <d3ng-radial-edge-bundling style="width: 600px;" d3ngSource
-                               [source]="data" pattern="package/type"></d3ng-radial-edge-bundling>
-  </d3ng-groups>
+    <div class="scatterPlots">
+      <d3ng-groups [context]="context" [groups]="[2]">
+        <d3ng-scatter-plot [data]="classes" x="WMC-CC" y="RFC"
+                           [dimensions]='typeMetrics'>
+        </d3ng-scatter-plot>
+      </d3ng-groups>
+      <d3ng-groups [context]="context" [groups]="[2]">
+        <d3ng-scatter-plot [data]="classes" x="WMC-CC" y="LCOM"
+                           [dimensions]='typeMetrics'>
+        </d3ng-scatter-plot>
+      </d3ng-groups>
+    </div>
 
-  <d3ng-groups [context]="context">
-    <d3ng-force-graph style="width: 400px; height: 600px" d3ngSource
-                      [source]="data" pattern="package/type"
-                      nodeValue="WMC-1" [nodeDimensions]="typeMetrics"></d3ng-force-graph>
-  </d3ng-groups>
+    <div class="dependencies">
+      <d3ng-groups [context]="context" [groups]="[2]">
+        <d3ng-radial-edge-bundling style="width: 600px;" d3ngSource
+                                   [source]="data" pattern="package/type">
+        </d3ng-radial-edge-bundling>
+      </d3ng-groups>
+    </div>
 
-  <d3ng-groups [context]="context">
-    <d3ng-tree-map style="height: 400px" d3ngSource
-                   [source]="data" pattern="package+/type"
-                   value="WMC-1" [dimensions]="typeMetrics"></d3ng-tree-map>
-  </d3ng-groups>
+    <!--<d3ng-groups [context]="context">
+      <d3ng-force-graph style="width: 400px; height: 600px" d3ngSource
+                        [source]="data" pattern="package/type"
+                        nodeValue="WMC-1" [nodeDimensions]="typeMetrics"></d3ng-force-graph>
+    </d3ng-groups>-->
+
+
+  </div>
 </div>
 

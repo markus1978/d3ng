@@ -3,6 +3,12 @@
   overflow: hidden;
 }
 
+.body {
+  max-width: 1024px;
+  margin: auto;
+  padding-top: 30px;
+}
+
 .explorer {
   width: 300px;
   overflow: auto;
@@ -12,4 +18,28 @@
 
 .content {
   margin-left: 320px;
+}
+
+.scatterPlots, .dependencies {
+  position: relative;
+  display: block;
+  height: 350px;
+  margin-top: 30px;
+}
+
+d3ng-tree-map {
+  margin: 20px;
+}
+
+.dependencies d3ng-groups {
+  width: 450px;
+  height: 450px;
+  margin: auto;
+}
+
+.scatterPlots d3ng-groups {
+  position: relative;
+  float: left;
+  width: 350px;
+  height: 350px;
 }
