@@ -1,3 +1,5 @@
+Look at our demo and examples page build with *d3ng*: [http://d3ng.github.io](https://d3ng.github.io)
+
 # D3p
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
