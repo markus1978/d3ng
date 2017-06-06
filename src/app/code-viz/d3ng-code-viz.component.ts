@@ -6,7 +6,7 @@ import {D3ngGroupContext} from "../components/d3ng-groups.component";
 @Component({
   selector: 'd3ng-code-viz',
   templateUrl: 'd3ng-code-viz.component.html',
-  styleUrls: [ 'd3ng-code-viz.component.css' ]
+  styleUrls: [ 'simplegrid.css', 'd3ng-code-viz.component.css' ]
 })
 
 @Injectable()

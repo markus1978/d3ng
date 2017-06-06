@@ -23,6 +23,11 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
   @ViewChild('chart') chart;
   @ViewChild('container') container;
 
+  @Input() config: {
+    shortenLength?: number,
+    textWidth?: number
+  } = {};
+
   private currentLocalSelection: Array<any> = [];
 
   private svg: any;
@@ -68,6 +73,9 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
       return;
     }
 
+    const textWidth = (this.config && this.config.textWidth) ? this.config.textWidth : 80;
+    const shortenLength = (this.config && this.config.shortenLength) ? this.config.shortenLength : -1;
+
     let width = this.chart.nativeElement.offsetWidth,
       height = this.chart.nativeElement.offsetHeight;
 
@@ -85,7 +93,7 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
       rotate = 0;
 
     const cluster = d3.layout.cluster()
-      .size([360, ry - 120])
+      .size([360, ry - textWidth])
       .sort((a, b) => d3.ascending(self.getId(a.original), self.getId(b.original)));
 
     const bundle = d3.layout.bundle();
@@ -109,7 +117,7 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
 
     svg.append("svg:path")
       .attr("class", "arc")
-      .attr("d", d3.svg.arc().outerRadius(ry - 120).innerRadius(0).startAngle(0).endAngle(2 * Math.PI))
+      .attr("d", d3.svg.arc().outerRadius(ry - textWidth).innerRadius(0).startAngle(0).endAngle(2 * Math.PI))
       .on("mousedown", mousedown);
 
     const root = D3ngHierarchicalChart.computeHierarchyRoot(self, this.data);
@@ -124,6 +132,10 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
       .attr("class", d =>  "link source-" + self.getId(d.source) + " target-" + self.getId(d.target))
       .attr("d", (d, i) => this.line(this.splines[i]));
 
+    const shorten = function(s, n){
+      return (n > 0 && s.length > n) ? s.substr(0, n-5) + '...' + s.substr(s.length-3, s.length): s;
+    };
+
     svg.selectAll("g.node")
       .data(nodes.filter(function (n) {
         return !n.children;
@@ -137,7 +149,7 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
       .attr("dy", ".31em")
       .attr("text-anchor", d => d.x < 180 ? "start" : "end")
       .attr("transform", d => d.x < 180 ? null : "rotate(180)")
-      .text(d => self.getLabel(d.original))
+      .text(d => shorten(self.getLabel(d.original), shortenLength))
       .on("mouseover", d => self.mouseover(d.original))
       .on("mouseout", d => {
         if (this.currentLocalSelection.indexOf(d.original) == -1) {
