@@ -145,7 +145,7 @@ export abstract class D3ngChart implements OnChanges {
   };
   @Output() selectedChange = new EventEmitter<Array<any>>();
 
-  @Input() private customLabel: Function = null;
+  @Input() customLabel: Function = null;
 
   /**
    * Calculates a set of representatives for an original data point. The idea is that a parent or child data point

@@ -37,9 +37,12 @@ export class AppComponent {
     },
     {
       path : '/code-viz',
-      label: 'Example'
+      label: 'Software Example'
     },
-
+    {
+      path: '/owid',
+      label: 'OWID Example'
+    }
   ];
   selection = [];
 }

@@ -17,11 +17,13 @@ import {D3ngWorkbenchComponent} from "./workbench/d3ng-workbench.component";
 import {D3ngWorkbenchModule} from "./workbench/d3ng-workbench.module";
 import {D3ngStoriesModule, storiesRouting} from "./stories/d3ng-stories.module";
 import {D3ngStoriesComponent} from "./stories/d3ng-stories/d3ng-stories.component";
+import { OwidComponent } from './owid/owid.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     D3ngCodeVizComponent,
+    OwidComponent,
   ],
   imports: [
     BrowserModule, // before other material modules are imported
@@ -51,6 +53,10 @@ import {D3ngStoriesComponent} from "./stories/d3ng-stories/d3ng-stories.componen
       {
         path: 'workbench',
         component: D3ngWorkbenchComponent
+      },
+      {
+        path: 'owid',
+        component: OwidComponent
       }
     ])
   ],

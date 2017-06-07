@@ -1,0 +1,11 @@
+
+<div class="grid">
+  <div class="col-4-12" style="overflow: auto;">
+    <d3ng-collapsible-indented-tree #meta [data]="metaDataList"></d3ng-collapsible-indented-tree>
+  </div>
+  <div class="col-8-12">
+    <d3ng-parallel-coordinates #pc [data]="data" [dimensions]="dimensions" [(selected)]="selection"></d3ng-parallel-coordinates>
+    <d3ng-map [data]="data" [(selected)]="selection" idKey="code"></d3ng-map>
+  </div>
+</div>
+

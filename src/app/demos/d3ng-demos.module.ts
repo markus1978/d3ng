@@ -16,6 +16,7 @@ import {MdListModule, MdSidenavModule} from "@angular/material";
 import 'hammerjs';
 import {D3ngComponentsModule} from "../components/d3ng-components.module";
 import {D3ngHistogramDemoComponent} from "./d3ng-histogram-demo.component";
+import {D3ngMapDemoComponent} from "./d3ng-map-demo.component";
 
 export const demosRouting: Routes = [
   {
@@ -57,6 +58,10 @@ export const demosRouting: Routes = [
   {
     path: 'histogram',
     component: D3ngHistogramDemoComponent
+  },
+  {
+    path: 'map',
+    component: D3ngMapDemoComponent
   }
 ];
 
@@ -72,7 +77,8 @@ export const demosRouting: Routes = [
     D3ngRadialEdgeBundlingDemoComponent,
     D3ngScatterPlotDemoComponent,
     D3ngTreeMapDemoComponent,
-    D3ngHistogramDemoComponent
+    D3ngHistogramDemoComponent,
+    D3ngMapDemoComponent
   ],
   imports: [
     BrowserModule, // before other material modules are imported

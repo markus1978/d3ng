@@ -25,6 +25,7 @@ import {D3ngSourceDirective} from "./d3ng-source.directive";
 import {D3ngHistogramComponent} from "./d3ng-histogram.component";
 import {D3ngGroupsComponent} from "./d3ng-groups.component";
 import {D3ngGroupSelectionComponent} from "./d3ng-groups-selection.component";
+import {D3ngMapComponent} from "./d3ng-map.component";
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import {D3ngGroupSelectionComponent} from "./d3ng-groups-selection.component";
     D3ngHistogramComponent,
     D3ngGroupsComponent,
     D3ngGroupSelectionComponent,
+    D3ngMapComponent
   ],
   imports: [
     BrowserModule, // before other material modules are imported
@@ -65,7 +67,8 @@ import {D3ngGroupSelectionComponent} from "./d3ng-groups-selection.component";
     D3ngSourceDirective,
     D3ngHistogramComponent,
     D3ngGroupsComponent,
-    D3ngGroupSelectionComponent
+    D3ngGroupSelectionComponent,
+    D3ngMapComponent
   ]
 })
 export class D3ngComponentsModule { }
