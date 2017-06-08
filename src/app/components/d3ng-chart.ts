@@ -1,4 +1,7 @@
-import {EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from "@angular/core";
+import {
+  ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, Renderer, Renderer2, SimpleChanges,
+  ViewContainerRef
+} from "@angular/core";
 
 export class D3ngSelectionItem {
   group = 0;
@@ -147,6 +150,14 @@ export abstract class D3ngChart implements OnChanges {
 
   @Input() customLabel: Function = null;
 
+  @Input() multiselect: boolean = false;
+
+  @HostListener('contextmenu') onRightClick() {
+    if (this.multiselect) {
+      this.setDirectSelection([]);
+    }
+  };
+
   /**
    * Calculates a set of representatives for an original data point. The idea is that a parent or child data point
    * in the data set can represent data points that are not within the data set.
@@ -217,6 +228,16 @@ export abstract class D3ngChart implements OnChanges {
   }
 
   protected setDirectSelection(selected: Array<any>) {
+    if (this.multiselect && selected.length != 0) {
+      const currentDirectSelection = this.currentSelection.getSelection(this.currentSelectionGroup, true);
+      if (currentDirectSelection) {
+        if (!(selected.length == 1 && currentDirectSelection.selected.lastIndexOf(selected[0]) != -1)) {
+          const allSelected = currentDirectSelection.selected.slice(0);
+          selected.forEach(s => allSelected.push(s));
+          selected = allSelected;
+        }
+      }
+    }
     this.updateSelection(selected, this.currentSelectionGroup, true);
     this.selectedChange.emit(selected);
   }

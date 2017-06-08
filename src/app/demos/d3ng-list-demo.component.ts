@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
     <h3>A list</h3>
     <d3ng-list [data]="listData" [(selected)]="selection" [customLabel]="label"></d3ng-list>
     <h3>A list connected with the other list</h3>
-    <d3ng-list [data]="listData" [(selected)]="selection" [customLabel]="label"></d3ng-list>
+    <d3ng-list [data]="listData" [(selected)]="selection" [customLabel]="label" [multiselect]="true"></d3ng-list>
   `,
   styles: [ ]
 })
