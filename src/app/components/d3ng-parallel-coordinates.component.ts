@@ -1,5 +1,5 @@
 import {
-  Component, forwardRef, Input, OnChanges, ViewChild
+  Component, forwardRef, Input, OnChanges, SimpleChanges, ViewChild
 } from '@angular/core';
 import * as d3 from "d3";
 import {D3ngChart, D3ngSelection} from "./d3ng-chart";
@@ -50,6 +50,14 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
         }
       });
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.hasOwnProperty("dimensions")) {
+      this.redraw();
+    } else {
+      super.ngOnChanges(changes);
+    }
   }
 
   protected draw() {

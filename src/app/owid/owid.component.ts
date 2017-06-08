@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {Http, Response} from "@angular/http";
 import {D3ngListComponent} from "../components/d3ng-list.component";
 import {D3ngParallelCoordinatesComponent} from "../components/d3ng-parallel-coordinates.component";
+import {D3ngChart} from "../components/d3ng-chart";
 
 @Component({
   selector: 'app-owid',
@@ -33,7 +34,7 @@ export class OwidComponent implements OnInit {
   ];
   private data: any[] = [];
 
-  @ViewChild('meta') metaDataListElement: D3ngListComponent;
+  @ViewChild('meta') metaDataListElement: D3ngChart;
   @ViewChild('pc') pc: D3ngParallelCoordinatesComponent;
 
   constructor(http: Http) {
@@ -44,45 +45,47 @@ export class OwidComponent implements OnInit {
       });
   }
 
+  private dimensionsFromSelection(selection: any[]): string[] {
+    return selection.map(d => d.key);
+}
+
   private setDB(db: any): void {
     this.db = db;
 
-    this.data = db.data.map(data => {
-      const result = {
-        label: data.label,
-        code: data.code,
-      };
-      this.dimensions.forEach(dim => {
-        const holder = data.data.filter(d => d.key == dim)[0];
-        if (holder) {
-          result[dim] = holder.value;
-        } else {
-          result[dim] = 0;
-        }
-      });
-      return result;
+    // restructure data
+    db.data.forEach(data => {
+      data.data.forEach(value => {
+        data[value.key] = value.value;
+      })
+      data.data = undefined;
     });
+    this.data = db.data;
 
-    this.db.meta.forEach(m1 => {
-      m1.children = m1.children.filter(m2 => ((m2.countries > 100) && m2.number));
-    });
-    this.db.meta = this.db.meta.filter(m1 => m1.children.length > 0);
-    this.db.meta = this.db.meta.map(m1 => {
-      if (m1.children.length == 1) {
-        return m1.children[0];
+    // filter and flatten meta data directory
+    const filter = (node, pred: (any) => boolean) => {
+      if (node.children) {
+        node.children = node.children.filter(child => filter(child, pred));
+        return node.children.length > 0;
       } else {
-        return m1;
+        return pred(node);
       }
-    });
+    };
+
+    this.db.meta = this.db.meta.filter(m => filter(m, node => (node.countries > 100 && node.number)));
     this.metaDataList = [{
-      label: "data",
+      label: "OWID Data",
       children: this.db.meta
     }];
-    // this.dimensions = this.metaDataList.map(d => d.key);
   }
 
   ngOnInit() {
-
+    this.metaDataListElement.customLabel = (item) => {
+      if (item.countries) {
+        return "(" + item.countries + ") " + item.label;
+      } else {
+        return item.label;
+      }
+    };
   }
 
 }

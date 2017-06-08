@@ -1,7 +1,10 @@
 
 <div class="grid">
   <div class="col-4-12" style="overflow: auto;">
-    <d3ng-collapsible-indented-tree #meta [data]="metaDataList"></d3ng-collapsible-indented-tree>
+    <d3ng-collapsible-indented-tree #meta d3ngSource [source]="metaDataList" pattern="."
+                                    [multiselect]="true" (selectedChange)="dimensions=dimensionsFromSelection($event)">
+
+    </d3ng-collapsible-indented-tree>
   </div>
   <div class="col-8-12">
     <d3ng-parallel-coordinates #pc [data]="data" [dimensions]="dimensions" [(selected)]="selection"></d3ng-parallel-coordinates>

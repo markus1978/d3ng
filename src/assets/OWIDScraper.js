@@ -10,6 +10,7 @@ grapher = /^https:\/\/ourworldindata.org\/grapher\/([^\/]*)$/;
 var db = { data: [], meta: [] };
 var byCountryCode = {};
 var countriesByMetric = {};
+var groups = [];
 
 addData = function(datas, source) {
   datas.forEach(function (data) {
@@ -27,7 +28,7 @@ addData = function(datas, source) {
         country.data = [];
         db.data.push(country);
         byCountryCode[cc] = country;
-        console.log("Added country " + cc);
+        // console.log("Added country " + cc);
       }
 
       var year = Number(data.Year);
@@ -38,7 +39,7 @@ addData = function(datas, source) {
         if (key != 'Entity' && key != 'Year' && key != 'Country code') {
           var value = data[key];
           var number = Number(value);
-          if (number != NaN) {
+          if (number != null) {
             value = number;
           }
 
@@ -57,13 +58,13 @@ addData = function(datas, source) {
             if (metas.length == 0) {
               meta = {
                 timeSeries: !!year,
-                number: number != NaN,
+                number: number != null,
                 source: source,
                 key: key,
                 label: key
               };
               db.meta.push(meta);
-              console.log("Added data for " + key);
+              // console.log("Added data for " + key);
             } else {
               meta = metas[0];
             }
@@ -91,31 +92,39 @@ addData = function(datas, source) {
   });
 };
 
-x('https://ourworldindata.org/', {
-  links: x(['.link-container a@href'])
-}) (function (err,links) {
-  links.links.forEach(function(link) {
-    x(link, {
-      srcURLs: x(['iframe@src'])
-    }) (function(err, srcURLs) {
-      srcURLs.srcURLs.forEach(function(url) {
-        if (url && url.match(grapher)) {
-          get(url + ".csv", function(err, res) {
-            if (!err && res.statusCode == 200) {
-              toString(res).then(function (body) {
-                var csv = d3.csv.parse(body);
-                addData(csv, { page: link, csv: url + ".csv" });
-              });
-            }
-          });
-        }
+x('https://ourworldindata.org/', '.owid-data ul li', [{
+  title: 'h4',
+  links: x('.link-container a', [{
+    title: '',
+    url: '@href',
+  }])
+}]) (function (err, items) {
+  items.forEach(function(item) {
+    console.log(item.title);
+    groups.push(item);
+    item.links.forEach(function(link) {
+      console.log("  " + link.title);
+      x(link.url, {
+        srcURLs: x(['iframe@src'])
+      })(function (err, srcURLs) {
+        srcURLs.srcURLs.forEach(function (url) {
+          if (url && url.match(grapher)) {
+            get(url + ".csv", function (err, res) {
+              if (!err && res.statusCode == 200) {
+                toString(res).then(function (body) {
+                  var csv = d3.csv.parse(body);
+                  addData(csv, {page: link, csv: url + ".csv"});
+                });
+              }
+            });
+          }
+        });
       });
     });
   });
 });
 
 function exitHandler(options, err) {
-  var prefixExp = /https:\/\/ourworldindata.org\//;
   var json;
 
   // replace countries with # countries
@@ -129,19 +138,32 @@ function exitHandler(options, err) {
 
   // add meta source hierarchy
   var allMeta = [];
+  var parentByPage = {};
+  groups.forEach(function(group) {
+    var meta = {
+      label: group.title,
+      id: group.title,
+      children: []
+    }
+    group.links.forEach(function(link) {
+      parentByPage[link.url] = meta;
+    });
+    allMeta.push(meta);
+  });
+
   var metaByPage = {};
   db.meta.forEach(function(meta) {
-    var pageKey = meta.source.page;
+    var pageKey = meta.source.page.url;
     var page = metaByPage[pageKey];
     if (!page) {
       page = {
-        label: pageKey.replace(prefixExp, ""),
-        id: pageKey.replace(prefixExp, ""),
+        label: meta.source.page.title,
+        id: pageKey,
         source: pageKey,
         children: []
       };
       metaByPage[pageKey] = page;
-      allMeta.push(page);
+      parentByPage[pageKey].children.push(page);
     }
     page.children.push(meta);
     meta.source = meta.source.csv;
