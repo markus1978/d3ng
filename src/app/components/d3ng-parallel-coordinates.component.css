@@ -29,7 +29,7 @@
   shape-rendering: crispEdges;
 }
 
-:host /deep/ .axis text {
+:host /deep/ .axis .axisTitle {
   text-shadow: 0 1px 0 #fff;
   cursor: move;
 }

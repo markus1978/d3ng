@@ -98,13 +98,13 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
       // Calculate domain with 5% extra space
       const extent = d3.extent(self.data, p => p[d]);
       const size = extent[1] - extent[0];
-      extent[0] = extent[0] - size * .05;
-      extent[1] = extent[1] + size * .05;
+      // extent[0] = extent[0] - size * .05;
+      // extent[1] = extent[1] + size * .05;
 
       // Create the scale
-      y[d] = d3.scale.linear()
+      y[d] = this.getScaleForDimension(d)
         .domain(extent)
-        .range([h, 0]);
+        .range([h, 0]).nice();
 
       // Create the brush
       y[d].brush = d3.svg.brush()
@@ -164,13 +164,15 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
         }));
 
     // Add an axis and title.
-    g.append("svg:g")
+    const axisSvg = g.append("svg:g");
+    axisSvg
       .attr("class", "axis")
       .each(function(d) { d3.select(this).call(axis.scale(y[d])); })
-      .append("svg:text")
+      .append("svg:text").classed("axisTitle", true)
       .attr("text-anchor", "middle")
       .attr("y", -9)
-      .text(String);
+      .text(d => this.getDimensionLabel(d));
+    this.appendAxis(axisSvg);
 
     // Add a brush for each axis.
     g.append("svg:g")
@@ -179,6 +181,14 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
       .selectAll("rect")
       .attr("x", -8)
       .attr("width", 16);
+  }
+
+  public appendAxis(axis: any): void {
+
+  }
+
+  public getScaleForDimension(dim: any): any {
+    return d3.scale.linear();
   }
 
 }

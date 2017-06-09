@@ -31,6 +31,10 @@ export class D3ngCollapsibleIndentedTreeComponent extends D3ngHierarchicalChart 
     this.chart.nativeElement.innerHTML = "";
   }
 
+  public customizeEntrySpan(span:any):void {
+
+  }
+
   protected draw() {
     const self = this;
     const data: any = this.computeHierarchyRoot();
@@ -62,9 +66,12 @@ export class D3ngCollapsibleIndentedTreeComponent extends D3ngHierarchicalChart 
         .text((children && children.length > 0) ? "add_circle_outline" : "keyboard_arrow_right")
         .on("click", click);
 
-      nodeContainer.append("span")
+      const span = nodeContainer.append("span")
         .text(label)
+        .attr("title", d => self.getDescription(d))
         .on("click", d => self.setDirectSelection([ d ]));
+
+      self.customizeEntrySpan(span);
 
       if (children && children.length > 0) {
         const ul = nodeContainer.append("ul");

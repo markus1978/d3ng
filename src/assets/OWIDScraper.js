@@ -38,9 +38,9 @@ addData = function(datas, source) {
       Object.keys(data).forEach(function(key) {
         if (key != 'Entity' && key != 'Year' && key != 'Country code') {
           var value = data[key];
-          var number = Number(value);
-          if (number != null) {
-            value = number;
+          var isNumber = !isNaN(value);
+          if (isNumber) {
+            value = Number(value);
           }
 
           var metrics = country.data.filter(function(d) { return d.key == key; });
@@ -58,8 +58,9 @@ addData = function(datas, source) {
             if (metas.length == 0) {
               meta = {
                 timeSeries: !!year,
-                number: number != null,
+                number: isNumber,
                 source: source,
+                description: source.description,
                 key: key,
                 label: key
               };
@@ -75,7 +76,7 @@ addData = function(datas, source) {
               countriesByMetric[key] = countries;
               meta.countries = countries;
             }
-            if (countries.indexOf(cc) == -1) {
+            if ((!isNumber || value != 0) && countries.indexOf(cc) == -1) {
               countries.push(cc);
             }
           }
@@ -112,8 +113,19 @@ x('https://ourworldindata.org/', '.owid-data ul li', [{
             get(url + ".csv", function (err, res) {
               if (!err && res.statusCode == 200) {
                 toString(res).then(function (body) {
-                  var csv = d3.csv.parse(body);
-                  addData(csv, {page: link, csv: url + ".csv"});
+                  x(url, 'head meta', [{
+                    name: '@name',
+                    content: '@content'
+                  }])(function (err, headers) {
+                    var description = "";
+                    headers.forEach(function(header) {
+                      if (header.name == "description") {
+                        description = header.content;
+                      }
+                    });
+                    var csv = d3.csv.parse(body);
+                    addData(csv, {description: description, page: link, csv: url});
+                  });
                 });
               }
             });

@@ -340,4 +340,16 @@ export abstract class D3ngChart implements OnChanges {
     return node["parent"];
   }
 
+  /**
+   * Returns the description of the node, if available.
+   * @param node
+   * @returns {any}
+   */
+  public getDescription(node: Object): String {
+    return node["description"];
+  }
+
+  public getDimensionLabel(dim: any): String {
+    return dim;
+  }
 }

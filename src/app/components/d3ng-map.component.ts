@@ -108,7 +108,7 @@ export class D3ngMapComponent extends D3ngChart {
         } else {
           this.setDirectSelection([]);
         }
-      });
+      }).append('title').text(d => d.properties.name);
   }
 
   private colorize(d) {
