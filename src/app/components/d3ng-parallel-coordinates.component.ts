@@ -167,7 +167,7 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
     const axisSvg = g.append("svg:g");
     axisSvg
       .attr("class", "axis")
-      .each(function(d) { d3.select(this).call(axis.scale(y[d])); })
+      .each(function(d) { d3.select(this).call(axis.scale(y[d]).ticks(10, "s")); })
       .append("svg:text").classed("axisTitle", true)
       .attr("text-anchor", "middle")
       .attr("y", -9)
