@@ -70,6 +70,13 @@ export class D3ngGroupsComponent implements AfterContentInit, OnDestroy {
       this.groupEventHandlers.push(handler);
       this.context.groups[group].subscribe(handler);
     });
+    const order = this.groups.slice(0);
+    [0, 1, 2, 3].forEach(g => {
+      if (order.indexOf(g) == -1) {
+        order.push(g);
+      }
+    });
+    this.chart.groupOrder = order;
   }
 
   private onIndirectSelectedChanged(group: number, selected: Array<any>) {

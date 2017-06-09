@@ -7,8 +7,33 @@
     </d3ng-collapsible-indented-tree>
   </div>
   <div class="col-8-12">
-    <d3ng-parallel-coordinates #pc [data]="data" [dimensions]="dimensions" [(selected)]="selection"></d3ng-parallel-coordinates>
-    <d3ng-map [data]="data" [(selected)]="selection" idKey="code"></d3ng-map>
+    <d3ng-groups [context]="context" [groups]="[1]" (selectedChanged)="countries = $event.selected">
+      <d3ng-parallel-coordinates #pc [data]="data" [dimensions]="dimensions"></d3ng-parallel-coordinates>
+    </d3ng-groups>
+    <d3ng-groups [context]="context" [groups]="[0,2,1]">
+      <d3ng-map [data]="data" idKey="code"></d3ng-map>
+    </d3ng-groups>
+
+    <div class="grid" *ngIf="countries">
+      <div class="col-4-12">
+        <d3ng-groups [context]="context" [groups]="[0,2]" style="width: 100%; height: 260px;">
+          <d3ng-scatter-plot [data]="countries" [dimensions]='dimensions' [config]="{ticks: [5, 5]}">
+          </d3ng-scatter-plot>
+        </d3ng-groups>
+      </div>
+      <div class="col-4-12">
+        <d3ng-groups [context]="context" [groups]="[0,2]" style="width: 100%; height: 260px;">
+          <d3ng-scatter-plot [data]="countries" [dimensions]='dimensions' [config]="{ticks: [5, 5]}">
+          </d3ng-scatter-plot>
+        </d3ng-groups>
+      </div>
+      <div class="col-4-12">
+        <d3ng-groups [context]="context" [groups]="[0,2]" style="width: 100%; height: 260px;">
+          <d3ng-scatter-plot [data]="countries" [dimensions]='dimensions' [config]="{ticks: [5, 5]}">
+          </d3ng-scatter-plot>
+        </d3ng-groups>
+      </div>
+    </div>
   </div>
 </div>
 

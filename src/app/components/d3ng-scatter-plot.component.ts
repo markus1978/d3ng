@@ -101,8 +101,8 @@ export class D3ngScatterPlotComponent extends D3ngChart implements OnChanges {
     const xAxis = d3.svg.axis().scale(scales.x).orient("bottom");
     const yAxis = d3.svg.axis().scale(scales.y).orient("left");
     if (this.config.ticks) {
-      xAxis.ticks(this.config.ticks[0]);
-      yAxis.ticks(this.config.ticks[1]);
+      xAxis.ticks(this.config.ticks[0], "s");
+      yAxis.ticks(this.config.ticks[1], "s");
     }
 
     const d_chart = d3.select(self.chart.nativeElement);

@@ -3,6 +3,7 @@ import {Http, Response} from "@angular/http";
 import {D3ngParallelCoordinatesComponent} from "../components/d3ng-parallel-coordinates.component";
 import {D3ngCollapsibleIndentedTreeComponent} from "../components/d3ng-collapsible-indented-tree.component";
 import * as d3 from "d3";
+import {D3ngGroupContext} from "../components/d3ng-groups.component";
 
 @Component({
   selector: 'app-owid',
@@ -10,6 +11,7 @@ import * as d3 from "d3";
   styleUrls: ['simplegrid.css', './owid.component.css']
 })
 export class OwidComponent implements OnInit {
+  private context = new D3ngGroupContext();
 
   private db: {
     data: [{

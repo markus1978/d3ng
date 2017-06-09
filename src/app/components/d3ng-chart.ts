@@ -53,7 +53,7 @@ export class D3ngSelection  {
         } else {
           if (this.directSelectionColors.indexOf(color) == -1) {
             const oldColor = this.indirectSelectionColors.indexOf(color);
-            if (oldColor < item.group) {
+            if (oldColor == -1) {
               color = D3ngChart.selectionColors[item.group].indirect;
             }
           }
@@ -61,6 +61,14 @@ export class D3ngSelection  {
       }
     });
     return color;
+  }
+
+  public sortSelection(groups: number[]) {
+    this.items.sort((a,b) => {
+      const ag = groups.indexOf(a.group);
+      const bg = groups.indexOf(b.group);
+      return (ag > bg) ? 1 : ((ag < bg) ? -1 : 0);
+    });
   }
 
   public isSelected(dataPoint: any, predicate?: (selected: any[], dataPoint: any) => boolean): boolean {
@@ -158,6 +166,8 @@ export abstract class D3ngChart implements OnChanges {
     }
   };
 
+  public groupOrder = [0, 1, 2, 3];
+
   /**
    * Calculates a set of representatives for an original data point. The idea is that a parent or child data point
    * in the data set can represent data points that are not within the data set.
@@ -224,6 +234,7 @@ export abstract class D3ngChart implements OnChanges {
 
     selection.selected = this.computeSelectedRepresentatives(selected);
 
+    this.currentSelection.sortSelection(this.groupOrder);
     this.drawSelection(this.currentSelection);
   }
 
