@@ -62,7 +62,9 @@ export class D3ngGroupsComponent implements AfterContentInit, OnDestroy {
       throw new Error("No group context set.");
     }
     this.chart.selectedChange.subscribe(selected => this.onDirectSelectedChanged(selected));
-    this.chart.currentSelectionGroup = this.groups[0];
+    if (this.groups.indexOf(this.chart.currentSelectionGroup) == -1) {
+      this.chart.currentSelectionGroup = this.groups[0];
+    }
     this.groups.forEach(group => {
       const handler = selected => {
         this.onIndirectSelectedChanged(group, selected);

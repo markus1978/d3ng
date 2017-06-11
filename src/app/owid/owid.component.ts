@@ -26,13 +26,14 @@ export class OwidComponent implements OnInit {
   } = null;
 
   private metaDataList: any[] = [];
-  private dimensions = [
-    "Government spending (%GDP)",
-    "Literacy rate",
-    "Per capita energy use- World Bank",
-    "Population Growth Rate",
-    "Gini Index – World Bank",
-    "Population Density"
+  private dimensions = [];
+  private startDimensions = [
+    "UN – Population Division (Fertility) – 2015 revision",
+    "Child Mortality Estimates (CME Info)",
+    "Rate of Natural Population Increase – UN 2015",
+    "Population Density",
+    "Population by Country (Clio Infra)",
+    "Life Expectancy at Birth (both genders)"
   ];
   private data: any[] = [];
   private metaByKey = {};
@@ -48,10 +49,6 @@ export class OwidComponent implements OnInit {
       });
   }
 
-  private dimensionsFromSelection(selection: any[]): string[] {
-    return selection.map(d => d.key);
-}
-
   private setDB(db: any): void {
     this.db = db;
 
@@ -59,10 +56,9 @@ export class OwidComponent implements OnInit {
     db.data.forEach(data => {
       data.data.forEach(value => {
         data[value.key] = value.value;
-      })
+      });
       data.data = undefined;
     });
-    this.data = db.data;
 
     // filter and flatten meta data directory
     const filter = (node, pred: (any) => boolean) => {
@@ -91,6 +87,27 @@ export class OwidComponent implements OnInit {
       label: "OWID Data",
       children: this.db.meta
     }];
+
+    this.metaByKey['Population Density'].scale = 0.25;
+    this.metaByKey['Population by Country (Clio Infra)'].scale = 0.25;
+    this.metaByKey['Life Expectancy at Birth (both genders)'].scale = 4;
+
+    this.metaDataListElement.preDirectSelection = this.startDimensions.map(key => this.metaByKey[key]);
+  }
+
+  private setDimensions(dimensions: any[]): void {
+    // filter data
+    this.data = this.db.data.filter(country => {
+      let filter = false;
+      dimensions.forEach(meta => {
+        if (country[meta.key] == 0) {
+          filter = true;
+        }
+      });
+      return !filter;
+    });
+
+    this.dimensions = dimensions.map(d => d.key);
   }
 
   ngOnInit() {
@@ -121,6 +138,7 @@ export class OwidComponent implements OnInit {
       }
     };
 
+    // this should be moved into parallel coordinates (or all axis based visualizations)!
     this.pc.appendAxis = (axis) => {
       axis.selectAll('.axisTitle').attr("y", -15);
       axis.append('title').text(d => {
@@ -137,7 +155,7 @@ export class OwidComponent implements OnInit {
           .text(direction > 0 ? '>' : '<')
           .attr("text-anchor", "middle")
           .attr("y", -4)
-          .attr("x", 5*direction)
+          .attr("x", 5 * direction)
           .attr("style", "font-size: 11px; cursor: pointer;")
           .on('click', (d) => {
             if (!this.metaByKey[d].scale) {
@@ -154,18 +172,17 @@ export class OwidComponent implements OnInit {
     this.pc.getScaleForDimension = (dim) => {
       const meta = this.metaByKey[dim];
       if (meta) {
-        var scale = this.metaByKey[dim].scale;
+        let scale = this.metaByKey[dim].scale;
         if (!scale) {
           scale = 1;
         }
         return d3.scale.pow().exponent(scale);
       }
       return d3.scale.linear();
-    }
+    };
   }
 
   private trunc(str: string, n: number): string {
-    return (str.length > n) ? str.substr(0, n-1) + '..' : str;
+    return (str.length > n) ? str.substr(0, n - 1) + '..' : str;
   }
-
 }

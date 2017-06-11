@@ -22,8 +22,18 @@ export class D3ngCollapsibleIndentedTreeComponent extends D3ngHierarchicalChart 
 
   protected drawSelection(selection: D3ngSelection): void {
     if (this.d3Chart) {
-      this.d3Chart.selectAll("span")
-        .style("color", dataPoint => selection.selectionColor(dataPoint));
+      this.d3Chart.selectAll("span").style("color", (dataPoint) => selection.selectionColor(dataPoint));
+      this.d3Chart.selectAll("div").each(function(dataPoint) {
+        if (selection.selectionColor(dataPoint) != "black") {
+          let node = this;
+          while (node) {
+            if (node.className == "closed") {
+              node.className = "open";
+            }
+            node = node.parentNode;
+          }
+        }
+      });
     }
   }
 

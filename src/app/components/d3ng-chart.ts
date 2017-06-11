@@ -169,6 +169,13 @@ export abstract class D3ngChart implements OnChanges {
   public groupOrder = [0, 1, 2, 3];
 
   /**
+   * Allows clients to set a direct selection, before the chart has any data. Will be removed and set once data is set.
+   * Its a hack, handle with care.
+   * @type {any}
+   */
+  public preDirectSelection: any[] = null;
+
+  /**
    * Calculates a set of representatives for an original data point. The idea is that a parent or child data point
    * in the data set can represent data points that are not within the data set.
    * @param original
@@ -238,7 +245,7 @@ export abstract class D3ngChart implements OnChanges {
     this.drawSelection(this.currentSelection);
   }
 
-  protected setDirectSelection(selected: Array<any>) {
+  public setDirectSelection(selected: Array<any>) {
     if (this.multiselect && selected.length != 0) {
       const currentDirectSelection = this.currentSelection.getSelection(this.currentSelectionGroup, true);
       if (currentDirectSelection) {
@@ -280,6 +287,11 @@ export abstract class D3ngChart implements OnChanges {
   protected onDataChanged() {
     this.clear();
     this.draw();
+
+    if (this.preDirectSelection) {
+      this.setDirectSelection(this.preDirectSelection);
+      this.preDirectSelection = null;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
