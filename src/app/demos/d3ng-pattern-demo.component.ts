@@ -13,6 +13,7 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class D3ngPatternDemoComponent {
+  selection: any[] = [];
   source = [];
 
   constructor(http:Http) {

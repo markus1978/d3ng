@@ -29,7 +29,7 @@ export class D3ngTreeMapComponent extends D3ngHierarchicalChart implements OnCha
   private cell = null;
   private color = null;
 
-  private onValueChange(event: any): void {
+  onValueChange(event: any): void {
     this.value = event.value;
     this.clear();
     this.draw();
@@ -56,48 +56,6 @@ export class D3ngTreeMapComponent extends D3ngHierarchicalChart implements OnCha
       });
     }
   }
-
-  // protected drawSelected(selected: Array<any>) {
-  //   const self = this;
-  //   if (self.data && self.cell) {
-  //     const selectedWithNoChildSelected = [];
-  //
-  //     const everyWithAll = (list: Array<Object>, predicate: (Object) => boolean) => {
-  //       let overallResult = true;
-  //       for (let i = 0; i < list.length; i++) {
-  //         const result = predicate(list[i]);
-  //         overallResult = result && overallResult;
-  //       }
-  //       return overallResult;
-  //     };
-  //
-  //     const notSelected = d => {
-  //       const children = self.getChildren(d);
-  //       let childNotSelected = true;
-  //       if (children) {
-  //         childNotSelected = everyWithAll(children, function(c) {
-  //           return notSelected(c);
-  //         });
-  //       }
-  //       const selfSelected = selected.indexOf(d) != -1;
-  //       if (selfSelected && childNotSelected) {
-  //         selectedWithNoChildSelected.push(d);
-  //       }
-  //       return childNotSelected && !selfSelected;
-  //     };
-  //     notSelected(this.computeHierarchyRoot());
-  //
-  //     this.cell.classed("selected", d => {
-  //       while (d) {
-  //         if (selectedWithNoChildSelected.indexOf(d.original) != -1) {
-  //           return true;
-  //         }
-  //         d = d.parent;
-  //       }
-  //       return false;
-  //     });
-  //   }
-  // }
 
   protected clear() {
     this.chart.nativeElement.innerHTML = "";

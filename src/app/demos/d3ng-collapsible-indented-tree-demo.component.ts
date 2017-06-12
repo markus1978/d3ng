@@ -15,6 +15,7 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class D3ngCollapsibleIndentedTreeDemoComponent {
+  selection: any[] = [];
   source = [];
 
   constructor(http:Http) {

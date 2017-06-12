@@ -3,6 +3,13 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'd3ng-demos',
   template: `
+    <div class="explanations">
+      <p>
+        D3ng uses <a href="http://d3.js">D3.js</a> to implement a variety of chart types. This pages demonstrates each individual chart type.
+        For your own visualizations, you probably want to implement new chart types. To do so you only have to
+        implement to methods. One drawing data with D3.js; and another one that add styling based on selections.
+      </p>
+    </div>
     <div class="container">
       <div class="nav">
         <md-list>

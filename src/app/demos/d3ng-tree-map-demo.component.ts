@@ -15,6 +15,8 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class D3ngTreeMapDemoComponent {
+
+  selection: any[] = [];
   source = [];
 
   constructor(http:Http) {

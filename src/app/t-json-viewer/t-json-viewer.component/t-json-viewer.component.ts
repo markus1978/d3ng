@@ -19,8 +19,7 @@ export class TJsonViewerComponent implements OnInit, OnChanges {
 
   @Input()
   json: Array<any>|Object|any;
-
-  private asset: Array<Item> = [];
+  asset: Array<Item> = [];
 
   constructor() { }
 
@@ -28,7 +27,7 @@ export class TJsonViewerComponent implements OnInit, OnChanges {
     this.onChanged();
   }
 
-  private onChanged() {
+  onChanged() {
     if (!_.isObject(this.json) && !_.isArray(this.json)) {
       this.json = {};
       // return;

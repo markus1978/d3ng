@@ -12,6 +12,7 @@ import 'rxjs/Rx';
 })
 
 export class D3ngRadialEdgeBundlingDemoComponent {
+  selection: any[] = [];
   data = {};
 
   constructor(http:Http) {

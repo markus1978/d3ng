@@ -224,7 +224,7 @@ export abstract class D3ngChart implements OnChanges {
 
   private computeSelectedRepresentatives(selected: Array<any>): Array<any> {
     const representatives = [];
-    selected.forEach(s => {
+    selected.filter(s => s).forEach(s => {
       this.findRepresentative(s).forEach(r => {
         representatives.push(r);
       });

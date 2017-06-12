@@ -1,4 +1,16 @@
-
+<div class="explanations">
+  <p>
+    <a target="new" href="http://ourworldindata.org">Our World in Data (OWID)</a>
+    is an online publication that shows living conditions in our world. OWID is
+    produced at the University of Oxford. It comprises a collection of many data-sets
+    from various sources covering many variables for as many countries as possible.
+    Use the source-links to get to the respective OWID page to get more information.
+  </p>
+  <p>
+    OWID's data is licenced under CC-BY-SA. Therefore, this distribution of its data
+    is also licenced under CC-BY-SA.
+  </p>
+</div>
 <div class="grid">
   <div class="col-4-12" style="overflow: auto;">
     <p>
@@ -24,7 +36,7 @@
       <d3ng-map [data]="data" idKey="code" [currentSelectionGroup]="1" [multiselect]="true"></d3ng-map>
     </d3ng-groups>
 
-    <div class="grid" *ngIf="countries">
+    <div class="grid" *ngIf="countries && countries.length > 0">
       <p>
         4. Analyse the data of the selected countries. Select via clicking and dragging. Click the colored boxes to switch the selection color.
       </p>

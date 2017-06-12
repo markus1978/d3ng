@@ -26,10 +26,10 @@ export class D3ngScatterPlotComponent extends D3ngChart implements OnChanges {
 
   @ViewChild('chart') chart;
 
-  @Input() protected x: string;
-  @Input() protected y: string;
+  @Input() x: string;
+  @Input() y: string;
 
-  @Input() protected dimensions: Array<string>;
+  @Input() dimensions: Array<string>;
 
   private d3Chart = null;
 
@@ -38,13 +38,13 @@ export class D3ngScatterPlotComponent extends D3ngChart implements OnChanges {
     ticks?: number[]
   } = {};
 
-  private onXChange(event: any): void {
+  onXChange(event: any): void {
     this.x = event.value;
     this.clear();
     this.draw();
   }
 
-  private onYChange(event: any): void {
+  onYChange(event: any): void {
     this.y = event.value;
     this.clear();
     this.draw();

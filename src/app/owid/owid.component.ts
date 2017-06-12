@@ -11,7 +11,10 @@ import {D3ngGroupContext} from "../components/d3ng-groups.component";
   styleUrls: ['simplegrid.css', './owid.component.css']
 })
 export class OwidComponent implements OnInit {
-  private context = new D3ngGroupContext();
+
+  countries: any[] = [];
+
+  context = new D3ngGroupContext();
 
   private db: {
     data: [{
@@ -25,17 +28,17 @@ export class OwidComponent implements OnInit {
     meta: any[]
   } = null;
 
-  private metaDataList: any[] = [];
-  private dimensions = [];
+  metaDataList: any[] = [];
+  dimensions = [];
   private startDimensions = [
     "UN – Population Division (Fertility) – 2015 revision",
-    "Child Mortality Estimates (CME Info)",
+    "Gapminder (child mortality estimates version 8)",
     "Rate of Natural Population Increase – UN 2015",
     "Population Density",
     "Population by Country (Clio Infra)",
     "Life Expectancy at Birth (both genders)"
   ];
-  private data: any[] = [];
+  data: any[] = [];
   private metaByKey = {};
 
   @ViewChild('meta') metaDataListElement: D3ngCollapsibleIndentedTreeComponent;
@@ -95,7 +98,8 @@ export class OwidComponent implements OnInit {
     this.metaDataListElement.preDirectSelection = this.startDimensions.map(key => this.metaByKey[key]);
   }
 
-  private setDimensions(dimensions: any[]): void {
+  setDimensions(dimensions: any[]): void {
+    dimensions = dimensions.filter(d => d);
     // filter data
     this.data = this.db.data.filter(country => {
       let filter = false;

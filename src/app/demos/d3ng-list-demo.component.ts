@@ -13,9 +13,12 @@ import { Component } from '@angular/core';
 })
 
 export class D3ngListDemoComponent {
+
+  selection: any[] = [];
+
   label = function(d) {
     return d;
-  }
+  };
 
   listData = [
     "One",

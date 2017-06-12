@@ -23,3 +23,10 @@
 .content {
   margin-left: 250px;
 }
+
+.explanations {
+  font-style: italic;
+}
+.explanations p:last-of-type {
+  margin-bottom: 0;
+}

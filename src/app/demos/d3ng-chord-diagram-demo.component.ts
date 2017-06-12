@@ -10,6 +10,7 @@ import { Component } from '@angular/core';
 })
 
 export class D3ngChordDiagramDemoComponent {
+  selection: any[] = [];
   data = [
     {
       id: "a",
@@ -40,5 +41,5 @@ export class D3ngChordDiagramDemoComponent {
         { id: "c", value: 1 }
       ]
     },
-  ]
+  ];
 }

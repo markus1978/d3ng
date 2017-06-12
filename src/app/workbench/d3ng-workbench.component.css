@@ -7,6 +7,10 @@
   margin-right: 5px;
 }
 
+.explanations {
+  font-style: italic;
+}
+
 .editor {
   width: 400px;
   display: inline-block;

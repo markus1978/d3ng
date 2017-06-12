@@ -39,7 +39,7 @@ export class D3ngCodeVizComponent {
     }
   }
 
-  private onPackagesChanged(packages: any[]) {
+  onPackagesChanged(packages: any[]) {
     if (packages.length == 0) {
       this.packages = this.data;
     } else {
@@ -47,7 +47,7 @@ export class D3ngCodeVizComponent {
     }
   }
 
-  private onClassesChanged(event: any) {
+  onClassesChanged(event: any) {
     if (event.group == 1) {
       this.classes = event.selected as any[];
     }

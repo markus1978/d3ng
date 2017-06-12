@@ -24,25 +24,31 @@ export class AppComponent {
   title = 'D3ng – D3.js chart component library';
   navLinks = [
     {
-      path : '/demos',
-      label : 'Components'
+      path: '/about',
+      label: 'D3ng'
     },
     {
-      path: '/stories',
-      label: 'Interactions'
-    },
-    {
-      path : '/workbench',
-      label: 'Workbench'
+      path: '/owid',
+      label: 'OWID Example'
     },
     {
       path : '/code-viz',
       label: 'Software Example'
     },
     {
-      path: '/owid',
-      label: 'OWID Example'
-    }
+      path: '/stories',
+      label: 'Interactions'
+    },
+    {
+      path : '/demos',
+      label : 'Components'
+    },
+    {
+      path : '/workbench',
+      label: 'Workbench'
+    },
+
+
   ];
   selection = [];
 }

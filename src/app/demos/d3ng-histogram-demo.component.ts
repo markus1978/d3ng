@@ -13,7 +13,7 @@ import { Component } from '@angular/core';
 })
 
 export class D3ngHistogramDemoComponent {
-
+  selection: any[] = [];
   listData = [
     { a: "One", b: 2, c:"++" },
     { a: "Two" },
@@ -24,5 +24,5 @@ export class D3ngHistogramDemoComponent {
     { a: "One" },
     { a: "One" },
     { a: "One" },
-  ]
+  ];
 }

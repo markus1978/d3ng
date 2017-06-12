@@ -115,7 +115,11 @@ class D3ngGroup {
 
   public getSelected() {
     const selected = [];
-    for (const selection of this.selections.values()) {
+    const it = this.selections.values();
+    let itResult = it.next();
+    while (!itResult.done) {
+      const selection = itResult.value;
+      itResult = it.next();
       selection.forEach(s => {
         if (selected.indexOf(s) != 1) {
           selected.push(s);

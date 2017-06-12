@@ -10,6 +10,9 @@ import { Component } from '@angular/core';
 })
 
 export class D3ngScatterPlotDemoComponent {
+
+  selection: any[] = [];
+
   data = [
     { id: "a", a: 10, b: 20, c:5 },
     { id: "b", a: 12, b: 10, c:7 },

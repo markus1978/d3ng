@@ -18,3 +18,10 @@
   font-weight: bold;
   text-decoration: none;
 }
+
+.explanations {
+  font-style: italic;
+}
+.explanations p:last-of-type {
+  margin-bottom: 0;
+}

@@ -18,12 +18,14 @@ import {D3ngWorkbenchModule} from "./workbench/d3ng-workbench.module";
 import {D3ngStoriesModule, storiesRouting} from "./stories/d3ng-stories.module";
 import {D3ngStoriesComponent} from "./stories/d3ng-stories/d3ng-stories.component";
 import { OwidComponent } from './owid/owid.component';
+import { D3ngAboutComponent } from './d3ng-about.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     D3ngCodeVizComponent,
     OwidComponent,
+    D3ngAboutComponent,
   ],
   imports: [
     BrowserModule, // before other material modules are imported
@@ -36,6 +38,11 @@ import { OwidComponent } from './owid/owid.component';
     D3ngComponentsModule,
     D3ngWorkbenchModule,
     RouterModule.forRoot([
+      { path: '', redirectTo: '/about', pathMatch: 'full' },
+      {
+        path: 'about',
+        component: D3ngAboutComponent
+      },
       {
         path: 'code-viz',
         component: D3ngCodeVizComponent

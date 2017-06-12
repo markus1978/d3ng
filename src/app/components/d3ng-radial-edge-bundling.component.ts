@@ -53,7 +53,7 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
     }
   }
 
-  private onTensionChange(event: any): void {
+  onTensionChange(event: any): void {
     this.line.tension(event.value / 100);
     this.path.attr("d", (d, i) => this.line(this.splines[i]));
   }

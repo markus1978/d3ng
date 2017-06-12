@@ -26,7 +26,7 @@ export class D3ngForceGraphComponent extends D3ngDependencyChart implements OnCh
 
   private d3Chart = null;
 
-  private onNodeValueChange(event: any): void {
+  onNodeValueChange(event: any): void {
     this.nodeValue = event.value;
     this.clear();
     this.draw();

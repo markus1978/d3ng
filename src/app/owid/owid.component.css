@@ -2,3 +2,12 @@ d3ng-parallel-coordinates {
   width: 100%;
   height: 400px;
 }
+
+.explanations {
+  max-width: 1140px;
+  margin: auto;
+  font-style: italic;
+}
+.explanations p:last-of-type {
+  margin-bottom: 0;
+}

@@ -25,7 +25,7 @@ export class D3ngWorkbenchItemComponent {
 
   constructor (@Host() private workbench: D3ngWorkbenchComponent) { }
 
-  private onRemoveClicked():void {
+  onRemoveClicked():void {
     this.workbench.removeItem(this.index);
   }
 

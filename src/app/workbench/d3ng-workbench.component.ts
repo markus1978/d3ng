@@ -114,7 +114,7 @@ export class D3ngWorkbenchComponent {
     })
   }
 
-  private addChart():void {
+  addChart():void {
     const groups = Array.from(this.groupSelection.values);
     const item = {
       gridItemConfig: this.createGridItemConfig(),
@@ -179,7 +179,7 @@ export class D3ngWorkbenchComponent {
     });
   }
 
-  private onSelectedChanged(group: number, selected: any[]) {
+  onSelectedChanged(group: number, selected: any[]) {
     if (this.sourceGroup == group) {
       this.source = selected;
     }
@@ -189,7 +189,7 @@ export class D3ngWorkbenchComponent {
     });
   }
 
-  private onSourceGroupChanged(group: number) {
+  onSourceGroupChanged(group: number) {
     this.sourceGroup = group;
     const selectableGroups = Array.from(this.groups);
     if (group == -1) {
