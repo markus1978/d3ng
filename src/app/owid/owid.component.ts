@@ -1,9 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Http, Response} from "@angular/http";
-import {D3ngParallelCoordinatesComponent} from "../components/d3ng-parallel-coordinates.component";
-import {D3ngCollapsibleIndentedTreeComponent} from "../components/d3ng-collapsible-indented-tree.component";
+import {D3ngParallelCoordinatesComponent} from "../../lib/d3ng-parallel-coordinates.component";
+import {D3ngCollapsibleIndentedTreeComponent} from "../../lib/d3ng-collapsible-indented-tree.component";
 import * as d3 from "d3";
-import {D3ngGroupContext} from "../components/d3ng-groups.component";
+import {D3ngGroupContext} from "../../lib/d3ng-groups.component";
 
 @Component({
   selector: 'app-owid',

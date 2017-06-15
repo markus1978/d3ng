@@ -97,7 +97,7 @@ export class D3ngGroupsComponent implements AfterContentInit, OnDestroy {
   }
 }
 
-class D3ngGroup {
+export class D3ngGroup {
   private selections: Map<D3ngChart, Array<any>> = new Map<D3ngChart, Array<any>>();
   private handler: Array<(selected: any[]) => void> = [];
 

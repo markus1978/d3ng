@@ -1,5 +1,5 @@
 import {NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
-import { D3ngComponentsModule } from '../components/d3ng-components.module';
+import { D3ngComponentsModule } from '../../lib/d3ng.module';
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MdListModule, MdSidenavModule} from "@angular/material";

@@ -1,0 +1,19 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../dist/lib",
+    "module": "commonjs",
+    "stripInternal": true,
+    "declaration": true
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "files": [
+    "./lib/d3ng.module.ts"
+  ],
+  "angularCompilerOptions": {
+    "skipTemplateCodegen": true,
+    "debug": true
+  }
+}

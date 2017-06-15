@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {D3ngGroupContext} from "../../components/d3ng-groups.component";
+import {D3ngGroupContext} from "../../../lib/d3ng-groups.component";
 
 @Component({
   selector: 'd3ng-story',

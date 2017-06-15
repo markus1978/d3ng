@@ -26,6 +26,7 @@ import {D3ngHistogramComponent} from "./d3ng-histogram.component";
 import {D3ngGroupsComponent} from "./d3ng-groups.component";
 import {D3ngGroupSelectionComponent} from "./d3ng-groups-selection.component";
 import {D3ngMapComponent} from "./d3ng-map.component";
+import {CommonModule} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import {D3ngMapComponent} from "./d3ng-map.component";
     D3ngMapComponent
   ],
   imports: [
+    CommonModule,
     BrowserModule, // before other material modules are imported
     BrowserAnimationsModule, // before other material modules are imported
     MdSliderModule,

@@ -1,7 +1,7 @@
 import {Component, Injectable} from '@angular/core';
 import {Http, Response} from "@angular/http";
 import 'rxjs/Rx';
-import {D3ngGroupContext} from "../components/d3ng-groups.component";
+import {D3ngGroupContext} from "../../lib/d3ng-groups.component";
 
 @Component({
   selector: 'd3ng-code-viz',

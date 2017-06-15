@@ -8,7 +8,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MdTabsModule} from "@angular/material";
 import {D3ngDemosModule} from "./demos/d3ng-demos.module";
 import {D3ngDemosComponent} from "./demos/d3ng-demos.component";
-import {D3ngComponentsModule} from "./components/d3ng-components.module";
+import {D3ngComponentsModule} from "../lib/d3ng.module";
 import {D3ngCodeVizComponent} from "./code-viz/d3ng-code-viz.component";
 import {demosRouting} from "./demos/d3ng-demos.module";
 

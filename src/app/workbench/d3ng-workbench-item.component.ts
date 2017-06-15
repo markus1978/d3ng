@@ -1,9 +1,9 @@
 import {
   Component, EventEmitter, Host, HostListener, Input, Output, ViewChild,
 } from '@angular/core';
-import {D3ngChart} from "../components/d3ng-chart";
+import {D3ngChart} from "../../lib/d3ng-chart";
 import {D3ngWorkbenchComponent} from "./d3ng-workbench.component";
-import {D3ngGroupContext} from "../components/d3ng-groups.component";
+import {D3ngGroupContext} from "../../lib/d3ng-groups.component";
 
 @Component({
   selector: 'd3ng-workbench-item',

@@ -14,7 +14,7 @@ import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MdListModule, MdSidenavModule} from "@angular/material";
 import 'hammerjs';
-import {D3ngComponentsModule} from "../components/d3ng-components.module";
+import {D3ngComponentsModule} from "../../lib/d3ng.module";
 import {D3ngHistogramDemoComponent} from "./d3ng-histogram-demo.component";
 import {D3ngMapDemoComponent} from "./d3ng-map-demo.component";
 

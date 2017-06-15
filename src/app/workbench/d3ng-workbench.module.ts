@@ -4,7 +4,7 @@ import {NgGridModule} from "angular2-grid";
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MdButtonModule, MdIconModule, MdInputModule, MdSelectModule, MdToolbarModule} from "@angular/material";
-import {D3ngComponentsModule} from "../components/d3ng-components.module";
+import {D3ngComponentsModule} from "../../lib/d3ng.module";
 import {D3ngWorkbenchComponent} from "./d3ng-workbench.component";
 import {D3ngWorkbenchItemComponent} from "./d3ng-workbench-item.component";
 import {FormsModule} from "@angular/forms";
