@@ -1,7 +1,4 @@
-import {
-  ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, Renderer, Renderer2, SimpleChanges,
-  ViewContainerRef
-} from "@angular/core";
+import {EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges} from "@angular/core";
 
 export class D3ngSelectionItem {
   group = 0;

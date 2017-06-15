@@ -1,9 +1,16 @@
 import {
-  Directive, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges,
+  Directive,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
   ViewContainerRef
-} from '@angular/core';
-declare let D3ngPatternParser: any; import "./d3ng-pattern-parser";
+} from "@angular/core";
+import "./d3ng-pattern-parser";
 import {D3ngChart} from "./d3ng-chart";
+declare let D3ngPatternParser: any;
 
 export interface PatternTerm {
   type:string;

@@ -11,7 +11,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build:lib": "rimraf dist/lib && tsc -p src/tsconfig.lib.json && gulp && rollup -c src/tools/rollup.config.js dist/lib/d3ng.module.js > dist/lib/d3ng.bundle.js && ngc -p src/tsconfig.lib.json && cp package.json README.md dist/lib",
+    "build:lib": "rimraf dist/lib && ngc -p src/tsconfig.lib.json && gulp && rollup -c src/tools/rollup.config.js dist/lib/d3ng.module.js > dist/lib/d3ng.bundle.js && cp package.json README.md dist/lib",
     "build:app": "ng build --prod --aot",
     "test": "ng test",
     "lint": "ng lint",
@@ -68,6 +68,6 @@
     "rollup": "^0.43.0",
     "ts-node": "^2.1.2",
     "tslint": "^4.5.1",
-    "typescript": "^2.4.0"
+    "typescript": "^2.3.4"
   }
 }

@@ -1,6 +1,4 @@
-import {
-  Component, forwardRef, Input, OnChanges, ViewChild
-} from '@angular/core';
+import {Component, forwardRef, Input, OnChanges, ViewChild} from "@angular/core";
 import * as d3 from "d3";
 import {D3ngChart, D3ngSelection} from "./d3ng-chart";
 import {D3ngHierarchicalChart} from "./d3ng-hierarchical-chart";

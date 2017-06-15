@@ -1,8 +1,8 @@
-import {EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from "@angular/core";
-
-declare var D3ngPatternParser: any;
+import {Input} from "@angular/core";
 import "./d3ng-pattern-parser";
 import {D3ngChart} from "./d3ng-chart";
+
+declare var D3ngPatternParser: any;
 
 export abstract class D3ngDependencyChart extends D3ngChart {
 

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, ViewChild} from "@angular/core";
 import {D3ngChart} from "./d3ng-chart";
 import * as d3 from "d3";
 

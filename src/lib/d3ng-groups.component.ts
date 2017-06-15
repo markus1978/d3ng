@@ -1,7 +1,4 @@
-import {
-  AfterContentInit,
-  Component, ContentChild, EventEmitter, Input, OnDestroy, Output
-} from '@angular/core';
+import {AfterContentInit, Component, ContentChild, EventEmitter, Input, OnDestroy, Output} from "@angular/core";
 import {D3ngChart} from "./d3ng-chart";
 
 export class D3ngGroupContext {
