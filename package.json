@@ -1,6 +1,6 @@
 {
   "name": "d3ng",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Interactive data visualizations with Angular 2 and d3.js.",
   "repository": {
     "type": "git",
