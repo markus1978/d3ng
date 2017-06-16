@@ -1,25 +1,16 @@
-<d3ng-story title="Input from Selections">
-  <story-description>
-    Often we want to use a chart or selection group to select the input data for other charts.
-  </story-description>
+<div class="example">
+  <d3ng-groups class="chart" (selectedChanged)="selection=$event.selected"
+               [groups]="[0]" [context]="context">
+    <d3ng-scatter-plot d3ngSource [source]="data"
+                       pattern="container"
+                       [dimensions]="dimensions" x="x" y="y"
+                       [config]="scatterPlotConfig">
+    </d3ng-scatter-plot>
+  </d3ng-groups>
 
-  <story-body>
-    <div class="example">
-      <d3ng-groups class="chart" (selectedChanged)="selection=$event.selected"
-                   [groups]="[0]" [context]="context">
-        <d3ng-scatter-plot d3ngSource [source]="data"
-                           pattern="container"
-                           [dimensions]="dimensions" x="x" y="y"
-                           [config]="scatterPlotConfig">
-        </d3ng-scatter-plot>
-      </d3ng-groups>
-
-      <d3ng-scatter-plot class="chart" d3ngSource
-                         [source]="selection"
-                         pattern="container/contents" [allowEmpty]="true"
-                         [dimensions]="dimensions" x="x" y="y" [config]="scatterPlotConfig">
-      </d3ng-scatter-plot>
-    </div>
-  </story-body>
-
-</d3ng-story>
+  <d3ng-scatter-plot class="chart" d3ngSource
+                     [source]="selection"
+                     pattern="container/contents" [allowEmpty]="true"
+                     [dimensions]="dimensions" x="x" y="y" [config]="scatterPlotConfig">
+  </d3ng-scatter-plot>
+</div>

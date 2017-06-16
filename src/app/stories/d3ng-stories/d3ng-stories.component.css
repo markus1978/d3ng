@@ -1,13 +1,5 @@
 .container {
-  width: 100%;
   overflow: hidden;
-  display: inline-block;
-}
-
-.nav {
-  display: inline;
-  width: 250px;
-  float: left;
 }
 
 .nav a {
@@ -20,13 +12,17 @@
   padding: 0 16px !important;
 }
 
-.content {
-  margin-left: 250px;
-}
-
 .explanations {
   font-style: italic;
 }
 .explanations p:last-of-type {
   margin-bottom: 0;
+}
+
+.description {
+  color: #555;
+}
+
+.body {
+  margin-top: 30px;
 }

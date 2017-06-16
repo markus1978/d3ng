@@ -1,23 +1,16 @@
-<d3ng-story title="Overlapping Selection Groups">
-  <story-description>
-    Each selection group is associated with a color to distinguish selection groups and selections belonging to
-    different groups.
-  </story-description>
+<div class="example">
+  <d3ng-groups class="chart" [groups]="[0]" [context]="context">
+    <d3ng-scatter-plot [data]="data" [dimensions]="dimensions" x="x" y="y"
+                       [config]="scatterPlotConfig"></d3ng-scatter-plot>
+  </d3ng-groups>
 
-  <story-body>
-    <div class="example">
-      <d3ng-groups class="chart" [groups]="[0]" [context]="context">
-        <d3ng-scatter-plot [data]="data" [dimensions]="dimensions" x="x" y="y" [config]="scatterPlotConfig"></d3ng-scatter-plot>
-      </d3ng-groups>
+  <d3ng-groups class="chart" [groups]="[1,0]" [context]="context">
+    <d3ng-scatter-plot [data]="data" [dimensions]="dimensions" x="x" y="y"
+                       [config]="scatterPlotConfig"></d3ng-scatter-plot>
+  </d3ng-groups>
 
-      <d3ng-groups class="chart" [groups]="[1,0]" [context]="context">
-        <d3ng-scatter-plot [data]="data" [dimensions]="dimensions" x="x" y="y" [config]="scatterPlotConfig"></d3ng-scatter-plot>
-      </d3ng-groups>
-
-      <d3ng-groups class="chart" [groups]="[1]" [context]="context">
-        <d3ng-scatter-plot [data]="data" [dimensions]="dimensions" x="x" y="y" [config]="scatterPlotConfig"></d3ng-scatter-plot>
-      </d3ng-groups>
-    </div>
-  </story-body>
-
-</d3ng-story>
+  <d3ng-groups class="chart" [groups]="[1]" [context]="context">
+    <d3ng-scatter-plot [data]="data" [dimensions]="dimensions" x="x" y="y"
+                       [config]="scatterPlotConfig"></d3ng-scatter-plot>
+  </d3ng-groups>
+</div>

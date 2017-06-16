@@ -1,20 +1,13 @@
-<d3ng-story title="Mixed Hierarchy Levels">
-  <story-description>
-    If data is hierarchical, charts might represent data on different hierarchy levels.
-    In this case, a data point (parent) in one chart can represent multiple data points (children) in another chart.
-  </story-description>
+<div class="example">
+  <d3ng-groups class="chart" [context]="context">
+    <d3ng-scatter-plot d3ngSource [source]="data" pattern="container"
+                       [dimensions]="dimensions" x="x" y="y"
+                       [config]="scatterPlotConfig"></d3ng-scatter-plot>
+  </d3ng-groups>
 
-  <story-body>
-    <div class="example">
-      <d3ng-groups class="chart" [context]="context">
-        <d3ng-scatter-plot d3ngSource [source]="data" pattern="container" [dimensions]="dimensions" x="x" y="y" [config]="scatterPlotConfig"></d3ng-scatter-plot>
-      </d3ng-groups>
-
-      <d3ng-groups class="chart" [context]="context">
-        <d3ng-scatter-plot d3ngSource [source]="data" pattern="container/contents" [dimensions]="dimensions" x="x" y="y" [config]="scatterPlotConfig"></d3ng-scatter-plot>
-      </d3ng-groups>
-    </div>
-  </story-body>
-
-</d3ng-story>
-
+  <d3ng-groups class="chart" [context]="context">
+    <d3ng-scatter-plot d3ngSource [source]="data" pattern="container/contents"
+                       [dimensions]="dimensions" x="x" y="y"
+                       [config]="scatterPlotConfig"></d3ng-scatter-plot>
+  </d3ng-groups>
+</div>

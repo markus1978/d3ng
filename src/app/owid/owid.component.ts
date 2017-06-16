@@ -8,7 +8,7 @@ import {D3ngGroupContext} from "../../lib/d3ng-groups.component";
 @Component({
   selector: 'app-owid',
   templateUrl: './owid.component.html',
-  styleUrls: ['simplegrid.css', './owid.component.css']
+  styleUrls: ['./owid.component.css']
 })
 export class OwidComponent implements OnInit {
 

@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from "@angular/core/testing";
 
-import { D3ngStoriesComponent } from './d3ng-stories.component';
+import {D3ngStoriesComponent} from "./d3ng-stories.component";
 
 describe('D3ngStoriesComponent', () => {
   let component: D3ngStoriesComponent;

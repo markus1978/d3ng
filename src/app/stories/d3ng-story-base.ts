@@ -1,21 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {D3ngGroupContext} from "../../../lib/d3ng-groups.component";
-
-@Component({
-  selector: 'd3ng-story',
-  templateUrl: './d3ng-story.component.html',
-  styleUrls: ['./d3ng-story.component.css']
-})
-export class D3ngStoryComponent implements OnInit {
-
-  @Input() title;
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-}
+import {D3ngGroupContext} from "../../lib/d3ng-groups.component";
 
 export abstract class D3ngStoryBase {
   public context = new D3ngGroupContext;

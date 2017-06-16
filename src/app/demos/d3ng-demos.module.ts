@@ -12,11 +12,16 @@ import {D3ngForceGraphDemoComponent} from "./d3ng-force-graph-demo.component";
 import {D3ngCollapsibleIndentedTreeDemoComponent} from "./d3ng-collapsible-indented-tree-demo.component";
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MdListModule, MdSidenavModule} from "@angular/material";
+import {
+  MdButtonModule,
+  MdButtonToggleModule, MdCardModule, MdIconModule, MdListModule, MdSidenavModule,
+  MdTabsModule
+} from "@angular/material";
 import 'hammerjs';
 import {D3ngComponentsModule} from "../../lib/d3ng.module";
 import {D3ngHistogramDemoComponent} from "./d3ng-histogram-demo.component";
 import {D3ngMapDemoComponent} from "./d3ng-map-demo.component";
+import {D3ngShadredModule} from "../shared/d3ng-shared.module";
 
 export const demosRouting: Routes = [
   {
@@ -85,6 +90,7 @@ export const demosRouting: Routes = [
     BrowserAnimationsModule, // before other material modules are imported
     MdListModule,
     MdSidenavModule,
+    D3ngShadredModule,
     D3ngComponentsModule,
     RouterModule.forChild(demosRouting),
   ],

@@ -7,11 +7,15 @@
     "declaration": true
   },
   "exclude": [
-    "node_modules"
-  ],
-  "files": [
-    "./lib/d3ng.module.ts",
-    "./lib/d3ng-map.data.ts"
+    "node_modules",
+    "app",
+    "assets",
+    "environments",
+    "tools",
+    "main.ts",
+    "polyfills.ts",
+    "test.ts",
+    "lib/d3ng-map.data.ts"
   ],
   "angularCompilerOptions": {
     "skipTemplateCodegen": true,

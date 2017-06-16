@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {D3ngStoryBase} from "../d3ng-story/d3ng-story.component";
+import {Component} from "@angular/core";
+import {D3ngStoryBase} from "../d3ng-story-base";
 
 @Component({
   selector: 'd3ng-selection-group-story',

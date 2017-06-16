@@ -1,18 +1,4 @@
 
-.container {
-  width: 100%;
-  overflow: hidden;
-}
-
-.container .nav {
-  width: 200px;
-  float: left;
-}
-
-.container .content {
-  margin-left: 220px;
-}
-
 .nav a {
   color: black;
   font-weight: bold;
@@ -22,6 +8,7 @@
 .explanations {
   font-style: italic;
 }
-.explanations p:last-of-type {
-  margin-bottom: 0;
+
+.content {
+  margin-top: 30px;
 }
