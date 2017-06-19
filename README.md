@@ -1,7 +1,9 @@
 # D3ng
-D3ng is a web-based framework for interactive visual analysis of complex data-sets. It is build on top of Angular2 and D3.js. It allows you to combine multiple individual visualizations (charts) with user interactions that allow to explore the relationships between the data shown in different visual representations.
+D3ng is a web-based framework for interactive visual analysis of complex data-sets. It is build on top of **Angular2** and **D3.js**. It allows you to combine multiple individual visualizations (charts) with user interactions that allow to explore the relationships between the data shown in different visual representations.
 
 Have a look at our example visualizations build with *d3ng* [here](http://d3ng.github.io/owid).
+
+Some features of this READ.me work better in d3ng's [github page](http://github.com/markus1978/d3ng).
 
 ## Table of contents
 1. [Getting started](#getting-started)
@@ -99,6 +101,8 @@ You can also look at or fork our [example and skeleton project](https//github.co
 
 ## Documentation
 
+There is a generated API documentation of the d3ng component library [here](http://d3ng.github.io/documentation).
+
 ### Charts
 D3ng contains components for various types of charts. Refer to our running [example app](http://d3ng.github.io/demos) for a list and source code snippets.
 
@@ -169,7 +173,7 @@ Type needs to be a string, and children an array of child nodes.
 Each node can define more keys to keep the actual data variables. All nodes of the same type, need to define the same data keys. 
 
 Patterns of types can be used to select data from trees. Here is a simple example that selects all `class` typed nodes from a tree of `packages` and `classes, based on the given json data:
-```
+```typescript
 <d3ng-scatter-plot [source]="source" pattern="package/type" 
                    [dimensions]="['WMC', 'RFC', 'LOC']">
 </d3ng-scatter-plot>
@@ -241,3 +245,8 @@ There are no tests yet :-(.
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 Before running the tests make sure you are serving the app via `ng serve`.
 
+## License
+
+[MIT License](https://github.com/markus1978/d3ng/blob/master/LICENSE)
+
+Copyright (c) 2017 Markus Scheidgen
