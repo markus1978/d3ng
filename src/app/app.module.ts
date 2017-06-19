@@ -19,6 +19,7 @@ import {D3ngStoriesModule, storiesRouting} from "./stories/d3ng-stories.module";
 import {D3ngStoriesComponent} from "./stories/d3ng-stories/d3ng-stories.component";
 import { OwidComponent } from './owid/owid.component';
 import { D3ngAboutComponent } from './d3ng-about.component';
+import {MarkdownModule} from "angular2-markdown";
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { D3ngAboutComponent } from './d3ng-about.component';
     D3ngStoriesModule,
     D3ngComponentsModule,
     D3ngWorkbenchModule,
+    MarkdownModule.forRoot(),
     RouterModule.forRoot([
       { path: '', redirectTo: '/about', pathMatch: 'full' },
       {

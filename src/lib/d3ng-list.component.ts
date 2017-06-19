@@ -36,5 +36,4 @@ export class D3ngListComponent extends D3ngChart implements OnChanges {
         self.setDirectSelection([ d ]);
       });
   }
-
 }
