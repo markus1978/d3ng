@@ -1,5 +1,9 @@
 # D3ng
-D3ng is a web-based framework for interactive visual analysis of complex data-sets. It is build on top of **Angular2** and **D3.js**. It allows you to combine multiple individual visualizations (charts) with user interactions that allow to explore the relationships between the data shown in different visual representations.
+D3ng is a web-based framework for *interactive visual analysis* of complex data-sets. It is build on top of **Angular2** and **D3.js**. 
+
+You can combine multiple individual visualizations to allow users interactive exploration of the relations within data. Users can select data-points in one chart (*brushing*) and observe the same selection in other representations (*linking*).
+ 
+D3ng comes with a number of predefined charts, different ways to combine charts, and allows you to define your own charts. 
 
 <html>
 <a href="http://d3ng.github.io/owid">
