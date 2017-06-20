@@ -6,8 +6,10 @@ You can combine multiple individual visualizations to allow users interactive ex
 D3ng comes with a number of predefined charts, different ways to combine charts, and allows you to define your own charts. 
 
 <html>
-<a href="http://d3ng.github.io/owid">
-<img style="width:100%" src="https://raw.githubusercontent.com/markus1978/d3ng/master/src/assets/brushing_linking.png" title="OWID example"></a>
+<div style="align: center">
+  <a href="http://d3ng.github.io/owid">
+  <img style="width:100%;" src="https://raw.githubusercontent.com/markus1978/d3ng/master/src/assets/brushing_linking.png" title="OWID example"></a>
+</div>
 </html>
 
 Have a look at our example visualizations build with *d3ng* [here](http://d3ng.github.io/owid).
