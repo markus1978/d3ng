@@ -1,6 +1,11 @@
 # D3ng
 D3ng is a web-based framework for interactive visual analysis of complex data-sets. It is build on top of **Angular2** and **D3.js**. It allows you to combine multiple individual visualizations (charts) with user interactions that allow to explore the relationships between the data shown in different visual representations.
 
+<html>
+<a href="http://d3ng.github.io/owid">
+<img style="width:100%" src="/assets/brushing_linking.png" title="OWID example"></a>
+</html>
+
 Have a look at our example visualizations build with *d3ng* [here](http://d3ng.github.io/owid).
 
 Some features of this READ.me work better in d3ng's [github page](http://github.com/markus1978/d3ng).
