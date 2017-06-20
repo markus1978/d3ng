@@ -3,7 +3,7 @@ D3ng is a web-based framework for interactive visual analysis of complex data-se
 
 <html>
 <a href="http://d3ng.github.io/owid">
-<img style="width:100%" src="/assets/brushing_linking.png" title="OWID example"></a>
+<img style="width:100%" src="https://raw.githubusercontent.com/markus1978/d3ng/master/src/assets/brushing_linking.png" title="OWID example"></a>
 </html>
 
 Have a look at our example visualizations build with *d3ng* [here](http://d3ng.github.io/owid).
