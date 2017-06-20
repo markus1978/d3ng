@@ -8,7 +8,7 @@ D3ng comes with a number of predefined charts, different ways to combine charts,
 <html>
 <div style="text-align: center; width: 100%;">
   <a href="http://d3ng.github.io/owid">
-  <img src="https://raw.githubusercontent.com/markus1978/d3ng/master/src/assets/brushing_linking.png" title="OWID example"></a>
+  <img style="width: 60%" src="https://raw.githubusercontent.com/markus1978/d3ng/master/src/assets/brushing_linking.png" title="OWID example"></a>
 </div>
 </html>
 
