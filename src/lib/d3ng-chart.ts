@@ -163,6 +163,15 @@ export abstract class D3ngChart implements OnChanges {
     }
   };
 
+  private _isDrawSelection = true;
+  @Input() set isDrawSelection(value: boolean) {
+    this._isDrawSelection = value;
+    this.redraw();
+  }
+  get isDrawSelection(): boolean {
+    return this._isDrawSelection;
+  }
+
   public groupOrder = [0, 1, 2, 3];
 
   /**
@@ -239,7 +248,9 @@ export abstract class D3ngChart implements OnChanges {
     selection.selected = this.computeSelectedRepresentatives(selected);
 
     this.currentSelection.sortSelection(this.groupOrder);
-    this.drawSelection(this.currentSelection);
+    if (this._isDrawSelection) {
+      this.drawSelection(this.currentSelection);
+    }
   }
 
   public setDirectSelection(selected: Array<any>) {
@@ -279,6 +290,9 @@ export abstract class D3ngChart implements OnChanges {
   public redraw(): void {
     this.clear();
     this.draw();
+    if (this._isDrawSelection) {
+      this.drawSelection(this.currentSelection);
+    }
   }
 
   protected onDataChanged() {

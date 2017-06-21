@@ -32,9 +32,19 @@
     <p>
       3. You can also select data points by country. (Right click deselects all.)
     </p>
-    <d3ng-groups [context]="context" [groups]="[0,2,1]">
-      <d3ng-map [data]="data" idKey="code" [currentSelectionGroup]="1" [multiselect]="true"></d3ng-map>
-    </d3ng-groups>
+    <div class="map-container">
+      <div class="map-controls">
+        <md-select placeholder="Choropleth" [(ngModel)]="map.choropleth">
+          <md-option [value]="null">none</md-option>
+          <md-option *ngFor="let dim of dimensions" [value]="dim">{{ dim }}</md-option>
+        </md-select>
+        <md-checkbox [(ngModel)]="map.isDrawSelection">Show selections</md-checkbox>
+      </div>
+      <d3ng-groups [context]="context" [groups]="[0,2,1]">
+        <d3ng-map #map [data]="data" idKey="code" [currentSelectionGroup]="1" [multiselect]="true"
+                       [config]="{ choroplethColors: ['#007700', '#FFCC00'] }"></d3ng-map>
+      </d3ng-groups>
+    </div>
 
     <div class="grid" *ngIf="countries && countries.length > 0">
       <p>

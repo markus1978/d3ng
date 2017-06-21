@@ -11,3 +11,24 @@ d3ng-parallel-coordinates {
 .explanations p:last-of-type {
   margin-bottom: 0;
 }
+
+.map-container {
+  position: relative;
+}
+
+.map-controls {
+  position: absolute;
+  bottom: 30px;
+  left: 0px;
+  z-index: 10;
+  vertical-align: bottom;
+  width: 100%;
+}
+
+.map-controls md-checkbox {
+  margin-left: 10px;
+}
+
+.map-controls md-select {
+  width: 45%;
+}

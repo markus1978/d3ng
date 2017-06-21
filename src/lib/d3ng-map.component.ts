@@ -12,9 +12,18 @@ import {D3ngMapData} from "./d3ng-map.data";
 })
 export class D3ngMapComponent extends D3ngChart {
   @ViewChild('chart') chart;
-  @Input() dimension: string = null;
 
   @Input() idKey: string = "id";
+
+  private _choropleth: string = null;
+  @Input('choropleth')
+  set choropleth(value: string) {
+    this._choropleth = value;
+    this.redraw();
+  }
+  get choropleth(): string {
+    return this._choropleth;
+  }
 
   public getId(d: any): string {
     return d[this.idKey];
@@ -24,6 +33,10 @@ export class D3ngMapComponent extends D3ngChart {
   private d3Chart: any = null;
   private color: any = null;
 
+  @Input() config: {
+    choroplethColors: string[]
+  } = null;
+
   protected drawSelection(selection: D3ngSelection): void {
     if (this.geoData && this.d3Chart) {
       this.d3Chart.selectAll("path").style("fill", dataPoint => {
@@ -31,7 +44,12 @@ export class D3ngMapComponent extends D3ngChart {
         if (color == "black") {
           return this.colorize(dataPoint);
         } else {
-          return color;
+          const origColor = this.colorize(dataPoint);
+          if (origColor == "lightgrey") {
+            return color;
+          } else {
+            return d3.interpolateRgb(d3.rgb(origColor), d3.rgb(color))(0.5);
+          }
         }
       });
     }
@@ -60,10 +78,14 @@ export class D3ngMapComponent extends D3ngChart {
       w = this.chart.nativeElement.offsetWidth  - margin.left - margin.right,
       h = (this.chart.nativeElement.offsetWidth * 457.0 / 700.0)  - margin.top - margin.bottom;
 
-    const extent = d3.extent(self.data, d => d[this.dimension]);
+    const extent = d3.extent(self.data, d => d[this._choropleth]);
+    let choroplethColors = ["#0000FF", "#FF0000"];
+    if (this.config && this.config.choroplethColors && this.config.choroplethColors.length >= 2) {
+      choroplethColors = this.config.choroplethColors;
+    }
     const color = d3.scale.linear().domain(extent)
       .interpolate(d3.interpolateRgb)
-      .range([d3.rgb("#0000FF"), d3.rgb('#FF0000')]);
+      .range([d3.rgb(choroplethColors[0]), d3.rgb(choroplethColors[1])]);
     this.color = color;
 
     const path = d3.geo.path()
@@ -99,7 +121,7 @@ export class D3ngMapComponent extends D3ngChart {
 
   private colorize(d) {
     if (d.original) {
-      const value = d.original[this.dimension];
+      const value = d.original[this._choropleth];
       if (value) {
         return this.color(value);
       }

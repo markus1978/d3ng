@@ -4,6 +4,7 @@ import {D3ngParallelCoordinatesComponent} from "../../lib/d3ng-parallel-coordina
 import {D3ngCollapsibleIndentedTreeComponent} from "../../lib/d3ng-collapsible-indented-tree.component";
 import * as d3 from "d3";
 import {D3ngGroupContext} from "../../lib/d3ng-groups.component";
+import {D3ngMapComponent} from "../../lib/d3ng-map.component";
 
 @Component({
   selector: 'app-owid',
@@ -43,6 +44,7 @@ export class OwidComponent implements OnInit {
 
   @ViewChild('meta') metaDataListElement: D3ngCollapsibleIndentedTreeComponent;
   @ViewChild('pc') pc: D3ngParallelCoordinatesComponent;
+  @ViewChild('map') map: D3ngMapComponent;
 
   constructor(http: Http) {
     http.get('/assets/owid-2017.json')
@@ -112,6 +114,9 @@ export class OwidComponent implements OnInit {
     });
 
     this.dimensions = dimensions.map(d => d.key);
+    if (!this.map.choropleth) {
+      this.map.choropleth = this.dimensions[0];
+    }
   }
 
   ngOnInit() {
