@@ -136,66 +136,103 @@ x('https://ourworldindata.org/', '.owid-data ul li', [{
   });
 });
 
+__saved = false;
+
 function exitHandler(options, err) {
-  var json;
+  if (!__saved) {
+    __saved = true;
+    console.log("Done scraping; transforming and saving now!");
 
-  // replace countries with # countries
-  db.meta.forEach(function(meta) {
-    if (meta.countries) {
-      meta.countries = meta.countries.length;
-    } else {
-      meta.countries = 0;
-    }
-  });
+    var json;
 
-  // add meta source hierarchy
-  var allMeta = [];
-  var parentByPage = {};
-  groups.forEach(function(group) {
-    var meta = {
-      label: group.title,
-      id: group.title,
-      children: []
-    }
-    group.links.forEach(function(link) {
-      parentByPage[link.url] = meta;
+    // replace countries with # countries
+    db.meta.forEach(function (meta) {
+      if (meta.countries) {
+        meta.countries = meta.countries.length;
+      } else {
+        meta.countries = 0;
+      }
     });
-    allMeta.push(meta);
-  });
 
-  var metaByPage = {};
-  db.meta.forEach(function(meta) {
-    var pageKey = meta.source.page.url;
-    var page = metaByPage[pageKey];
-    if (!page) {
-      page = {
-        label: meta.source.page.title,
-        id: pageKey,
-        source: pageKey,
+    // add meta source hierarchy
+    var allMeta = [];
+    var parentByPage = {};
+    groups.forEach(function (group) {
+      var meta = {
+        label: group.title,
+        id: group.title,
         children: []
-      };
-      metaByPage[pageKey] = page;
-      parentByPage[pageKey].children.push(page);
-    }
-    page.children.push(meta);
-    meta.source = meta.source.csv;
-  });
-  db.meta = allMeta;
-
-  // save all
-  // json = JSON.stringify(db, null, 2);
-  // fs.writeFileSync('owid.json', json, { encoding: 'utf8'});
-
-  // save 2017
-  db.data.forEach(function(country) {
-    country.data.forEach(function(data) {
-      data.years = undefined;
-      data.values = undefined;
+      }
+      group.links.forEach(function (link) {
+        parentByPage[link.url] = meta;
+      });
+      allMeta.push(meta);
     });
-  });
 
-  json = JSON.stringify(db, null, 2);
-  fs.writeFileSync('src/assets/owid-2017.json', json, { encoding: 'utf8'});
+    var metaByPage = {};
+    db.meta.forEach(function (meta) {
+      var pageKey = meta.source.page.url;
+      var page = metaByPage[pageKey];
+      if (!page) {
+        page = {
+          label: meta.source.page.title,
+          id: pageKey,
+          source: pageKey,
+          children: []
+        };
+        metaByPage[pageKey] = page;
+        parentByPage[pageKey].children.push(page);
+      }
+      page.children.push(meta);
+      meta.source = meta.source.csv;
+    });
+    const origMeta = db.meta;
+
+    // add file names
+    const prefixLength = "https://ourworldindata.org/grapher/".length;
+    db.meta.forEach(meta => {
+      meta.fileName = meta.source.substring(prefixLength, meta.source.length) + ".json";
+    });
+
+    // replace list with hiearchy
+    db.meta = allMeta;
+
+    // save all
+    // json = JSON.stringify(db, null, 2);
+    // fs.writeFileSync('owid.json', json, { encoding: 'utf8'});
+
+    // save by metric
+    origMeta.forEach(meta => {
+      const metricData = [];
+      db.data.forEach(country => {
+        country.data.forEach(data => {
+          if (data.key == meta.key) {
+            metricData.push({
+              code: country.code,
+              label: country.label,
+              years: data.years,
+              values: data.values
+            });
+          }
+        });
+      });
+      if (metricData.length > 0) {
+        // console.log(meta.fileName);
+        fs.writeFileSync(`src/assets/owid/${meta.fileName}`, JSON.stringify(metricData, null, 2), { encoding: 'utf8'});
+      }
+    });
+
+    // save 2017
+    db.data.forEach(function (country) {
+      country.data.forEach(function (data) {
+        data.years = undefined;
+        data.values = undefined;
+      });
+    });
+
+    json = JSON.stringify(db, null, 2);
+    fs.writeFileSync('src/assets/owid-2017.json', json, {encoding: 'utf8'});
+  }
 
   if (options.cleanup) console.log('clean');
   if (err) console.log(err.stack);

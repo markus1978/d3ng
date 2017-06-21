@@ -223,6 +223,14 @@ Get all dependencies via `npm`:
 ```
 npm update
 ```
+Scrape the OWID example data from the OWID webpage (kinda optional):
+```
+npm run gen:owid
+```
+Generated HTML for syntax highlighted source-code snippets in demo app (kinda optional):
+```
+npm run gen:highlights
+```
 Start the for dev server that hosts the example and demo app:
 ```
 npm run start
