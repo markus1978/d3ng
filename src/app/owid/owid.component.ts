@@ -138,6 +138,8 @@ export class OwidComponent implements OnInit {
       span.append('span').text(')');
     };
 
+    this.metaDataListElement.selectionFilter = (item => item.countries);
+
     this.pc.getDimensionLabel = (dim) => {
       const meta = this.metaByKey[dim];
       if (meta) {
