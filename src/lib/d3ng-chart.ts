@@ -101,18 +101,18 @@ export abstract class D3ngChart implements OnChanges {
   static selectionColors = [
     {
       direct: "#9E2622",
-      indirect: "#CC8574"
+      indirect: "#bd7766"
     },
     {
       direct: "#005A9C",
-      indirect: "#B3C1DF"
+      indirect: "#6a83a6"
     },
     {
-      direct: "#E8DEC0",
-      indirect: "#D4C48E"
+      direct: "#dec057",
+      indirect: "#ab9978"
     },
     {
-      direct: "#76A58E",
+      direct: "#69947d",
       indirect: "#006C45"
     },
   ];

@@ -6,12 +6,12 @@ import {D3ngChart, D3ngSelection} from "./d3ng-chart";
   selector: 'd3ng-scatter-plot',
   providers: [{provide: D3ngChart, useExisting: forwardRef(() => D3ngScatterPlotComponent)}],
   template: `
-    <div class="y-controls">
+    <div #xSelect class="y-controls">
       <md-select [(ngModel)]="y" (change)="onYChange($event)">
         <md-option *ngFor="let dim of dimensions ? dimensions : [y]" [value]="dim">{{ dim }}</md-option>
       </md-select>
     </div>
-    <div class="x-controls">
+    <div #ySelect class="x-controls">
       <md-select [(ngModel)]="x" (change)="onXChange($event)">
         <md-option *ngFor="let dim of dimensions ? dimensions : [x]" [value]="dim">{{ dim }}</md-option>
       </md-select>
@@ -20,9 +20,11 @@ import {D3ngChart, D3ngSelection} from "./d3ng-chart";
   styleUrls: [ './d3ng-scatter-plot.component.css' ]
 })
 
-export class D3ngScatterPlotComponent extends D3ngChart implements OnChanges {
+export class D3ngScatterPlotComponent extends D3ngChart {
 
   @ViewChild('chart') chart;
+  @ViewChild('xSelect') xSelect;
+  @ViewChild('ySelect') ySelect;
 
   @Input() x: string;
   @Input() y: string;

@@ -17,6 +17,8 @@ export class OwidComponent implements OnInit {
 
   context = new D3ngGroupContext();
 
+  scatterPlotConfig = null;
+
   private db: {
     data: [{
       code: string,
