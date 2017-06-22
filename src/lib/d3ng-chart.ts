@@ -1,4 +1,5 @@
 import {EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges} from "@angular/core";
+import * as d3 from "d3";
 
 export class D3ngSelectionItem {
   group = 0;
@@ -386,11 +387,59 @@ export abstract class D3ngChart implements OnChanges {
    * @param node
    * @returns {any}
    */
-  public getDescription(node: Object): String {
+  public getDescription(node: Object): string {
     return node["description"];
   }
 
-  public getDimensionLabel(dim: any): String {
+  public getDimensionLabel(dim: any): string {
     return dim;
+  }
+
+  /**
+   * Helper function that adds a mouseover tooltip to d3 elements.
+   * @param vis is a d3 selection with all the elements that a mouseover tooltip shall be applied to.
+   * @parem label function that produces the tooltip texts from data objects. this.getQualifiedLabel is used as a default.
+   */
+  public appendTooltip(vis: any, label?: (any, number?) => string) {
+    const body = d3.select('body');
+    const bodyNode = body.node();
+    if (!label) {
+      label = (data) => this.getQualifiedLabel(data);
+    }
+
+    vis.on('mouseover', (data, index) => {
+      body.select('.tooltip').remove();
+      const text = label(data, index);
+
+      if (text) {
+        const mousePos = d3.mouse(bodyNode);
+        body.append('div')
+          .attr('class', 'tooltip')
+          .style({
+            left: (mousePos[0] + 20) + 'px',
+            top: mousePos[1] + 'px',
+            position: "absolute",
+            'box-shadow': '0 1px 2px 0 #656565',
+            'background-color': 'white',
+            padding: '3px',
+            'z-index': 5,
+            'font-size': "10px",
+            'max-width': "150px"
+          })
+          .html(label(data, index));
+      }
+    });
+
+    vis.on('mousemove', function() {
+      const mousePos = d3.mouse(bodyNode);
+      body.select('.tooltip').style({
+        left: (mousePos[0] + 20) + 'px',
+        top: mousePos[1] + 'px'
+      });
+    });
+
+    vis.on('mouseout', function() {
+      body.select('.tooltip').remove();
+    });
   }
 }

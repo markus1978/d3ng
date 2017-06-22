@@ -105,7 +105,7 @@ export class D3ngForceGraphComponent extends D3ngDependencyChart implements OnCh
         self.setDirectSelection([ d.data ]);
       });
 
-    node.append("title").text(d => self.getQualifiedLabel(d.data));
+    this.appendTooltip(node);
 
     force.on("tick", () => {
       link

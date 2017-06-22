@@ -152,7 +152,7 @@ export class OwidComponent implements OnInit {
     // this should be moved into parallel coordinates (or all axis based visualizations)!
     this.pc.appendAxis = (axis) => {
       axis.selectAll('.axisTitle').attr("y", -15);
-      axis.append('title').text(d => {
+      this.pc.appendTooltip(axis, d => {
         const meta = this.metaByKey[d];
         if (meta) {
           return meta.label + ": " + meta.description;

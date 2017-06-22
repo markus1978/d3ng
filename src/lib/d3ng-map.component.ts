@@ -105,7 +105,7 @@ export class D3ngMapComponent extends D3ngChart {
     const states = svg.append("svg:g")
       .attr("id", "states");
 
-    states.selectAll("path")
+    const paths = states.selectAll("path")
       .data(this.geoData)
       .enter().append("svg:path")
       .style("fill", d => this.colorize(d))
@@ -116,7 +116,9 @@ export class D3ngMapComponent extends D3ngChart {
         } else {
           this.setDirectSelection([]);
         }
-      }).append('title').text(d => d.properties.name);
+      });
+
+    this.appendTooltip(paths, d => d.properties.name);
   }
 
   private colorize(d) {

@@ -134,9 +134,7 @@ export class D3ngTreeMapComponent extends D3ngHierarchicalChart implements OnCha
       .style("opacity", function(d) { d.w = this.getComputedTextLength(); return d.dx > d.w ? 1 : 0; });
 
     // Add a mouseover title.
-    cell.append("title").text(function(d) {
-      return self.getQualifiedLabel(d.original);
-    });
+    this.appendTooltip(cell, d => this.getQualifiedLabel(d.original));
 
     d3.select(window).on("click", function() {
       if (self.doZoom) {

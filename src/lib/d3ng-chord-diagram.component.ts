@@ -130,10 +130,7 @@ export class D3ngChordDiagramComponent extends D3ngDependencyChart implements On
       .on("click", click);
     self.group = group;
 
-    // Add a mouseover title.
-    group.append("title").text(function(d, i) {
-      return self.getQualifiedLabel(self.data[i]);
-    });
+    this.appendTooltip(group, (d, i) => this.getQualifiedLabel(this.data[i]));
 
     // Add the group arc.
     const groupPath = group.append("path")

@@ -76,8 +76,8 @@ export class D3ngCollapsibleIndentedTreeComponent extends D3ngHierarchicalChart 
 
       const span = nodeContainer.append("span")
         .text(label)
-        .attr("title", d => self.getDescription(d))
         .on("click", d => self.setDirectSelection([ d ]));
+      self.appendTooltip(span, d => self.getDescription(d));
 
       self.customizeEntrySpan(span);
 

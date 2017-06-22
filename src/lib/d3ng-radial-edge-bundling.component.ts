@@ -134,7 +134,7 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
       return (n > 0 && s.length > n) ? s.substr(0, n-5) + '...' + s.substr(s.length-3, s.length): s;
     };
 
-    svg.selectAll("g.node")
+    const names = svg.selectAll("g.node")
       .data(nodes.filter(function (n) {
         return !n.children;
       }))
@@ -157,6 +157,7 @@ export class D3ngRadialEdgeBundlingComponent extends D3ngDependencyChart impleme
       .on("click", (d) => {
         self.setDirectSelection([ d.original ]);
       });
+    this.appendTooltip(names, d => this.getQualifiedLabel(d.original));
 
     d3.select(window)
       .on("mousemove", mousemove)

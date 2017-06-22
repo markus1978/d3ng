@@ -131,9 +131,7 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
       .attr("d", path);
     self.lines = foreground;
 
-    foreground.append("title").text(function(d) {
-      return self.getQualifiedLabel(d);
-    });
+    this.appendTooltip(foreground);
 
     let i = 0;
 

@@ -7,7 +7,7 @@ import * as d3 from "d3";
   template: `
     <h2>D3ng Map Demo</h2>
     <h3>A World Map</h3>
-    <d3ng-map [data]="data" dimension="value"></d3ng-map>
+    <d3ng-map [data]="data" choropleth="value"></d3ng-map>
   `,
   styles: [ ]
 })
