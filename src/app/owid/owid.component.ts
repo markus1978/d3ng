@@ -5,6 +5,8 @@ import {D3ngCollapsibleIndentedTreeComponent} from "../../lib/d3ng-collapsible-i
 import * as d3 from "d3";
 import {D3ngGroupContext} from "../../lib/d3ng-groups.component";
 import {D3ngMapComponent} from "../../lib/d3ng-map.component";
+import {Observable} from "rxjs";
+import * as joiner from "joiner";
 
 @Component({
   selector: 'app-owid',
@@ -12,6 +14,8 @@ import {D3ngMapComponent} from "../../lib/d3ng-map.component";
   styleUrls: ['./owid.component.css']
 })
 export class OwidComponent implements OnInit {
+
+  static defaultTimeExtent = { min: 1000, max: 2200 };
 
   countries: any[] = [];
 
@@ -33,6 +37,7 @@ export class OwidComponent implements OnInit {
 
   metaDataList: any[] = [];
   dimensions = [];
+  dimensionsData = [];
   private startDimensions = [
     "UN – Population Division (Fertility) – 2015 revision",
     "Gapminder (child mortality estimates version 8)",
@@ -44,12 +49,18 @@ export class OwidComponent implements OnInit {
   data: any[] = [];
   private metaByKey = {};
 
+  private year: number = 2017;
+  private timeExtent = OwidComponent.defaultTimeExtent;
+
+  // a dictionary for already loaded time series data with meta key as key and loaded json as value
+  private tsdata = {};
+
   @ViewChild('meta') metaDataListElement: D3ngCollapsibleIndentedTreeComponent;
   @ViewChild('pc') pc: D3ngParallelCoordinatesComponent;
   @ViewChild('map') map: D3ngMapComponent;
 
-  constructor(http: Http) {
-    http.get('/assets/owid-2017.json')
+  constructor(private http: Http) {
+    this.http.get('/assets/owid-2017.json')
       .map((res: Response) => res.json())
       .subscribe(res => {
         this.setDB(res);
@@ -104,21 +115,125 @@ export class OwidComponent implements OnInit {
 
   setDimensions(dimensions: any[]): void {
     dimensions = dimensions.filter(d => d);
-    // filter data
-    this.data = this.db.data.filter(country => {
-      let filter = false;
-      dimensions.forEach(meta => {
-        if (country[meta.key] == 0) {
-          filter = true;
-        }
-      });
-      return !filter;
-    });
+    // // filter data
+    // this.data = this.db.data.filter(country => {
+    //   let filter = false;
+    //   dimensions.forEach(meta => {
+    //     if (country[meta.key] == 0) {
+    //       filter = true;
+    //     }
+    //   });
+    //   return !filter;
+    // });
+    this.data = [];
 
+    this.dimensionsData = dimensions;
     this.dimensions = dimensions.map(d => d.key);
     if (!this.map.choropleth) {
       this.map.choropleth = this.dimensions[0];
     }
+
+    this.updateData(dimensions, this.year);
+  }
+
+  private loadDimensionData(dimensions: any[], onComplete: ()=>void) {
+    const notYetLoadedDimensions = dimensions.filter(dim => !this.tsdata[dim]);
+    const requests = notYetLoadedDimensions.map(dim => this.http.get("/assets/owid/" + dim.fileName).map(res => {
+      return {
+        meta: dim,
+        data: res.json()
+      }
+    }));
+    if (requests.length > 0) {
+      Observable.forkJoin(requests).subscribe(results => {
+        results.forEach(result => this.tsdata[result.meta.key] = result.data);
+        onComplete();
+      });
+    } else {
+      onComplete();
+    }
+  }
+
+  /**
+   * Creates a data array with objects for all countries with all dimensions and values that are closest before year.
+   * Countries are filtered. Only countries with data before year for all dimensions.
+   * @param dimensions Meta data objects for the dimensions
+   * @param year The year as a number
+   */
+  private extractSnapshot(dimensions: any[], year: number): any[] {
+    if (dimensions.length == 0) {
+      return [];
+    }
+
+    const dimDataForYear = dimensions.map(dim => {
+      return this.tsdata[dim.key].map(countryData => {
+        let value = null;
+        for (let index = 0; index < countryData.years.length; index++) {
+          if (countryData.years[index] <= year) {
+            const countryValue = countryData.values[index];
+            if (countryValue && countryValue != 0) {
+              value = countryValue;
+            }
+          }
+        }
+        const result = {
+          code: countryData.code,
+          label: countryData.label
+        };
+        if (value != null) {
+          result[dim.key] = value;
+        }
+        return result;
+      }).filter(countryDataForYear => countryDataForYear[dim.key]);
+    });
+
+    const joinerConfig: any = {
+      leftDataKey: 'code',
+      rightDataKey: 'code'
+    };
+    let result = dimDataForYear[0];
+    for(let i = 1; i < dimDataForYear.length; i++) {
+      joinerConfig.leftData = result;
+      joinerConfig.rightData = dimDataForYear[i];
+      const joinerResult = joiner(joinerConfig);
+      result = joinerResult.data.filter(d => joinerResult.report.diff.a_and_b.indexOf(d.code) != -1);
+    }
+
+    return result;
+  }
+
+  private extractTimeExtent(dimensions: any[]): any {
+    let gmin = 3000;
+    let gmax = 0;
+    dimensions.map(dim => this.tsdata[dim.key]).forEach(countriesData => countriesData.forEach(countryData => {
+      const max = countryData.years[countryData.years.length - 1];
+      const min = countryData.years[0];
+      if (min < gmin) gmin = min;
+      if (max > gmax) gmax = max;
+    }));
+    if (gmin > gmax) {
+      return OwidComponent.defaultTimeExtent;
+    }
+
+    return {
+      min: gmin,
+      minLabel: (gmin < 0 ? (-gmin) + " BC" : gmin + " AD"),
+      max: gmax,
+      maxLabel: gmax + " AD"
+    };
+  }
+
+  private updateData(dimensions: any[], year: number) {
+    this.countries = []; // clear current selected countries, old data will soon be invalid
+    this.loadDimensionData(dimensions, () => {
+      this.timeExtent = this.extractTimeExtent(dimensions);
+      this.data = this.extractSnapshot(dimensions, year);
+    });
+  }
+
+  onTimeChanged(event: any): void {
+    this.year = event.value;
+    this.updateData(this.dimensionsData, this.year);
   }
 
   ngOnInit() {

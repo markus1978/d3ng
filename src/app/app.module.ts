@@ -5,7 +5,7 @@ import {HttpModule} from '@angular/http';
 import {AppComponent} from './app.component';
 import {RouterModule} from '@angular/router';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MdCheckboxModule, MdInputModule, MdSelectModule, MdTabsModule} from "@angular/material";
+import {MdCheckboxModule, MdInputModule, MdSelectModule, MdSliderModule, MdTabsModule} from "@angular/material";
 import {D3ngDemosModule} from "./demos/d3ng-demos.module";
 import {D3ngDemosComponent} from "./demos/d3ng-demos.component";
 import {D3ngComponentsModule} from "../lib/d3ng.module";
@@ -34,6 +34,7 @@ import {MarkdownModule} from "angular2-markdown";
     MdCheckboxModule,
     MdTabsModule,
     MdSelectModule,
+    MdSliderModule,
     FormsModule,
     HttpModule,
     D3ngDemosModule,
