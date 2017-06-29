@@ -26,6 +26,7 @@
       There is some data from {{timeExtent.minLabel}} to {{timeExtent.maxLabel}}. The current year is {{year}}.
       You can shift in time:
     </p>
+    <d3ng-bubble-histogram [data]="tsHistogramData" xKey="year"></d3ng-bubble-histogram>
     <p>
       <md-slider style="width: 100%" [min]="timeExtent.min" [max]="timeExtent.max"
                  [thumb-label]="true" [step]="(timeExtent.max - timeExtent.min)/50"

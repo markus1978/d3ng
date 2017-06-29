@@ -13,9 +13,9 @@ export class D3ngBubbleHistogramComponent extends D3ngChart implements OnChanges
 
   @ViewChild('chart') chart;
 
-  @Input() xKey: string;
-  @Input() valueKey: string;
-  @Input() categoryKey: string;
+  @Input() xKey = "x";
+  @Input() valueKey = "value";
+  @Input() categoryKey = "category";
 
   private d3Chart = null;
 

@@ -16,7 +16,7 @@ import * as jsonata from "jsonata";
 export class OwidComponent implements OnInit {
 
   private static extractTimeExtent = jsonata('{"min": $min(data.years), "max": $max(data.years)}').evaluate;
-  private static defaultTimeExtent = { min: 1000, max: 2200 };
+  private static defaultTimeExtent = { min: 1000, minLabel: "1000 AD", max: 2200, maxLabel: "2200 AD" };
 
   countries: any[] = [];
   context = new D3ngGroupContext();
@@ -42,6 +42,8 @@ export class OwidComponent implements OnInit {
   private timeExtent = OwidComponent.defaultTimeExtent;
 
   private tsdata = [];
+
+  tsHistogramData = [];
 
   @ViewChild('meta') metaDataListElement: D3ngCollapsibleIndentedTreeComponent;
   @ViewChild('pc') pc: D3ngParallelCoordinatesComponent;
@@ -161,7 +163,7 @@ export class OwidComponent implements OnInit {
           key: outer.key,
         };
       })
-      .filter(obj => obj.value && obj.value != 0)
+      // .filter(obj => obj.value && obj.value != 0)
       .d3ngJoin("code",
         first => {
           return {
@@ -203,17 +205,54 @@ export class OwidComponent implements OnInit {
     };
   }
 
-  private updateData(dimensions: any[], year: number) {
+  private extractTSHistogramData(dimensions: any[]): any[] {
+    const result = [];
+    this.tsdata.filter(data => dimensions.d3ngExists(dim => dim.key == data.key)).forEach(data => {
+      const category = data.key;
+      const values = {};
+      data.data.forEach(countryData => {
+        for (let i = 0; i < countryData.years.length; i++) {
+          if (countryData.values[i] != 0) {
+            const year = countryData.years[i];
+            if (values[year]) {
+              values[year]++;
+            } else {
+              values[year] = 1;
+            }
+          }
+        }
+      });
+      Object.keys(values).forEach(key => {
+        result.push({
+          category: category,
+          year: key,
+          value: values[key]
+        });
+      });
+    });
+    return result;
+  }
+
+  private updateData(dimensions: any[], year: number, onlyYear?: boolean) {
     this.countries = []; // clear current selected countries, old data will soon be invalid
     this.loadDimensionData(dimensions, () => {
-      this.timeExtent = this.extractTimeExtent(dimensions);
+      if (!onlyYear) {
+        this.tsHistogramData = this.extractTSHistogramData(dimensions);
+        const extent: number[] = d3.extent(this.tsHistogramData, d => d.year);
+        this.timeExtent = {
+          min: extent[0],
+          minLabel: (extent[0] < 0 ? (-extent[0]) + " BC" : extent[0] + " AD"),
+          max: extent[1],
+          maxLabel: extent[1] + " AD"
+        };
+      }
       this.data = this.extractSnapshot(dimensions, year);
     });
   }
 
   onTimeChanged(event: any): void {
     this.year = event.value;
-    this.updateData(this.dimensionsData, this.year);
+    this.updateData(this.dimensionsData, this.year, true);
   }
 
   ngOnInit() {
