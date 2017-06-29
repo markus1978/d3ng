@@ -27,6 +27,7 @@ import {D3ngGroupsComponent} from "./d3ng-groups.component";
 import {D3ngGroupSelectionComponent} from "./d3ng-groups-selection.component";
 import {D3ngMapComponent} from "./d3ng-map.component";
 import {CommonModule} from "@angular/common";
+import {D3ngBubbleHistogramComponent} from "./d3ng-bubble-histogram.component";
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import {CommonModule} from "@angular/common";
     D3ngHistogramComponent,
     D3ngGroupsComponent,
     D3ngGroupSelectionComponent,
-    D3ngMapComponent
+    D3ngMapComponent,
+    D3ngBubbleHistogramComponent,
   ],
   imports: [
     CommonModule,
@@ -70,7 +72,8 @@ import {CommonModule} from "@angular/common";
     D3ngHistogramComponent,
     D3ngGroupsComponent,
     D3ngGroupSelectionComponent,
-    D3ngMapComponent
+    D3ngMapComponent,
+    D3ngBubbleHistogramComponent
   ]
 })
 export class D3ngComponentsModule { }
