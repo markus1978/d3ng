@@ -5,8 +5,8 @@ import {D3ngCollapsibleIndentedTreeComponent} from "../../lib/d3ng-collapsible-i
 import * as d3 from "d3";
 import {D3ngGroupContext} from "../../lib/d3ng-groups.component";
 import {D3ngMapComponent} from "../../lib/d3ng-map.component";
-import {Observable} from "rxjs";
-import * as joiner from "joiner";
+import {Observable} from "rxjs/Observable";
+import * as jsonata from "jsonata";
 
 @Component({
   selector: 'app-owid',
@@ -15,45 +15,33 @@ import * as joiner from "joiner";
 })
 export class OwidComponent implements OnInit {
 
-  static defaultTimeExtent = { min: 1000, max: 2200 };
+  private static extractTimeExtent = jsonata('{"min": $min(data.years), "max": $max(data.years)}').evaluate;
+  private static defaultTimeExtent = { min: 1000, max: 2200 };
 
   countries: any[] = [];
-
   context = new D3ngGroupContext();
-
   scatterPlotConfig = null;
 
-  private db: {
-    data: [{
-      code: string,
-      label: string,
-      data: [{
-        key: string,
-        value: any
-      }]
-    }],
-    meta: any[]
-  } = null;
-
-  metaDataList: any[] = [];
   dimensions = [];
   dimensionsData = [];
   private startDimensions = [
     "UN – Population Division (Fertility) – 2015 revision",
     "Gapminder (child mortality estimates version 8)",
-    "Rate of Natural Population Increase – UN 2015",
+   // "Rate of Natural Population Increase – UN 2015",
     "Population Density",
     "Population by Country (Clio Infra)",
     "Life Expectancy at Birth (both genders)"
   ];
-  data: any[] = [];
-  private metaByKey = {};
 
-  private year: number = 2017;
+  data: any[] = [];
+
+  private metaByKey = {};
+  metaDataList = [];
+
+  private year = 2017;
   private timeExtent = OwidComponent.defaultTimeExtent;
 
-  // a dictionary for already loaded time series data with meta key as key and loaded json as value
-  private tsdata = {};
+  private tsdata = [];
 
   @ViewChild('meta') metaDataListElement: D3ngCollapsibleIndentedTreeComponent;
   @ViewChild('pc') pc: D3ngParallelCoordinatesComponent;
@@ -68,15 +56,6 @@ export class OwidComponent implements OnInit {
   }
 
   private setDB(db: any): void {
-    this.db = db;
-
-    // restructure data
-    db.data.forEach(data => {
-      data.data.forEach(value => {
-        data[value.key] = value.value;
-      });
-      data.data = undefined;
-    });
 
     // filter and flatten meta data directory
     const filter = (node, pred: (any) => boolean) => {
@@ -87,7 +66,7 @@ export class OwidComponent implements OnInit {
         return pred(node);
       }
     };
-    this.db.meta = this.db.meta.filter(m => filter(m, node => (node.countries > 100 && node.number)));
+    const meta = db.meta.filter(m => filter(m, node => (node.countries > 100 && node.number)));
 
     // keep meta dict
     const visit = (node) => {
@@ -99,11 +78,11 @@ export class OwidComponent implements OnInit {
         this.metaByKey[node.key] = node;
       }
     };
-    this.db.meta.forEach(meta => visit(meta));
+    meta.forEach(meta => visit(meta));
 
     this.metaDataList = [{
       label: "OWID Data",
-      children: this.db.meta
+      children: meta
     }];
 
     this.metaByKey['Population Density'].scale = 0.25;
@@ -115,18 +94,7 @@ export class OwidComponent implements OnInit {
 
   setDimensions(dimensions: any[]): void {
     dimensions = dimensions.filter(d => d);
-    // // filter data
-    // this.data = this.db.data.filter(country => {
-    //   let filter = false;
-    //   dimensions.forEach(meta => {
-    //     if (country[meta.key] == 0) {
-    //       filter = true;
-    //     }
-    //   });
-    //   return !filter;
-    // });
     this.data = [];
-
     this.dimensionsData = dimensions;
     this.dimensions = dimensions.map(d => d.key);
     if (!this.map.choropleth) {
@@ -136,17 +104,20 @@ export class OwidComponent implements OnInit {
     this.updateData(dimensions, this.year);
   }
 
-  private loadDimensionData(dimensions: any[], onComplete: ()=>void) {
-    const notYetLoadedDimensions = dimensions.filter(dim => !this.tsdata[dim]);
+  private loadDimensionData(dimensions: any[], onComplete: () => void) {
+    const notYetLoadedDimensions = dimensions.filter(dim => this.tsdata.findIndex(data => data.key == dim.key) == -1);
     const requests = notYetLoadedDimensions.map(dim => this.http.get("/assets/owid/" + dim.fileName).map(res => {
       return {
         meta: dim,
         data: res.json()
-      }
+      };
     }));
     if (requests.length > 0) {
       Observable.forkJoin(requests).subscribe(results => {
-        results.forEach(result => this.tsdata[result.meta.key] = result.data);
+        results.forEach(result => this.tsdata.push({
+          key: result.meta.key,
+          data: result.data
+        }));
         onComplete();
       });
     } else {
@@ -165,52 +136,61 @@ export class OwidComponent implements OnInit {
       return [];
     }
 
-    const dimDataForYear = dimensions.map(dim => {
-      return this.tsdata[dim.key].map(countryData => {
-        let value = null;
-        for (let index = 0; index < countryData.years.length; index++) {
-          if (countryData.years[index] <= year) {
-            const countryValue = countryData.values[index];
-            if (countryValue && countryValue != 0) {
-              value = countryValue;
-            }
+    const value = (years: number[], values: number[]) => {
+      let value = 0;
+      let dist = 100000;
+      for (let i = 0; i < years.length; i++) {
+        const cValue = values[i];
+        if (years[i] <= year && cValue != 0) {
+          const cDist = year - years[i];
+          if (cDist < dist) {
+            value = cValue;
+            dist = cDist;
           }
         }
-        const result = {
-          code: countryData.code,
-          label: countryData.label
-        };
-        if (value != null) {
-          result[dim.key] = value;
-        }
-        return result;
-      }).filter(countryDataForYear => countryDataForYear[dim.key]);
-    });
-
-    const joinerConfig: any = {
-      leftDataKey: 'code',
-      rightDataKey: 'code'
+      }
+      return value;
     };
-    let result = dimDataForYear[0];
-    for(let i = 1; i < dimDataForYear.length; i++) {
-      joinerConfig.leftData = result;
-      joinerConfig.rightData = dimDataForYear[i];
-      const joinerResult = joiner(joinerConfig);
-      result = joinerResult.data.filter(d => joinerResult.report.diff.a_and_b.indexOf(d.code) != -1);
-    }
 
-    return result;
+    return this.tsdata.filter(data => dimensions.d3ngExists(dim => dim.key == data.key))
+      .d3ngFlatten("data", (inner: any, outer: any) => {
+        return {
+          code: inner.code,
+          label: inner.label,
+          value: value(inner.years, inner.values),
+          key: outer.key,
+        };
+      })
+      .filter(obj => obj.value && obj.value != 0)
+      .d3ngJoin("code",
+        first => {
+          return {
+            code: first.code,
+            label: first.label,
+          };
+        },
+        (target, source) => {
+          target[source.key] = source.value;
+        }
+      )
+      .filter(obj => Object.keys(obj).length == dimensions.length + 2);
   }
 
   private extractTimeExtent(dimensions: any[]): any {
     let gmin = 3000;
     let gmax = 0;
-    dimensions.map(dim => this.tsdata[dim.key]).forEach(countriesData => countriesData.forEach(countryData => {
-      const max = countryData.years[countryData.years.length - 1];
-      const min = countryData.years[0];
-      if (min < gmin) gmin = min;
-      if (max > gmax) gmax = max;
-    }));
+    this.tsdata.filter(data => dimensions.d3ngExists(dim => dim.key == data.key))
+      .map(data => data.data)
+      .forEach(countriesData => countriesData.forEach(countryData => {
+        const max = countryData.years[countryData.years.length - 1];
+        const min = countryData.years[0];
+        if (min < gmin) {
+          gmin = min;
+        }
+        if (max > gmax) {
+          gmax = max;
+        }
+      }));
     if (gmin > gmax) {
       return OwidComponent.defaultTimeExtent;
     }
@@ -313,4 +293,56 @@ export class OwidComponent implements OnInit {
   private trunc(str: string, n: number): string {
     return (str.length > n) ? str.substr(0, n - 1) + '..' : str;
   }
+}
+
+declare global {
+  interface Array<T> {
+    d3ngFlatten<R>(childrenKey: string, combine: (inner: T, outer: any) => R): Array<R>;
+    d3ngJoin<R>(joinKey: string, create: (first: T) => R, join: (target: R, source: T) => void): Array<R>;
+    d3ngOut(): Array<T>;
+    d3ngExists(pred: (T) => boolean): boolean;
+  }
+}
+
+if (!Array.prototype.d3ngExists) {
+  Array.prototype.d3ngExists = function<T>(pred: (T) => boolean) {
+    return this.findIndex(pred) != -1;
+  };
+}
+
+if (!Array.prototype.d3ngOut) {
+  Array.prototype.d3ngOut = function() {
+    console.log(this);
+    return this;
+  };
+}
+
+if (!Array.prototype.d3ngFlatten) {
+  Array.prototype.d3ngFlatten = function<R> (childKey: string, combine: (inner, outer) => R): Array<R> {
+    const result = [];
+    this.forEach(outer => {
+      outer[childKey].forEach(inner => {
+        result.push(combine(inner, outer));
+      });
+    });
+    return result;
+  };
+}
+
+if (!Array.prototype.d3ngJoin) {
+  Array.prototype.d3ngJoin = function(joinKey: string, create: (first) => any, join: (target, source) => void) {
+    const map = {};
+    const result = [];
+    this.forEach(obj => {
+      const key = obj[joinKey];
+      let target = map[key];
+      if (!target) {
+        target = create(obj);
+        map[key] = target;
+        result.push(target);
+      }
+      join(target, obj);
+    });
+    return result;
+  };
 }
