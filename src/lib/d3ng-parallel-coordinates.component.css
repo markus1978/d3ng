@@ -13,9 +13,21 @@
   stroke: #111;
 }
 
+:host /deep/ .foreground circle {
+  stroke: none;
+  fill-opacity: 0.2;
+  fill: #111;
+  z-index: 1;
+}
+
 :host /deep/ .foreground path.selected {
   stroke-opacity: 1;
   z-index: 2;
+}
+
+:host /deep/ .foreground circle.selected {
+  fill-opacity: 1;
+  z-index: 3;
 }
 
 :host /deep/ .brush .extent {

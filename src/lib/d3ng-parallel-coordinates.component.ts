@@ -21,13 +21,17 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
    */
   @Input() protected dimensions: Array<string>;
 
-  private lines = null;
+  private d3Chart = null;
 
   protected drawSelection(selection: D3ngSelection): void {
-    if (this.lines) {
-      this.lines
+    if (this.d3Chart) {
+      const foreground = this.d3Chart.selectAll(".foreground");
+      foreground.selectAll("path")
         .style("stroke", dataPoint => selection.selectionColor(dataPoint))
         .classed("selected", dataPoint => selection.isSelected(dataPoint));
+      foreground.selectAll("circle")
+        .style("fill", expanded => selection.selectionColor(expanded.data))
+        .classed("selected", expanded => selection.isSelected(expanded.data));
     }
   }
 
@@ -76,18 +80,15 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
     const line = d3.svg.line();
     const axis = d3.svg.axis().orient("left");
 
-    // Helper function: returns the path for a given data point.
-    const path = d => line(self.dimensions.map(p => [x(p), y[p](d[p])]));
-
     // Add svg chart.
-    const d_chart = d3.select(self.chart.nativeElement);
-    const svg = d_chart.append("svg:svg")
+    this.d3Chart = d3.select(self.chart.nativeElement);
+    const svg = this.d3Chart.append("svg:svg")
       .attr("width", w + m[1] + m[3])
       .attr("height", h + m[0] + m[2])
       .append("svg:g")
       .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-    let foreground: any = null;
+    let lines: any = null;
 
     // Create a scale and brush for each dimension.
     self.dimensions.forEach(d => {
@@ -95,9 +96,6 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
 
       // Calculate domain with 5% extra space
       const extent = d3.extent(self.data, p => p[d]);
-      const size = extent[1] - extent[0];
-      // extent[0] = extent[0] - size * .05;
-      // extent[1] = extent[1] + size * .05;
 
       // Create the scale
       y[d] = this.getScaleForDimension(d)
@@ -108,11 +106,11 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
       y[d].brush = d3.svg.brush()
         .y(y[d])
         .on("brush", () => {
-          // Handles a brush event, toggling the display of foreground lines.
+          // Handles a brush event, toggling the display of forground lines.
           const actives = self.dimensions.filter(p => !y[p].brush.empty());
           const extents = actives.map(p => y[p].brush.extent());
           const selection = [];
-          foreground.each(d => {
+          lines.each(d => {
             const selected = actives.length != 0 && actives.every((p, i) => extents[i][0] <= d[p] && d[p] <= extents[i][1]);
             if (selected) {
               selection.push(d);
@@ -122,16 +120,42 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
         });
     });
 
-    // Add foreground lines.
-    foreground = svg.append("svg:g")
-      .attr("class", "foreground")
-      .selectAll("path")
-      .data(self.data)
-      .enter().append("svg:path")
-      .attr("d", path);
-    self.lines = foreground;
 
-    this.appendTooltip(foreground);
+    // Helper function: returns the path for a given data point.
+    const expand = data => self.dimensions.filter(dim => data[dim] != 0).map(dim => {
+      return {
+        dim: dim,
+        value: data[dim],
+        data: data
+      };
+    });
+    const path = data => line(expand(data).map(expanded => [x(expanded.dim), y[expanded.dim](expanded.value)]));
+    const flatten = function<T>(source: Array<Array<T>>): Array<T> {
+      const result = [];
+      source.forEach(d => d.forEach(d => result.push(d)));
+      return result;
+    };
+    // Add foreground
+    const foreground = svg.append("svg:g")
+      .attr("class", "foreground");
+    // Add lines
+    const updateLines = lines => lines.attr("d", path);
+    lines = foreground.selectAll("path")
+      .data(self.data)
+      .enter().append("svg:path");
+    updateLines(lines);
+
+    // Add dots
+    const updateDots = dots => dots
+      .attr("cx", expanded => x(expanded.dim))
+      .attr("cy", expanded => y[expanded.dim](expanded.value));
+    const dots = foreground.selectAll("circle")
+      .data(flatten(this.data.map(expand)))
+      .enter().append("svg:circle")
+      .attr("r", 4);
+    updateDots(dots);
+
+    this.appendTooltip(lines);
 
     let i = 0;
 
@@ -146,17 +170,19 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
         .on("dragstart", d => {
           i = self.dimensions.indexOf(d);
         })
-        .on("drag", d => {
+        .on("drag", () => {
           x.range()[i] = d3.event.x;
           self.dimensions.sort((a, b) => x(a) - x(b));
           g.attr("transform", d => "translate(" + x(d) + ")");
-          foreground.attr("d", path);
+          updateLines(lines);
+          updateDots(dots);
         })
-        .on("dragend", d => {
+        .on("dragend", () => {
           x.domain(self.dimensions).rangePoints([0, w]);
           const t = d3.transition().duration(500);
           t.selectAll(".dimension").attr("transform", d => "translate(" + x(d) + ")");
-          t.selectAll(".foreground path").attr("d", path);
+          updateLines(t.selectAll(".foreground path"));
+          updateDots(t.selectAll(".foreground circle"));
         }));
 
     // Add an axis and title.
