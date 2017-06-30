@@ -26,13 +26,7 @@
       There is some data from {{timeExtent.minLabel}} to {{timeExtent.maxLabel}}. The current year is {{year}}.
       You can shift in time:
     </p>
-    <d3ng-bubble-histogram [data]="tsHistogramData" xKey="year"></d3ng-bubble-histogram>
-    <p>
-      <md-slider style="width: 100%" [min]="timeExtent.min" [max]="timeExtent.max"
-                 [thumb-label]="true" [step]="(timeExtent.max - timeExtent.min)/50"
-                 (input)="onTimeChanged($event)">
-      </md-slider>
-    </p>
+    <d3ng-bubble-histogram [data]="tsHistogramData" xKey="year" [sliderX]="2017" (sliderXChange)="onTimeChanged($event)"></d3ng-bubble-histogram>
     <p>
       2. Use the parallel coordinates to filter outliers and other unwanted data points by clicking and
       dragging vertically on an axis. You can use the small arrow heads to spread or compress the axis projections.

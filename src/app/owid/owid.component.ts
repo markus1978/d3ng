@@ -250,8 +250,8 @@ export class OwidComponent implements OnInit {
     });
   }
 
-  onTimeChanged(event: any): void {
-    this.year = event.value;
+  onTimeChanged(value: number): void {
+    this.year = value;
     this.updateData(this.dimensionsData, this.year, true);
   }
 

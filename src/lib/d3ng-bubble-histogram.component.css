@@ -10,8 +10,29 @@
   stroke: none;
 }
 
+:host /deep/ .scale rect {
+  fill-opacity: 0.3;
+}
+
+:host /deep/ .scale polygon {
+  stroke: black;
+  cursor: grab;
+  cursor: -webkit-grab;
+}
+
 :host /deep/ .axis path, :host /deep/ .axis line {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
+}
+
+:host /deep/ .slider {
+  cursor: grab;
+  cursor: -webkit-grab;
+}
+
+:host /deep/ .slider path {
+  stroke-opacity: 0.8;
+  stroke-width: 3px;
+  stroke: #FF00AA;
 }
