@@ -12,30 +12,48 @@ import {D3ngMapData} from "./d3ng-map.data";
 })
 export class D3ngMapComponent extends D3ngChart {
   @ViewChild('chart') chart;
-
-  @Input() idKey: string = "id";
-
-  private _choropleth: string = null;
-  @Input('choropleth')
-  set choropleth(value: string) {
-    this._choropleth = value;
-    this.redraw();
-  }
-  get choropleth(): string {
-    return this._choropleth;
-  }
-
-  public getId(d: any): string {
-    return d[this.idKey];
-  }
+  @Input() idKey = "id";
+  @Input() config: {
+    choroplethColors: string[]
+  } = null;
 
   private geoData: any[] = D3ngMapData.worldCountries.slice(0);
   private d3Chart: any = null;
   private color: any = null;
 
-  @Input() config: {
-    choroplethColors: string[]
-  } = null;
+  private choroplethToUse: string = null;
+  private choroplethStored: string = null;
+  private _isDrawChoropleth = true;
+
+  @Input('choropleth')
+  set choropleth(value: string) {
+    this.choroplethStored = value;
+    if (this._isDrawChoropleth) {
+      this.choroplethToUse = value;
+      this.redraw();
+    }
+  }
+  get choropleth(): string {
+    return this.choroplethStored;
+  }
+
+  @Input('isDrawChoropleth')
+  set isDrawChoropleth(value: boolean) {
+    this._isDrawChoropleth = value;
+    if (value) {
+      this.choroplethToUse = this.choroplethStored;
+    } else {
+      this.choroplethToUse = null;
+    }
+    this.redraw();
+  }
+  get isDrawChoropleth(): boolean {
+    return this._isDrawChoropleth;
+  }
+
+  public getId(d: any): string {
+    return d[this.idKey];
+  }
 
   protected drawSelection(selection: D3ngSelection): void {
     if (this.geoData && this.d3Chart) {
@@ -78,7 +96,7 @@ export class D3ngMapComponent extends D3ngChart {
       w = this.chart.nativeElement.offsetWidth  - margin.left - margin.right,
       h = (this.chart.nativeElement.offsetWidth * 457.0 / 700.0)  - margin.top - margin.bottom;
 
-    const extent = d3.extent(self.data, d => d[this._choropleth]);
+    const extent = d3.extent(self.data, d => d[this.choroplethToUse]);
     let choroplethColors = ["#0000FF", "#FF0000"];
     if (this.config && this.config.choroplethColors && this.config.choroplethColors.length >= 2) {
       choroplethColors = this.config.choroplethColors;
@@ -91,8 +109,8 @@ export class D3ngMapComponent extends D3ngChart {
     const path = d3.geo.path()
       .projection(function mercator(coordinates) {
       return [
-        (coordinates[0]+180)*w / 360,
-        ((-180 / Math.PI * Math.log(Math.tan(Math.PI / 4 + coordinates[1] * Math.PI / 360)))+180)*(h*1.2) / 360
+        (coordinates[0] + 180) * w / 360,
+        ((-180 / Math.PI * Math.log(Math.tan(Math.PI / 4 + coordinates[1] * Math.PI / 360))) + 180) * (h * 1.2) / 360
       ];
     });
 
@@ -123,7 +141,7 @@ export class D3ngMapComponent extends D3ngChart {
 
   private colorize(d) {
     if (d.original) {
-      const value = d.original[this._choropleth];
+      const value = d.original[this.choroplethToUse];
       if (value) {
         return this.color(value);
       }

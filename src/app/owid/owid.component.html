@@ -39,8 +39,8 @@
     </p>
     <div class="map-container">
       <div class="map-controls">
+        <md-checkbox [(ngModel)]="map.isDrawChoropleth"></md-checkbox>
         <md-select placeholder="Choropleth" [(ngModel)]="map.choropleth">
-          <md-option [value]="null">none</md-option>
           <md-option *ngFor="let dim of dimensions" [value]="dim">{{ dim }}</md-option>
         </md-select>
         <md-checkbox [(ngModel)]="map.isDrawSelection">Show selections</md-checkbox>
