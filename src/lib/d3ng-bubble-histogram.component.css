@@ -10,6 +10,12 @@
   stroke: none;
 }
 
+:host /deep/ .highlighted {
+  fill: #FF00AA;
+  fill-opacity: 1;
+  z-index: 10;
+}
+
 :host /deep/ .scale rect {
   fill-opacity: 0.3;
 }
@@ -35,4 +41,14 @@
   stroke-opacity: 0.8;
   stroke-width: 3px;
   stroke: #FF00AA;
+}
+
+:host /deep/ .category path {
+  stroke-width: 1px;
+  stroke: grey;
+  stroke-dasharray: 5px 2px;
+}
+
+:host /deep/ .category text {
+  font-size: 12px;
 }

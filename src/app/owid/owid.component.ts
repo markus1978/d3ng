@@ -251,7 +251,7 @@ export class OwidComponent implements OnInit {
   }
 
   onTimeChanged(value: number): void {
-    this.year = value;
+    this.year = Number(Number(value).toFixed(0));
     this.updateData(this.dimensionsData, this.year, true);
   }
 

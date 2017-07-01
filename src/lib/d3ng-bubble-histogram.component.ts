@@ -21,10 +21,6 @@ export class D3ngBubbleHistogramComponent extends D3ngChart implements OnChanges
 
   @Input() sliderX = 0;
   @Output() sliderXChange = new EventEmitter<number>();
-  private setSliderX(value: number) {
-    this.sliderX = value;
-    this.sliderXChange.emit(value);
-  }
 
   protected x(d: any): number {
     return d[this.xKey];
@@ -45,6 +41,30 @@ export class D3ngBubbleHistogramComponent extends D3ngChart implements OnChanges
 
   protected clear() {
     this.chart.nativeElement.innerHTML = "";
+  }
+
+  private setSliderX(value: number) {
+    this.sliderX = value;
+    this.sliderXChange.emit(value);
+
+    // highlight closest data
+    if (this.d3Chart) {
+      const dists = {};
+      const highlightDataMap = {};
+      this.data.forEach(data => {
+        const category = this.category(data);
+        const currentDist = this.sliderX - this.x(data);
+        if (currentDist >= 0) {
+          const dist = dists[category];
+          if (!dist || currentDist < dist) {
+            dists[category] = dist;
+            highlightDataMap[category] = data;
+          }
+        }
+      });
+      const highlighted = Object.keys(highlightDataMap).map(key => highlightDataMap[key]);
+      this.d3Chart.selectAll(".dot").classed("highlighted", data => highlighted.indexOf(data) != -1);
+    }
   }
 
   /** creates linear scale and axis that can be zoomed with handles */
@@ -129,7 +149,7 @@ export class D3ngBubbleHistogramComponent extends D3ngChart implements OnChanges
     // constants and helper
     const maxBubbleSize = 80;
     const categoryHeight = maxBubbleSize * 0.6;
-    const margin = {top: 5, right: 5, bottom: 60, left: 5};
+    const margin = {top: 10, right: 5, bottom: 60, left: 5};
     const width = this.chart.nativeElement.offsetWidth - margin.left - margin.right;
     const height = (categories.length + 1) * categoryHeight - margin.top - margin.bottom;
     const categoryScale = (category: any) => {
@@ -158,23 +178,28 @@ export class D3ngBubbleHistogramComponent extends D3ngChart implements OnChanges
       .call(zoomableAxis.append);
 
     // the categories
-    svg.selectAll(".category")
+    const categoriesSvg = svg.selectAll(".category")
       .data(categories)
-      .enter().append("text")
+      .enter().append("g")
       .attr("class", "category")
+      .attr("transform", data => "translate(0, " + categoryScale(data) + ")");
+    categoriesSvg.append("text")
       .attr("text-anchor", "left")
-      .attr("y", d => categoryScale(d))
+      .attr("y", -22)
       .text(d => this.categoryLabel(d));
+    categoriesSvg.append("path")
+      .attr("d", data => d3.svg.line()([[0, 0], [width, 0]]));
 
     // the bubbles
     const bubbles = svg.selectAll(".dot")
       .data(this.data)
-      .enter().append("circle")
+      .enter().append("rect")
       .attr("class", "dot")
-      .attr("r", d => valueScale(this.value(d)));
+      .attr("height", d => valueScale(this.value(d)))
+      .attr("width", 2);
     const updateBubbles = () => bubbles
-      .attr("cx", d => zoomableAxis.scale(this.x(d)))
-      .attr("cy", d => categoryScale(this.category(d)));
+      .attr("x", d => zoomableAxis.scale(this.x(d)))
+      .attr("y", d => categoryScale(this.category(d)) - valueScale(this.value(d)));
     updateBubbles();
 
     zoomableAxis.onChanged(() => {
@@ -193,7 +218,7 @@ export class D3ngBubbleHistogramComponent extends D3ngChart implements OnChanges
     const slider = svg.append("g")
       .attr("class", "slider");
     slider.append("path")
-      .attr("d", d3.svg.line()([[0, 0], [0, height + margin.bottom - 33]]));
+      .attr("d", d3.svg.line()([[0, -33], [0, height + margin.bottom - 33]]));
     slider.append("text")
       .attr("text-anchor", "left")
       .attr("y", 15)
