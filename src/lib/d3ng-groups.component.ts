@@ -30,6 +30,7 @@ export class D3ngGroupContext {
     '.group-controls { position: absolute; right: 10px; z-index: 1000;}',
     'md-button-toggle-group { height: 15px; }',
     '.mat-button-toggle-checked { border: solid grey 1px; }',
+    ':host /deep/ .mat-button-toggle-label-content { line-height: 0; !important; }',
     '.group-btn-0.mat-button-toggle-checked { background-color: #9E2622; }',
     '.group-btn-0:not(.mat-button-toggle-checked) {background-color: #CC8574; }',
     '.group-btn-1.mat-button-toggle-checked { background-color: #005A9C; }',
