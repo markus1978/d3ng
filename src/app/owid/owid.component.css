@@ -32,3 +32,8 @@ d3ng-parallel-coordinates {
 .map-controls md-select {
   width: 45%;
 }
+
+:host /deep/ .collapsible-panel-info {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}

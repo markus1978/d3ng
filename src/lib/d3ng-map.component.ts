@@ -90,8 +90,6 @@ export class D3ngMapComponent extends D3ngChart {
 
     const self = this;
 
-    this.chart.nativeElement.style.height = (this.chart.nativeElement.offsetWidth * 5 / 7) + "px";
-
     const margin = {top: 0, right: 0, bottom: 0, left: 0},
       w = this.chart.nativeElement.offsetWidth  - margin.left - margin.right,
       h = (this.chart.nativeElement.offsetWidth * 457.0 / 700.0)  - margin.top - margin.bottom;
@@ -101,10 +99,9 @@ export class D3ngMapComponent extends D3ngChart {
     if (this.config && this.config.choroplethColors && this.config.choroplethColors.length >= 2) {
       choroplethColors = this.config.choroplethColors;
     }
-    const color = d3.scale.linear().domain(extent)
+    this.color = d3.scale.linear().domain(extent)
       .interpolate(d3.interpolateRgb)
       .range([d3.rgb(choroplethColors[0]), d3.rgb(choroplethColors[1])]);
-    this.color = color;
 
     const path = d3.geo.path()
       .projection(function mercator(coordinates) {

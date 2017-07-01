@@ -20,6 +20,7 @@ import {D3ngStoriesComponent} from "./stories/d3ng-stories/d3ng-stories.componen
 import { OwidComponent } from './owid/owid.component';
 import { D3ngAboutComponent } from './d3ng-about.component';
 import {MarkdownModule} from "angular2-markdown";
+import {D3ngCollapsiblePanelComponent} from "./owid/d3ng-collapsible-panel.component";
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import {MarkdownModule} from "angular2-markdown";
     D3ngCodeVizComponent,
     OwidComponent,
     D3ngAboutComponent,
+    D3ngCollapsiblePanelComponent,
   ],
   imports: [
     BrowserModule, // before other material modules are imported

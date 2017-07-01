@@ -1,4 +1,4 @@
-import {EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges} from "@angular/core";
+import {AfterViewInit, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges} from "@angular/core";
 import * as d3 from "d3";
 
 export class D3ngSelectionItem {
@@ -62,7 +62,7 @@ export class D3ngSelection  {
   }
 
   public sortSelection(groups: number[]) {
-    this.items.sort((a,b) => {
+    this.items.sort((a, b) => {
       const ag = groups.indexOf(a.group);
       const bg = groups.indexOf(b.group);
       return (ag > bg) ? 1 : ((ag < bg) ? -1 : 0);
@@ -78,7 +78,7 @@ export class D3ngSelection  {
 }
 
 
-export abstract class D3ngChart implements OnChanges {
+export abstract class D3ngChart implements OnChanges, AfterViewInit {
 
   /**
    * The colors used to draw shapes and lines in charts and diagrams.
@@ -156,22 +156,7 @@ export abstract class D3ngChart implements OnChanges {
 
   @Input() customLabel: Function = null;
 
-  @Input() multiselect: boolean = false;
-
-  @HostListener('contextmenu') onRightClick() {
-    if (this.multiselect) {
-      this.setDirectSelection([]);
-    }
-  };
-
-  private _isDrawSelection = true;
-  @Input() set isDrawSelection(value: boolean) {
-    this._isDrawSelection = value;
-    this.redraw();
-  }
-  get isDrawSelection(): boolean {
-    return this._isDrawSelection;
-  }
+  @Input() multiselect = false;
 
   public groupOrder = [0, 1, 2, 3];
 
@@ -181,6 +166,24 @@ export abstract class D3ngChart implements OnChanges {
    * @type {any}
    */
   public preDirectSelection: any[] = null;
+
+  public selectionFilter: (any) => boolean = null;
+
+  private _isDrawSelection = true;
+
+  @HostListener('contextmenu') onRightClick() {
+    if (this.multiselect) {
+      this.setDirectSelection([]);
+    }
+  };
+
+  @Input() set isDrawSelection(value: boolean) {
+    this._isDrawSelection = value;
+    this.redraw();
+  }
+  get isDrawSelection(): boolean {
+    return this._isDrawSelection;
+  }
 
   /**
    * Calculates a set of representatives for an original data point. The idea is that a parent or child data point
@@ -253,8 +256,6 @@ export abstract class D3ngChart implements OnChanges {
       this.drawSelection(this.currentSelection);
     }
   }
-
-  public selectionFilter: (any) => boolean = null;
 
   public setDirectSelection(selected: Array<any>) {
     const originalSelected = selected;
@@ -441,5 +442,9 @@ export abstract class D3ngChart implements OnChanges {
     vis.on('mouseout', function() {
       body.select('.tooltip').remove();
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.redraw();
   }
 }
