@@ -1,5 +1,6 @@
 {
   "extends": "../tsconfig.json",
+  "module": "es2015",
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "module": "es2015",
