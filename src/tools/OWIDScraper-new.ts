@@ -6,7 +6,6 @@ import * as async from 'async';
 import * as fs from 'fs';
 import * as status from 'node-status';
 import * as JSONStream from 'JSONStream';
-import {count} from "rxjs/operator/count";
 
 const x = xray();
 
@@ -31,7 +30,7 @@ interface OWIDItem {
   data: any[];
 }
 
-interface OWIDVariable {
+interface OWIDVariableMetaData {
   key: string;
   description: string;
   metaDataUrl: string;
@@ -43,18 +42,21 @@ interface OWIDVariable {
   valuesPerYear: number[];
 }
 
-interface OWIDDatum {
-  code: string;
-  label: string;
-  years: number[];
-  values: number[];
+interface OWIDVariable {
+  key: string;
+  countries: [{
+    code: string;
+    label: string;
+    years: number[];
+    values: number[];
+  }];
 }
 
 /**
  * Fetches meta data and data from an individual OWID gapher metaData URI.
  */
 function fetchItem(metaDataUrl: string, callback: (err, item: OWIDItem) => void): void {
-  // console.log(`  Fetching item meta data from ${metaDataUrl}.`);
+  // logger.log(`  Fetching item meta data from ${metaDataUrl}.`);
   x(metaDataUrl, '', {
     headers: x('head meta', [{
       name: '@name',
@@ -70,10 +72,10 @@ function fetchItem(metaDataUrl: string, callback: (err, item: OWIDItem) => void)
     try {
       description = content.headers.filter(header => header.name == "description")[0].content;
     } catch (exception) {
-      console.log(`WARNING: Could not get meta data from ${metaDataUrl}.`);
+      logger.log(`WARNING: Could not get meta data from ${metaDataUrl}.`);
     }
 
-    // console.log(`  Fetching item data from ${url}.`);
+    // logger.log(`  Fetching item data from ${url}.`);
     get(url, (err, res) => {
       if (!err && res.statusCode == 200) {
         streamToString(res).then(body => {
@@ -99,7 +101,7 @@ function fetchData(callback: (err, data: OWIDData) => void): void {
   const url = 'https://ourworldindata.org/';
   const grapherRE = /^https:\/\/ourworldindata.org\/grapher\/([^\/]*)$/;
 
-  console.log(`Fetching structure from ${url}.`);
+  logger.log(`Fetching structure from ${url}.`);
   x(url, '.owid-data ul li', [{
     title: 'h4',
     pages: x('.link-container a', [{
@@ -108,9 +110,9 @@ function fetchData(callback: (err, data: OWIDData) => void): void {
     }])
   }]) ((err, groups) => {
     async.map(groups, (group, callback) => {
-      console.log("  " + group.title);
+      logger.log("  " + group.title);
       async.map(group.pages, (page, callback) => {
-        console.log("    " + page.url);
+        logger.log("    " + page.url);
         x(page.url, {
           srcURLs: x(['iframe@src'])
         }) ((err, pageContent) => {
@@ -127,21 +129,18 @@ function fetchData(callback: (err, data: OWIDData) => void): void {
         callback(err, group);
       });
     }, (err, groups) => {
-      console.log(`Completed fetching structure from ${url}.`);
+      logger.log(`Completed fetching structure from ${url}.`);
 
       const itemRefs = new Set();
       groups.forEach(group => group.pages.forEach(page => page.itemRefs.forEach(itemRef => itemRefs.add(itemRef))));
-      console.log(`Getting data from ${itemRefs.size} items.`);
-      const itemsStatus = status.addItem('items', { max: itemRefs.size });
-      status.start();
+      logger.log(`Getting data from ${itemRefs.size} items.`);
       async.mapLimit(Array.from(itemRefs), 10,
         (itemRef, callback) => {
           fetchItem(itemRef, (err, results) => {
-            itemsStatus.inc();
+            fetchingStatus.inc();
             callback(err, results);
           });
         }, (err, items) => {
-          status.stop();
           const result = {
             url: url,
             groups: groups,
@@ -163,10 +162,10 @@ function fetchDataFromWebOrFile(callback: (data: OWIDData) => void): void {
   if (!fs.existsSync(rawDataPath)) {
     fetchData((err, rawData) => {
       if (err) {
-        console.log(`Error while fetching data: ${err}. Try to work with data anyways.`);
+        logger.log(`Error while fetching data: ${err}. Try to work with data anyways.`);
       }
 
-      console.log(`Writing raw data to file.`);
+      logger.log(`Writing raw data to file.`);
       const items = rawData.items;
       rawData.items = [];
       const stream = JSONStream.stringify();
@@ -178,64 +177,222 @@ function fetchDataFromWebOrFile(callback: (data: OWIDData) => void): void {
       callback(rawData);
     });
   } else {
-    console.log(`Reading raw data from file.`);
+    logger.log(`Reading raw data from file.`);
     const stream = fs.createReadStream(rawDataPath, {encoding: 'utf8'});
     const parser = JSONStream.parse('*');
     stream.pipe(parser);
 
-    const itemStatus = status.addItem('items');
-    status.start();
     let rawData: OWIDData = null;
     parser.on('data', data => {
       if (rawData) {
-        itemStatus.inc();
+        loadingStatus.inc();
         rawData.items.push(data as any);
       } else {
         rawData = data as any;
       }
     });
     stream.on('end', () => {
-      status.stop();
       callback(rawData);
     });
   }
 }
 
-fetchDataFromWebOrFile(rawData => {
-  console.log(`Processing raw data from ${rawData.items.length} items.`);
-  const standardKeys = ['Entity', 'Country code', 'Year'];
-  rawData.items.forEach(item => {
-    const firstDatum = item.data[0];
-    const keys = Object.keys(firstDatum).filter(key => standardKeys.indexOf(key) == -1);
-    const timeSeries = firstDatum.hasKey('Year');
+class Matrix {
 
-    if (timeSeries) {
-      const variables: any = keys.map(key => {
-        const data: any[] = item.data.select(standardKeys.join([key])).replace(key, "value");
-        const variable: any = {};
-        variable.key = key;
-        variable.countries = data.groupBy(["code", "label"], "tmp");
-        variable.countries.forEach(country => {
-          const yearValueMatrix = country.tmp.filter(d => d.value && d.value != 0).matrix();
-          country.tmp = undefined;
-          country.years = yearValueMatrix.years;
-          country.values = yearValueMatrix.value;
-        })
-        return variable;
-      }).toObject("key");
-    } else {
-      console.log(`WARNING: Non time series data at ${item.dataUrl}.`);
+  private arr: any[];
+
+  static from(arr: any[]): Matrix {
+    if (!arr || arr.length == 0) {
+      throw new Error("Matrix must not be empty.");
     }
-  });
-});
+    const result = new Matrix();
+    result.arr = arr;
+    return result;
+  }
 
-declare global {
-  interface Array<T> {
-    select<R>(keys: string[]): R[];
-    replace<R>(from: string, to: string): R[];
-    groupBy<R>(keys: string[], groupedKey: string): R[];
-    matrix(): any;
-    toObject(key: string): any;
-    join(other: T[]): T[];
+  select(keys: string[]): Matrix {
+    const result = this.arr.map(source => {
+      const target = {};
+      keys.forEach(key => target[key] = source[key]);
+      return target;
+    });
+    return Matrix.from(result);
+  }
+
+  public project(fromKeys: string[], toKeys: string[]): Matrix {
+    fromKeys = fromKeys.slice(0);
+    toKeys = toKeys.slice(0);
+    Object.keys(this.arr[0]).filter(key => fromKeys.indexOf(key) == -1).forEach(key => {
+      fromKeys.push(key);
+      toKeys.push(key);
+    });
+    const result = this.arr.map(source => {
+      const target = {};
+      for( let i = 0; i < fromKeys.length; i++) {
+        target[toKeys[i]] = source[fromKeys[i]];
+      }
+      return target;
+    });
+    return Matrix.from(result);
+  }
+
+  groupBy(keys: string[], groupedKey: string): Matrix {
+    const keyKey = keys[0];
+    const groupDict = [];
+    const groups = [];
+    this.arr.forEach(element => {
+      const key = element[keyKey];
+      let group = groupDict[key];
+      if (!group) {
+        group = {};
+        group[groupedKey] = [];
+        Object.keys(element)
+          .filter(key => keys.indexOf(key) != -1)
+          .forEach(key => group[key] = element[key]);
+        groupDict[key] = group;
+        groups.push(group);
+      }
+
+      const groupElement = {};
+      Object.keys(element)
+        .filter(key => keys.indexOf(key) == -1)
+        .forEach(key => groupElement[key] = element[key]);
+      group[groupedKey].push(groupElement);
+    });
+    return Matrix.from(groups);
+  }
+
+  zip(): any {
+    const result = {};
+    const keys = Object.keys(this.arr[0]);
+    keys.forEach(key => result[key] = []);
+    this.arr.forEach(element => keys.forEach(key => result[key].push(element[key])));
+    return result;
+  }
+
+  rows(): string[] {
+    return Object.keys(this.arr[0]);
+  }
+
+  array(): any[] {
+    return this.arr;
   }
 }
+
+
+function transformRawItemToVariables(item: OWIDItem): OWIDVariable[] {
+  const rawStandardKeys = ['Entity', 'Country code', 'Year'];
+  const standardKeys = ['label', 'code', 'year'];
+
+  const matrix = Matrix.from(item.data).project(rawStandardKeys, standardKeys);
+  const keys = matrix.rows().filter(key => standardKeys.indexOf(key) == -1);
+
+  const variables = keys.map(key => {
+    const allKeys = standardKeys.slice();
+    allKeys.splice(0,0, key);
+    const data = matrix.select(allKeys).project([key], ["value"]);
+    const variable: any = {};
+    variable.key = key;
+    variable.countries = data.groupBy(["code", "label"], "tmp").array();
+    variable.countries.forEach(country => {
+      country.tmp = country.tmp.filter(d => d.value && d.value != 0);
+      if (country.tmp.length > 0) {
+        const yearValueMatrix = Matrix.from(country.tmp.filter(d => d.value && d.value != 0)).zip();
+        country.years = yearValueMatrix.year;
+        country.values = yearValueMatrix.value;
+      }
+      country.tmp = undefined;
+    });
+    return variable;
+  });
+
+  return variables;
+}
+
+// const testRawItem: OWIDItem = {
+//   description: "test",
+//   metaDataUrl: "mdu",
+//   dataUrl: "du",
+//   data: [
+//     {
+//       'Entity': 'USA',
+//       'Country code': 'US',
+//       'Year': 2006,
+//       'Somekey1': 0,
+//       'Somekey2': 0.1
+//     },
+//     {
+//       'Entity': 'USA',
+//       'Country code': 'US',
+//       'Year': 2007,
+//       'Somekey1': 0.23,
+//       'Somekey2': 0.1
+//     },
+//     {
+//       'Entity': 'USA',
+//       'Country code': 'US',
+//       'Year': 2008,
+//       'Somekey1': 0.46,
+//       'Somekey2': 0.2
+//     },
+//     {
+//       'Entity': 'Fra',
+//       'Country code': 'fr',
+//       'Year': 2006,
+//       'Somekey1': 0,
+//       'Somekey2': 0.1
+//     },
+//     {
+//       'Entity': 'Fra',
+//       'Country code': 'fr',
+//       'Year': 2007,
+//       'Somekey1': 0.23,
+//       'Somekey2': 0.1
+//     },
+//     {
+//       'Entity': 'Fra',
+//       'Country code': 'fr',
+//       'Year': 2008,
+//       'Somekey1': 0.46,
+//       'Somekey2': 0.2
+//     },
+//   ]
+// };
+//
+// logger.log(JSON.stringify(transformRawItemToVariables(testRawItem), null, 2));
+
+const loadingStatus = status.addItem('loading');
+const fetchingStatus = status.addItem('fetching');
+const processingStatus = status.addItem('processing');
+
+const logger = status.console();
+
+status.start({
+ interval: 100,
+ pattern: ' Doing work: {uptime}  |  {spinner.cyan}  |  featched: {fetching} | loaded: {loading} | processed: {processing}'
+});
+
+function pathFromDataUrl(dataUrl: string, variableIndex: number) {
+  const prefixLength = "https://ourworldindata.org/grapher/".length;
+  return dataUrl.substr(prefixLength, dataUrl.length) + "-" + variableIndex + ".json";
+}
+
+fetchDataFromWebOrFile(rawData => {
+  logger.log(`Processing raw data from ${rawData.items.length} items.`);
+
+  rawData.items.forEach(item => {
+    if (item.data[0]['Year']) {
+      const variables = transformRawItemToVariables(item);
+      let index = 0;
+      variables.forEach(variable => {
+        logger.log(pathFromDataUrl(item.dataUrl, index++));
+      });
+      processingStatus.inc();
+    }
+  });
+
+  status.stop();
+});
+
+
+
