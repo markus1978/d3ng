@@ -4,55 +4,66 @@ import * as streamToString from 'stream-to-string';
 import * as d3 from 'd3';
 import * as async from 'async';
 import * as fs from 'fs';
-import * as status from 'node-status';
 import * as JSONStream from 'JSONStream';
+import * as ProgressBar from 'progress';
+
+const outPath = "src/assets/owid-new/";
+if (!fs.existsSync(outPath)){
+  fs.mkdirSync(outPath);
+}
 
 const x = xray();
 
-const loadingStatus = status.addItem('loading');
-const fetchingStatus = status.addItem('fetching');
-const processingStatus = status.addItem('processing');
+const out = (() => {
+  const progressConfig = '[:bar] :current/:total ';
+  const progress = new ProgressBar(progressConfig, { total: 10, clear: true, width: 40 });
+  return {
+    set: (total: number) => {
+      progress.total = total;
+      progress.curr = 0;
+    },
+    tick: () => {
+      progress.tick();
+      progress.render();
+    },
+    log: progress.interrupt.bind(progress)
+  }
+})();
 
-const logger = status.console();
-
-status.start({
-  interval: 100,
-  pattern: ' Doing work: {uptime}  |  {spinner.cyan}  |  featched: {fetching} | loaded: {loading} | processed: {processing}'
-});
-
-interface OWIDData {
-  url: string;
-  groups: [{
-    title: string,
-    url: string,
-    pages: [{
-      title: string,
-      url: string,
-      itemRefs: string,
-      variables: OWIDVariableMetaData[], // TODO
-    }]
-  }];
-  items: OWIDItem[];
+interface OWIDMetaDataNode {  // root, groups, pages, variables
+  key: string;
+  title: string;
+  url?: string;
+  children?: OWIDMetaDataNode[];
+  dataSetRefs?: string[];
 }
 
-interface OWIDItem {
-  description: string;
-  metaDataUrl: string;
-  dataUrl: string;
-  data: any[];
-}
-
-interface OWIDVariableMetaData {
+interface OWIDDataSet { // a data set, i.e. what can be retrieved from one OWID chart
   key: string;
   description: string;
   metaDataUrl: string;
   dataUrl: string;
+  data: any[];
+  variableRefs?: string[];
+}
+
+interface OWIDRawData {
+  dataSetCount: number;
+  dataSets: OWIDDataSet[];
+  metaData: OWIDMetaDataNode;
+}
+
+interface OWIDVariableMetaData extends OWIDMetaDataNode {
+  key: string;
+  description: string;
+  dataUrl: string;
   dataFile: string;
+  allDataSetRefs: string[]; // one variable can be contained in multiple data sets multiple times (hopefully its always the same? We use the larges anyways.)
   years: number[];
   valuesPerYear: number[];
 }
 
-interface OWIDVariable {
+interface OWIDVariableData {
   key: string;
   countries: [{
     code: string;
@@ -65,8 +76,7 @@ interface OWIDVariable {
 /**
  * Fetches meta data and data from an individual OWID gapher metaData URI.
  */
-function fetchItem(dataUrl: string, callback: (err, item: OWIDItem) => void): void {
-  // logger.log(`  Fetching item meta data from ${metaDataUrl}.`);
+function fetchDataSet(dataUrl: string, callback: (err, dataSet: OWIDDataSet) => void): void {
   const metaDataUrl = dataUrl.substring(0, dataUrl.length - 4);
   x(metaDataUrl, '', {
     headers: x('head meta', [{
@@ -78,15 +88,15 @@ function fetchItem(dataUrl: string, callback: (err, item: OWIDItem) => void): vo
     try {
       description = content.headers.filter(header => header.name == "description")[0].content;
     } catch (exception) {
-      logger.log(`WARNING: Could not get meta data from ${metaDataUrl}.`);
+      out.log(`WARNING: Could not get meta data from ${metaDataUrl}.`);
     }
 
-    // logger.log(`  Fetching item data from ${url}.`);
     get(dataUrl, (err, res) => {
       if (!err && res.statusCode == 200) {
         streamToString(res).then(body => {
           const data = d3.csv.parse(body);
           callback(null, {
+            key: dataUrl,
             description: description,
             metaDataUrl: metaDataUrl,
             dataUrl: dataUrl,
@@ -94,20 +104,20 @@ function fetchItem(dataUrl: string, callback: (err, item: OWIDItem) => void): vo
           });
         });
       } else {
-        callback(`Could not successfully get data from ${dataUrl}.`, null);
+        callback(`ERROR: Could not successfully get data from ${dataUrl}.`, null);
       }
     });
   });
 }
 
 /**
- * Fetches all OWIDData from the OWID servers.
+ * Fetches all OWIDMetaData from the OWID servers.
  */
-function fetchData(callback: (err, data: OWIDData) => void): void {
+function fetchData(callback: (err, data: OWIDRawData) => void): void {
   const url = 'https://ourworldindata.org/';
   const grapherRE = /^https:\/\/ourworldindata.org\/grapher\/([^\/]*)$/;
 
-  logger.log(`Fetching structure from ${url}.`);
+  out.log(`Fetching structure from ${url}.`);
   x(url, '.owid-data ul li', [{
     title: 'h4',
     pages: x('.link-container a', [{
@@ -115,45 +125,58 @@ function fetchData(callback: (err, data: OWIDData) => void): void {
       url: '@href',
     }])
   }]) ((err, groups) => {
+    // groups = [groups[0]]; // only first group when debugging
     async.map(groups, (group, callback) => {
-      logger.log("  " + group.title);
+      // out.log("  " + group.title);
       async.map(group.pages, (page, callback) => {
-        logger.log("    " + page.url);
+        // out.log("    " + page.url);
         x(page.url, {
           srcURLs: x(['iframe@src'])
         }) ((err, pageContent) => {
           const urls = pageContent.srcURLs.filter(url => url && url.match(grapherRE));
-          const result = {
+          const result: OWIDMetaDataNode = {
+            key: page.url,
             title: page.title,
             url: page.url,
-            itemRefs: urls.map(metaDataUrlToDataUrl)
+            dataSetRefs: urls.map(metaDataUrlToDataUrl)
           };
           callback(err, result);
         });
       }, (err, pages) => {
-        group.pages = pages;
-        callback(err, group);
+        const result: OWIDMetaDataNode = {
+          key: group.title,
+          title: group.title,
+          children: pages
+        };
+        callback(err, result);
       });
     }, (err, groups) => {
-      logger.log(`Completed fetching structure from ${url}.`);
+      out.log(`Completed fetching structure from ${url}.`);
 
-      const itemRefs = new Set();
-      groups.forEach(group => group.pages.forEach(page => page.itemRefs.forEach(itemRef => itemRefs.add(itemRef))));
-      logger.log(`Getting data from ${itemRefs.size} items.`);
-      async.mapLimit(Array.from(itemRefs), 10,
-        (itemRef, callback) => {
-          fetchItem(itemRef, (err, results) => {
-            fetchingStatus.inc();
-            callback(err, results);
-          });
-        }, (err, items) => {
-          const result = {
-            url: url,
-            groups: groups,
-            items: items
-          };
-          callback(err, result);
+      const dataSetRefs = new Set();
+      groups.forEach(group => group.children.forEach(page => page.dataSetRefs.forEach(dataSetRef => dataSetRefs.add(dataSetRef))));
+      out.log(`Getting data from ${dataSetRefs.size} dataSets.`);
+
+      out.set(dataSetRefs.size);
+      const mapDataSetRefToDataSet = (dataSetRef, callback) => {
+        fetchDataSet(dataSetRef, (err, results) => {
+          out.tick();
+          callback(err, results);
         });
+      };
+
+      async.mapLimit(Array.from(dataSetRefs), 10, mapDataSetRefToDataSet, (err, dataSets) => {
+        callback(err, {
+          dataSetCount: dataSets.length,
+          dataSets: dataSets,
+          metaData: {
+            key: "root",
+            title: "OWID",
+            url: url,
+            children: groups,
+          }
+        });
+      });
     });
   });
 }
@@ -167,42 +190,44 @@ function metaDataUrlToDataUrl(metaDataUrl: string): string {
 }
 
 /**
- * Tries to find raw OWIDData on the disk. Fetches data from servers if the raw data file does not exist and writes it
+ * Tries to find raw OWIDMetaData on the disk. Fetches data from servers if the raw data file does not exist and writes it
  * for the next time.
  */
-function fetchDataFromWebOrFile(callback: (data: OWIDData) => void): void {
-  const rawDataPath = "src/assets/owid_raw.json";
+function fetchDataFromWebOrFile(callback: (data: OWIDRawData) => void): void {
+  const rawDataPath = outPath + "/owid_raw.json";
 
   if (!fs.existsSync(rawDataPath)) {
     fetchData((err, rawData) => {
       if (err) {
-        logger.log(`Error while fetching data: ${err}. Try to work with data anyways.`);
+        out.log(`Error while fetching data: ${err}. Try to work with data anyways.`);
       }
 
-      logger.log(`Writing raw data to file.`);
-      const items = rawData.items;
-      rawData.items = [];
+      out.log(`Writing raw data to ${rawDataPath}.`);
+      const dataSets = rawData.dataSets;
+      rawData.dataSets = [];
       const stream = JSONStream.stringify();
       stream.pipe(fs.createWriteStream(rawDataPath));
       stream.write(rawData);
-      items.forEach(item => stream.write(item));
+      dataSets.forEach(dataSet => stream.write(dataSet));
       stream.end();
 
+      rawData.dataSets = dataSets;
       callback(rawData);
     });
   } else {
-    logger.log(`Reading raw data from file.`);
+    out.log(`Reading raw data from ${rawDataPath}.`);
     const stream = fs.createReadStream(rawDataPath, {encoding: 'utf8'});
     const parser = JSONStream.parse('*');
     stream.pipe(parser);
 
-    let rawData: OWIDData = null;
+    let rawData: OWIDRawData = null;
     parser.on('data', data => {
       if (rawData) {
-        loadingStatus.inc();
-        rawData.items.push(data as any);
+        out.tick();
+        rawData.dataSets.push(data as any);
       } else {
         rawData = data as any;
+        out.set(rawData.dataSetCount);
       }
     });
     stream.on('end', () => {
@@ -298,14 +323,14 @@ class Matrix {
 }
 
 
-function transformRawItemToVariables(item: OWIDItem): {variable: OWIDVariable; metaData: OWIDVariableMetaData}[] {
+function transformRawDataSetToVariables(dataSet: OWIDDataSet): {variable: OWIDVariableData; metaData: OWIDVariableMetaData}[] {
   const rawStandardKeys = ['Entity', 'Country code', 'Year'];
   const standardKeys = ['label', 'code', 'year'];
 
-  const matrix = Matrix.from(item.data).project(rawStandardKeys, standardKeys);
+  const matrix = Matrix.from(dataSet.data).project(rawStandardKeys, standardKeys);
   const keys = matrix.columns().filter(key => standardKeys.indexOf(key) == -1);
 
-  const results = keys.map(key => {
+  return keys.map(key => {
     // compute variable
     const allKeys = standardKeys.slice();
     allKeys.splice(0, 0, key);
@@ -327,12 +352,14 @@ function transformRawItemToVariables(item: OWIDItem): {variable: OWIDVariable; m
     const dataByYear = data.groupBy(["year"], "countries").array();
     const metaData: OWIDVariableMetaData = {
       key: variable.key,
-      description: item.description,
-      metaDataUrl: item.metaDataUrl,
-      dataUrl: item.dataUrl,
-      dataFile: pathFromDataUrl(item.metaDataUrl, keys.indexOf(variable.key)),
+      title: variable.key,
+      description: dataSet.description,
+      url: dataSet.metaDataUrl,
+      dataUrl: dataSet.dataUrl,
+      dataFile: pathFromDataUrl(dataSet.metaDataUrl, keys.indexOf(variable.key)),
       years: dataByYear.map(year => year.year),
       valuesPerYear: dataByYear.map(year => year.countries.length),
+      allDataSetRefs: [dataSet.key]
     };
 
     return {
@@ -340,11 +367,9 @@ function transformRawItemToVariables(item: OWIDItem): {variable: OWIDVariable; m
       metaData: metaData
     };
   });
-
-  return results;
 }
 
-// const testRawItem: OWIDItem = {
+// const testRawdataSet: OWIDDataSet = {
 //   description: "test",
 //   metaDataUrl: "mdu",
 //   dataUrl: "du",
@@ -394,34 +419,106 @@ function transformRawItemToVariables(item: OWIDItem): {variable: OWIDVariable; m
 //   ]
 // };
 //
-// logger.log(JSON.stringify(transformRawItemToVariables(testRawItem), null, 2));
+// logger.out.log(JSON.stringify(transformRawdataSetToVariables(testRawdataSet), null, 2));
 
 function pathFromDataUrl(dataUrl: string, variableIndex: number) {
   const prefixLength = "https://ourworldindata.org/grapher/".length;
   return dataUrl.substr(prefixLength, dataUrl.length) + "-" + variableIndex + ".json";
 }
 
-fetchDataFromWebOrFile(rawData => {
-  logger.log(`Processing raw data from ${rawData.items.length} items.`);
+function mergeVariables(existingVariable, newVariable): any {
+  // TODO merge variable data or choose the variable with more data
+  existingVariable.metaData.allDataSetRefs.push(newVariable.metaData.allDataSetRefs[0]);
+  return existingVariable;
+}
 
-  // transform items to respective variables
+fetchDataFromWebOrFile((rawData: OWIDRawData) => {
+
+  out.log(`Processing raw data from ${rawData.dataSets.length} dataSets.`);
   const allVariables = {};
-  rawData.items.forEach(item => {
-    transformRawItemToVariables(item).forEach(variable => {
+  out.set(rawData.dataSets.length);
+
+  rawData.dataSets.forEach(dataSet => {
+    const variables = transformRawDataSetToVariables(dataSet);
+    out.tick();
+    dataSet.variableRefs = variables.map(variable => variable.metaData.key);
+    variables.forEach(variable => {
       if (!allVariables[variable.variable.key]) {
         allVariables[variable.variable.key] = variable;
+      } else {
+        const variableToUse = mergeVariables(allVariables[variable.variable.key], variable);
+        allVariables[variable.variable.key] = variableToUse;
       }
     });
-    processingStatus.inc();
   });
-  logger.log(`Found ${Object.keys(allVariables).length} variables.`);
 
-  // replace items with their variable meta data in meta data
+  out.log(`Add ${Object.keys(allVariables).length} variable's meta data to the meta data tree.`);
+  const dataSetMap = {};
+  rawData.dataSets.forEach(dataSet => dataSetMap[dataSet.key] = dataSet);
+  const visitForVariableMetaData = (node: OWIDMetaDataNode) => {
+    if (node.children) {
+      node.children.forEach(child => visitForVariableMetaData(child));
+    }
+
+    if (node.dataSetRefs) {
+      if (!node.children) {
+        node.children = [];
+      }
+      node.dataSetRefs.forEach(dataSetRef => {
+        dataSetMap[dataSetRef].variableRefs.forEach(variableRef => node.children.push(allVariables[variableRef].metaData));
+      });
+    }
+  };
+  visitForVariableMetaData(rawData.metaData);
+
+  // strip metadata
+  out.log("Stripping down empty or redundant meta data nodes.");
+  let removedNodes = 0;
+  const visitForStripDown: (node: OWIDMetaDataNode) => OWIDMetaDataNode = (node: OWIDMetaDataNode) => {
+    if (node.children) {
+      const newChildren = [];
+      node.children.forEach(child => {
+        const newChild = visitForStripDown(child);
+        if (newChild) {
+          newChildren.push(newChild);
+        }
+      });
+      node.children = newChildren;
+    } else {
+      return node;
+    }
+
+    if (node.children && node.children.length > 0) {
+      if (node.children.length == 1) {
+        removedNodes++;
+        return node.children[0];
+      } else {
+        return node;
+      }
+    } else {
+      removedNodes++;
+      return null;
+    }
+  };
+  visitForStripDown(rawData.metaData);
+  out.log(`Removed ${removedNodes} from meta data tree.`);
 
   // save meta data
-  // save variable data
+  const metaDataFileName = outPath + "/owid_metadata.json";
+  out.log(`Write meta data tree to ${metaDataFileName}.`);
+  fs.writeFileSync(metaDataFileName, JSON.stringify(rawData.metaData, null, 2));
 
-  status.stop();
+  // save variable data
+  const variableCount = Object.keys(allVariables).length;
+  out.log(`Write variable data for ${variableCount} variables to files in ${outPath}.`);
+  out.set(variableCount);
+  Object.keys(allVariables).forEach(key => {
+    const variable = allVariables[key].variable;
+    fs.writeFileSync(outPath + "/" + allVariables[key].metaData.dataFile, JSON.stringify(variable, null, 2));
+    out.tick();
+  });
+
+  console.log("");
 });
 
 
