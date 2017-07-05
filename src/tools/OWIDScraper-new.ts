@@ -9,6 +9,17 @@ import * as JSONStream from 'JSONStream';
 
 const x = xray();
 
+const loadingStatus = status.addItem('loading');
+const fetchingStatus = status.addItem('fetching');
+const processingStatus = status.addItem('processing');
+
+const logger = status.console();
+
+status.start({
+  interval: 100,
+  pattern: ' Doing work: {uptime}  |  {spinner.cyan}  |  featched: {fetching} | loaded: {loading} | processed: {processing}'
+});
+
 interface OWIDData {
   url: string;
   groups: [{
@@ -17,7 +28,8 @@ interface OWIDData {
     pages: [{
       title: string,
       url: string,
-      itemRefs: string
+      itemRefs: string,
+      variables: OWIDVariableMetaData[], // TODO
     }]
   }];
   items: OWIDItem[];
@@ -36,8 +48,6 @@ interface OWIDVariableMetaData {
   metaDataUrl: string;
   dataUrl: string;
   dataFile: string;
-  timeSeries: boolean;
-  numberOfCountries: number;
   years: number[];
   valuesPerYear: number[];
 }
@@ -55,20 +65,16 @@ interface OWIDVariable {
 /**
  * Fetches meta data and data from an individual OWID gapher metaData URI.
  */
-function fetchItem(metaDataUrl: string, callback: (err, item: OWIDItem) => void): void {
+function fetchItem(dataUrl: string, callback: (err, item: OWIDItem) => void): void {
   // logger.log(`  Fetching item meta data from ${metaDataUrl}.`);
+  const metaDataUrl = dataUrl.substring(0, dataUrl.length - 4);
   x(metaDataUrl, '', {
     headers: x('head meta', [{
       name: '@name',
       content: '@content'
     }]),
   }) ((err, content) => {
-    let url = metaDataUrl;
-    if (url.indexOf("?") != -1) {
-      url = url.substring(0, url.indexOf("?"));
-    }
-    let description = url;
-    url += ".csv";
+    let description = dataUrl;
     try {
       description = content.headers.filter(header => header.name == "description")[0].content;
     } catch (exception) {
@@ -76,19 +82,19 @@ function fetchItem(metaDataUrl: string, callback: (err, item: OWIDItem) => void)
     }
 
     // logger.log(`  Fetching item data from ${url}.`);
-    get(url, (err, res) => {
+    get(dataUrl, (err, res) => {
       if (!err && res.statusCode == 200) {
         streamToString(res).then(body => {
           const data = d3.csv.parse(body);
           callback(null, {
             description: description,
             metaDataUrl: metaDataUrl,
-            dataUrl: url,
+            dataUrl: dataUrl,
             data: data
           });
         });
       } else {
-        callback(`Could not successfully get data from ${url}.`, null);
+        callback(`Could not successfully get data from ${dataUrl}.`, null);
       }
     });
   });
@@ -120,7 +126,7 @@ function fetchData(callback: (err, data: OWIDData) => void): void {
           const result = {
             title: page.title,
             url: page.url,
-            itemRefs: urls
+            itemRefs: urls.map(metaDataUrlToDataUrl)
           };
           callback(err, result);
         });
@@ -150,6 +156,14 @@ function fetchData(callback: (err, data: OWIDData) => void): void {
         });
     });
   });
+}
+
+function metaDataUrlToDataUrl(metaDataUrl: string): string {
+  let url = metaDataUrl;
+  if (metaDataUrl.indexOf("?") != -1) {
+    url = metaDataUrl.substring(0, metaDataUrl.indexOf("?"));
+  }
+  return url + ".csv";
 }
 
 /**
@@ -228,7 +242,7 @@ class Matrix {
     });
     const result = this.arr.map(source => {
       const target = {};
-      for( let i = 0; i < fromKeys.length; i++) {
+      for (let i = 0; i < fromKeys.length; i++) {
         target[toKeys[i]] = source[fromKeys[i]];
       }
       return target;
@@ -270,9 +284,13 @@ class Matrix {
     return result;
   }
 
-  rows(): string[] {
+  columns(): string[] {
     return Object.keys(this.arr[0]);
   }
+
+  filter(pred: (row: any) => boolean): Matrix {
+    return Matrix.from(this.array().filter(pred));
+  };
 
   array(): any[] {
     return this.arr;
@@ -280,33 +298,50 @@ class Matrix {
 }
 
 
-function transformRawItemToVariables(item: OWIDItem): OWIDVariable[] {
+function transformRawItemToVariables(item: OWIDItem): {variable: OWIDVariable; metaData: OWIDVariableMetaData}[] {
   const rawStandardKeys = ['Entity', 'Country code', 'Year'];
   const standardKeys = ['label', 'code', 'year'];
 
   const matrix = Matrix.from(item.data).project(rawStandardKeys, standardKeys);
-  const keys = matrix.rows().filter(key => standardKeys.indexOf(key) == -1);
+  const keys = matrix.columns().filter(key => standardKeys.indexOf(key) == -1);
 
-  const variables = keys.map(key => {
+  const results = keys.map(key => {
+    // compute variable
     const allKeys = standardKeys.slice();
-    allKeys.splice(0,0, key);
-    const data = matrix.select(allKeys).project([key], ["value"]);
+    allKeys.splice(0, 0, key);
+    const data = matrix.select(allKeys).project([key], ["value"]).filter(row => row.value && row.value != 0);
     const variable: any = {};
     variable.key = key;
     variable.countries = data.groupBy(["code", "label"], "tmp").array();
     variable.countries.forEach(country => {
       country.tmp = country.tmp.filter(d => d.value && d.value != 0);
       if (country.tmp.length > 0) {
-        const yearValueMatrix = Matrix.from(country.tmp.filter(d => d.value && d.value != 0)).zip();
+        const yearValueMatrix = Matrix.from(country.tmp).zip();
         country.years = yearValueMatrix.year;
         country.values = yearValueMatrix.value;
       }
       country.tmp = undefined;
     });
-    return variable;
+
+    // compute meta data
+    const dataByYear = data.groupBy(["year"], "countries").array();
+    const metaData: OWIDVariableMetaData = {
+      key: variable.key,
+      description: item.description,
+      metaDataUrl: item.metaDataUrl,
+      dataUrl: item.dataUrl,
+      dataFile: pathFromDataUrl(item.metaDataUrl, keys.indexOf(variable.key)),
+      years: dataByYear.map(year => year.year),
+      valuesPerYear: dataByYear.map(year => year.countries.length),
+    };
+
+    return {
+      variable: variable,
+      metaData: metaData
+    };
   });
 
-  return variables;
+  return results;
 }
 
 // const testRawItem: OWIDItem = {
@@ -361,17 +396,6 @@ function transformRawItemToVariables(item: OWIDItem): OWIDVariable[] {
 //
 // logger.log(JSON.stringify(transformRawItemToVariables(testRawItem), null, 2));
 
-const loadingStatus = status.addItem('loading');
-const fetchingStatus = status.addItem('fetching');
-const processingStatus = status.addItem('processing');
-
-const logger = status.console();
-
-status.start({
- interval: 100,
- pattern: ' Doing work: {uptime}  |  {spinner.cyan}  |  featched: {fetching} | loaded: {loading} | processed: {processing}'
-});
-
 function pathFromDataUrl(dataUrl: string, variableIndex: number) {
   const prefixLength = "https://ourworldindata.org/grapher/".length;
   return dataUrl.substr(prefixLength, dataUrl.length) + "-" + variableIndex + ".json";
@@ -380,16 +404,22 @@ function pathFromDataUrl(dataUrl: string, variableIndex: number) {
 fetchDataFromWebOrFile(rawData => {
   logger.log(`Processing raw data from ${rawData.items.length} items.`);
 
+  // transform items to respective variables
+  const allVariables = {};
   rawData.items.forEach(item => {
-    if (item.data[0]['Year']) {
-      const variables = transformRawItemToVariables(item);
-      let index = 0;
-      variables.forEach(variable => {
-        logger.log(pathFromDataUrl(item.dataUrl, index++));
-      });
-      processingStatus.inc();
-    }
+    transformRawItemToVariables(item).forEach(variable => {
+      if (!allVariables[variable.variable.key]) {
+        allVariables[variable.variable.key] = variable;
+      }
+    });
+    processingStatus.inc();
   });
+  logger.log(`Found ${Object.keys(allVariables).length} variables.`);
+
+  // replace items with their variable meta data in meta data
+
+  // save meta data
+  // save variable data
 
   status.stop();
 });
