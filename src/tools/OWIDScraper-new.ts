@@ -6,9 +6,10 @@ import * as async from 'async';
 import * as fs from 'fs';
 import * as JSONStream from 'JSONStream';
 import * as ProgressBar from 'progress';
+import {variable} from "@angular/compiler/src/output/output_ast";
 
 const outPath = "src/assets/owid-new/";
-if (!fs.existsSync(outPath)){
+if (!fs.existsSync(outPath)) {
   fs.mkdirSync(outPath);
 }
 
@@ -27,7 +28,7 @@ const out = (() => {
       progress.render();
     },
     log: progress.interrupt.bind(progress)
-  }
+  };
 })();
 
 interface OWIDMetaDataNode {  // root, groups, pages, variables
@@ -427,7 +428,13 @@ function pathFromDataUrl(dataUrl: string, variableIndex: number) {
 }
 
 function mergeVariables(existingVariable, newVariable): any {
-  // TODO merge variable data or choose the variable with more data
+  // We do not really merge them and rather check out assumption that they are identical anyways.
+  let numberOfValues = 0;
+  existingVariable.metaData.valuesPerYear.forEach(value => numberOfValues += value);
+  newVariable.metaData.valuesPerYear.forEach(value => numberOfValues -= value);
+  if (numberOfValues != 0) {
+    out.log(`WARNING: Two variables with same key ${existingVariable.metaData.key} have different number of values.`);
+  }
   existingVariable.metaData.allDataSetRefs.push(newVariable.metaData.allDataSetRefs[0]);
   return existingVariable;
 }
@@ -446,8 +453,7 @@ fetchDataFromWebOrFile((rawData: OWIDRawData) => {
       if (!allVariables[variable.variable.key]) {
         allVariables[variable.variable.key] = variable;
       } else {
-        const variableToUse = mergeVariables(allVariables[variable.variable.key], variable);
-        allVariables[variable.variable.key] = variableToUse;
+        allVariables[variable.variable.key] = mergeVariables(allVariables[variable.variable.key], variable);
       }
     });
   });
