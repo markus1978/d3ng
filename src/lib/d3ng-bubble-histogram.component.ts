@@ -2,13 +2,17 @@ import {Component, Input, OnChanges, Output, ViewChild, EventEmitter} from "@ang
 import * as d3 from "d3";
 import {D3ngChart, D3ngSelection} from "./d3ng-chart";
 
+/**
+ * The expected data is an array of object with keys for x, value, and category. Where
+ * x and value are metric and category is nominal. Keys can be customized via
+ * xKey, valueKey, and categoryKey.
+ */
 @Component({
   selector: 'd3ng-bubble-histogram',
   template: `
     <div #chart></div>`,
   styleUrls: [ './d3ng-bubble-histogram.component.css']
 })
-
 export class D3ngBubbleHistogramComponent extends D3ngChart implements OnChanges {
 
   @ViewChild('chart') chart;

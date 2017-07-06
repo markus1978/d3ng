@@ -8,6 +8,7 @@ import {D3ngMapComponent} from "../../lib/d3ng-map.component";
 import {Observable} from "rxjs/Observable";
 import * as jsonata from "jsonata";
 import {OWIDMetaDataNode, OWIDVariableMetaData, treeFilter, treeForEach} from "./owid.data";
+import {Matrix} from "../../tools/matrix";
 
 @Component({
   selector: 'app-owid',
@@ -16,7 +17,6 @@ import {OWIDMetaDataNode, OWIDVariableMetaData, treeFilter, treeForEach} from ".
 })
 export class OwidComponent implements OnInit {
 
-  private static extractTimeExtent = jsonata('{"min": $min(data.years), "max": $max(data.years)}').evaluate;
   private static defaultTimeExtent = { min: 1000, minLabel: "1000 AD", max: 2200, maxLabel: "2200 AD" };
 
   // The group context that controls the data flow between charts and  chart groups.
@@ -37,6 +37,9 @@ export class OwidComponent implements OnInit {
     "Population by Country (Clio Infra)",
     "Life Expectancy at Birth (both genders)"
   ];
+
+  tsHistogramData: {category: string, x: number, value: number}[] = [];
+  timeExtent: {min: number, max: number, minLabel: string, maxLabel: string} = OwidComponent.defaultTimeExtent;
 
   // scatterPlotConfig = null;
   // data: any[] = [];
@@ -72,8 +75,32 @@ export class OwidComponent implements OnInit {
       });
   }
 
-  selectedVariablesChanged(variables: OWIDVariableMetaData[]): void {
+  selectedVariablesChange(variables: OWIDVariableMetaData[]): void {
+    // update time series histogram data
+    let minYear = Number.MIN_SAFE_INTEGER;
+    let maxYear = Number.MAX_SAFE_INTEGER;
+    this.tsHistogramData = Matrix.from(variables)
+      .unzip(['years', 'valuesPerYear'])
+      .array().map(row => {
+        minYear = Math.max(minYear, row.years);
+        maxYear = Math.min(maxYear, row.years);
+        return {
+          category: row.key,
+          x: row.years,
+          value: row.valuesPerYear
+        };
+    });
+    // update time extent data
+    this.timeExtent = {
+      max: maxYear,
+      min: minYear,
+      minLabel: minYear < 0 ? `${-minYear} BC` : `${minYear} AD`,
+      maxLabel: `${maxYear} AD`
+    };
+  }
 
+  onYearChanged(year: number): void {
+    console.log("new year " + year);
   }
 
   // private setDB(db: any): void {

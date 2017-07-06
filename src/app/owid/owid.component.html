@@ -18,19 +18,19 @@
     </p>
     <d3ng-collapsible-indented-tree #meta d3ngSource [source]="metaDataRoots" pattern="."
                                     [multiselect]="true" [selected]="selectedVariables"
-                                    (selectedChanged)="selectedVariablesChanged($event)">
+                                    (selectedChange)="selectedVariablesChange($event)">
     </d3ng-collapsible-indented-tree>
   </div>
-  <!--<div class="col-8-12" style="padding-left: 30px">-->
-    <!--<d3ng-collapsible-panel>-->
-      <!--<div class="info">-->
-        <!--2. Select a point in time.-->
-        <!--There is some data from {{timeExtent.minLabel}} to {{timeExtent.maxLabel}}. The current year is {{year}}.-->
-        <!--You can shift in time:-->
-      <!--</div>-->
-      <!--<d3ng-bubble-histogram [data]="tsHistogramData" xKey="year"-->
-                             <!--[sliderX]="2017" (sliderXChange)="onTimeChanged($event)"></d3ng-bubble-histogram>-->
-    <!--</d3ng-collapsible-panel>-->
+  <div class="col-8-12" style="padding-left: 30px">
+    <d3ng-collapsible-panel>
+      <div class="info">
+        2. Select a point in time.
+        There is some data from {{timeExtent.minLabel}} to {{timeExtent.maxLabel}}. The current year is {{year}}.
+        You can shift in time:
+      </div>
+      <d3ng-bubble-histogram [data]="tsHistogramData"
+                             [sliderX]="2017" (sliderXChange)="onYearChanged($event)"></d3ng-bubble-histogram>
+    </d3ng-collapsible-panel>
     <!--<d3ng-collapsible-panel>-->
       <!--<div class="info">-->
         <!--3. Use the parallel coordinates to filter outliers and other unwanted data points by clicking and-->
@@ -87,6 +87,6 @@
         <!--</div>-->
       <!--</d3ng-collapsible-panel>-->
     <!--</div>-->
-  <!--</div>-->
+  </div>
 </div>
 
