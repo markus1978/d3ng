@@ -20,7 +20,7 @@ export class Matrix {
     return Matrix.from(result);
   }
 
-  public project(fromKeys: string[], toKeys: string[]): Matrix {
+  project(fromKeys: string[], toKeys: string[]): Matrix {
     fromKeys = fromKeys.slice(0);
     toKeys = toKeys.slice(0);
     Object.keys(this.arr[0]).filter(key => fromKeys.indexOf(key) == -1).forEach(key => {

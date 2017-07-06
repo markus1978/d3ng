@@ -17,76 +17,73 @@
       1. Choose the data-sets that you want to visualize. (Right click deselects all.)
     </p>
     <d3ng-collapsible-indented-tree #meta d3ngSource [source]="metaDataRoots" pattern="."
-                                    [multiselect]="true" [selected]="selectedVariables"
-                                    (selectedChange)="selectedVariablesChange($event)">
+                                    [multiselect]="true" [(selected)]="selectedVariables">
     </d3ng-collapsible-indented-tree>
   </div>
   <div class="col-8-12" style="padding-left: 30px">
     <d3ng-collapsible-panel>
       <div class="info">
         2. Select a point in time.
-        There is some data from {{timeExtent.minLabel}} to {{timeExtent.maxLabel}}. The current year is {{year}}.
-        You can shift in time:
+        There is some data from {{timeExtent.minLabel}} to {{timeExtent.maxLabel}}. You can shift in time with the purple ruler.
       </div>
-      <d3ng-bubble-histogram [data]="tsHistogramData"
-                             [sliderX]="2017" (sliderXChange)="onYearChanged($event)"></d3ng-bubble-histogram>
+      <d3ng-bubble-histogram [data]="tsHistogramData" [(sliderX)]="selectedYear"></d3ng-bubble-histogram>
     </d3ng-collapsible-panel>
-    <!--<d3ng-collapsible-panel>-->
-      <!--<div class="info">-->
-        <!--3. Use the parallel coordinates to filter outliers and other unwanted data points by clicking and-->
-        <!--dragging vertically on an axis. You can use the small arrow heads to spread or compress the axis projections."-->
-      <!--</div>-->
-      <!--<d3ng-groups [context]="context" [groups]="[1]" (selectedChanged)="countries = $event.selected">-->
-        <!--<d3ng-parallel-coordinates #pc [data]="data" [dimensions]="dimensions"></d3ng-parallel-coordinates>-->
-      <!--</d3ng-groups>-->
-    <!--</d3ng-collapsible-panel>-->
-    <!--<d3ng-collapsible-panel>-->
-      <!--<div class="info">-->
-        <!--4. You can also select data points by country. (Right click deselects all.)"-->
-      <!--</div>-->
-      <!--<div class="map-container">-->
-        <!--<div class="map-controls">-->
-          <!--<md-checkbox [(ngModel)]="map.isDrawChoropleth"></md-checkbox>-->
-          <!--<md-select placeholder="Choropleth" [(ngModel)]="map.choropleth">-->
-            <!--<md-option *ngFor="let dim of dimensions" [value]="dim">{{ dim }}</md-option>-->
-          <!--</md-select>-->
-          <!--<md-checkbox [(ngModel)]="map.isDrawSelection">Show selections</md-checkbox>-->
-        <!--</div>-->
-        <!--<d3ng-groups [context]="context" [groups]="[0,2,1]">-->
-          <!--<d3ng-map #map [data]="data" idKey="code" [currentSelectionGroup]="1" [multiselect]="true"-->
-                         <!--[config]="{ choroplethColors: ['#007700', '#FFCC00'] }"></d3ng-map>-->
-        <!--</d3ng-groups>-->
-      <!--</div>-->
-    <!--</d3ng-collapsible-panel>-->
+    <d3ng-collapsible-panel>
+      <div class="info">
+        3. Use the parallel coordinates to filter outliers and other unwanted data points by clicking and
+        dragging vertically on an axis. You can use the small arrow heads to spread or compress the axis projections."
+      </div>
+      <d3ng-groups [context]="context" [groups]="[1]" (selectedChanged)="selectedCountries = $event.selected">
+        <d3ng-parallel-coordinates #pc [data]="countryData" [dimensions]="countryDataDimensions"></d3ng-parallel-coordinates>
+      </d3ng-groups>
+    </d3ng-collapsible-panel>
+    <d3ng-collapsible-panel>
+      <div class="info">
+        4. You can also select data points by country. (Right click deselects all.)"
+      </div>
+      <div class="map-container">
+        <div class="map-controls">
+          <md-checkbox [(ngModel)]="map.isDrawChoropleth"></md-checkbox>
+          <md-select placeholder="Choropleth" [(ngModel)]="map.choropleth">
+            <md-option *ngFor="let dim of countryDataDimensions" [value]="dim">{{ dim }}</md-option>
+          </md-select>
+          <md-checkbox [(ngModel)]="map.isDrawSelection">Show selections</md-checkbox>
+        </div>
+        <d3ng-groups [context]="context" [groups]="[0,2,1]">
+          <d3ng-map #map [data]="countryData" idKey="code" [currentSelectionGroup]="1" [multiselect]="true"
+                         [config]="{ choroplethColors: ['#007700', '#FFCC00'] }"></d3ng-map>
+        </d3ng-groups>
+      </div>
+    </d3ng-collapsible-panel>
 
-    <!--<div  *ngIf="countries && countries.length > 0">-->
-      <!--<d3ng-collapsible-panel>-->
-        <!--<div class="info">-->
-          <!--5. Analyse the data of the selected countries. Select via clicking and dragging.-->
-          <!--Click the colored boxes to switch the selection color."-->
-        <!--</div>-->
-        <!--<div class="grid" style="min-width: initial;">-->
-          <!--<div class="col-4-12">-->
-            <!--<d3ng-groups [context]="context" [groups]="[0,2]" style="width: 100%; height: 260px;">-->
-              <!--<d3ng-scatter-plot [data]="countries" [dimensions]='dimensions' [config]="{ticks: [5, 5]}">-->
-              <!--</d3ng-scatter-plot>-->
-            <!--</d3ng-groups>-->
-          <!--</div>-->
-          <!--<div class="col-4-12">-->
-            <!--<d3ng-groups [context]="context" [groups]="[0,2]" style="width: 100%; height: 260px;">-->
-              <!--<d3ng-scatter-plot [data]="countries" [dimensions]='dimensions' [config]="{ticks: [5, 5]}">-->
-              <!--</d3ng-scatter-plot>-->
-            <!--</d3ng-groups>-->
-          <!--</div>-->
-          <!--<div class="col-4-12">-->
-            <!--<d3ng-groups [context]="context" [groups]="[0,2]" style="width: 100%; height: 260px;">-->
-              <!--<d3ng-scatter-plot [data]="countries" [dimensions]='dimensions' [config]="{ticks: [5, 5]}">-->
-              <!--</d3ng-scatter-plot>-->
-            <!--</d3ng-groups>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</d3ng-collapsible-panel>-->
-    <!--</div>-->
+    <div  *ngIf="selectedCountries && selectedCountries.length > 0">
+      <d3ng-collapsible-panel>
+        <div class="info">
+          5. Analyse the data of the selected countries. Select via clicking and dragging.
+          Click the colored boxes to switch the selection color."
+        </div>
+        <div class="grid" style="min-width: initial;">
+          <div class="col-4-12">
+            <d3ng-groups [context]="context" [groups]="[0,2]" style="width: 100%; height: 260px;">
+              <d3ng-scatter-plot [data]="selectedCountries" [dimensions]='countryDataDimensions' [config]="{ticks: [5, 5]}">
+              </d3ng-scatter-plot>
+            </d3ng-groups>
+          </div>
+          <div class="col-4-12">
+            <d3ng-groups [context]="context" [groups]="[0,2]" style="width: 100%; height: 260px;">
+              <d3ng-scatter-plot [data]="selectedCountries" [dimensions]='countryDataDimensions' [config]="{ticks: [5, 5]}">
+              </d3ng-scatter-plot>
+            </d3ng-groups>
+          </div>
+          <div class="col-4-12">
+            <d3ng-groups [context]="context" [groups]="[0,2]" style="width: 100%; height: 260px;">
+              <d3ng-scatter-plot [data]="selectedCountries" [dimensions]='countryDataDimensions' [config]="{ticks: [5, 5]}">
+              </d3ng-scatter-plot>
+            </d3ng-groups>
+          </div>
+        </div>
+      </d3ng-collapsible-panel>
+    </div>
   </div>
 </div>
 

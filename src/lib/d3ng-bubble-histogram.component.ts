@@ -13,7 +13,7 @@ import {D3ngChart, D3ngSelection} from "./d3ng-chart";
     <div #chart></div>`,
   styleUrls: [ './d3ng-bubble-histogram.component.css']
 })
-export class D3ngBubbleHistogramComponent extends D3ngChart implements OnChanges {
+export class D3ngBubbleHistogramComponent extends D3ngChart {
 
   @ViewChild('chart') chart;
 
@@ -23,7 +23,11 @@ export class D3ngBubbleHistogramComponent extends D3ngChart implements OnChanges
 
   private d3Chart = null;
 
-  @Input() sliderX = 0;
+  private _sliderX = 0;
+  @Input() set sliderX(value: number) {
+    this._sliderX = value;
+    this.updateSliderX(value);
+  }
   @Output() sliderXChange = new EventEmitter<number>();
 
   protected x(d: any): number {
@@ -47,9 +51,11 @@ export class D3ngBubbleHistogramComponent extends D3ngChart implements OnChanges
     this.chart.nativeElement.innerHTML = "";
   }
 
-  private setSliderX(value: number) {
-    this.sliderX = value;
-    this.sliderXChange.emit(value);
+  private updateSliderX(value: number) {
+    if (value != this._sliderX) { // do not emmit change, when set via setter
+      this._sliderX = value;
+      setTimeout(() => this.sliderXChange.emit(value), 0); // delay emit to avoid change detection errors
+    }
 
     // highlight closest data
     if (this.d3Chart) {
@@ -57,7 +63,7 @@ export class D3ngBubbleHistogramComponent extends D3ngChart implements OnChanges
       const highlightDataMap = {};
       this.data.forEach(data => {
         const category = this.category(data);
-        const currentDist = this.sliderX - this.x(data);
+        const currentDist = this._sliderX - this.x(data);
         if (currentDist >= 0) {
           const dist = dists[category];
           if (!dist || currentDist < dist) {
@@ -213,11 +219,11 @@ export class D3ngBubbleHistogramComponent extends D3ngChart implements OnChanges
     this.appendTooltip(bubbles, d => "" + this.value(d));
 
     // the slider
-    if (this.sliderX < zoomableAxis.zoomedExtent[0]) {
-      this.setSliderX(zoomableAxis.zoomedExtent[0]);
+    if (this._sliderX < zoomableAxis.zoomedExtent[0]) {
+      this.updateSliderX(zoomableAxis.zoomedExtent[0]);
     }
-    if (this.sliderX > zoomableAxis.zoomedExtent[1]) {
-      this.setSliderX(zoomableAxis.zoomedExtent[1]);
+    if (this._sliderX > zoomableAxis.zoomedExtent[1]) {
+      this.updateSliderX(zoomableAxis.zoomedExtent[1]);
     }
     const slider = svg.append("g")
       .attr("class", "slider");
@@ -229,9 +235,9 @@ export class D3ngBubbleHistogramComponent extends D3ngChart implements OnChanges
       .attr("x", 5);
 
     const updateSlider = () => {
-      slider.x = zoomableAxis.scale(this.sliderX);
+      slider.x = zoomableAxis.scale(this._sliderX);
       slider.attr("transform", "translate(" + slider.x + ")");
-      slider.select("text").text("" + Number(this.sliderX).toFixed(0));
+      slider.select("text").text("" + Number(this._sliderX).toFixed(0));
     };
     updateSlider();
 
@@ -239,14 +245,14 @@ export class D3ngBubbleHistogramComponent extends D3ngChart implements OnChanges
       .on("drag", () => {
         const x = zoomableAxis.scale.invert(d3.event.x);
         if (x >= zoomableAxis.zoomedExtent[0] && x <= zoomableAxis.zoomedExtent[1]) {
-          this.setSliderX(x);
+          this.updateSliderX(x);
           updateSlider();
         }
       })
     );
 
     zoomableAxis.onChanged(() => {
-      this.setSliderX(zoomableAxis.scale.invert(slider.x));
+      this.updateSliderX(zoomableAxis.scale.invert(slider.x));
       updateSlider();
     });
   }
