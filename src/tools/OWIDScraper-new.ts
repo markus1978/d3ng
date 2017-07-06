@@ -8,6 +8,8 @@ import * as JSONStream from 'JSONStream';
 import * as ProgressBar from 'progress';
 import {variable} from "@angular/compiler/src/output/output_ast";
 
+import {OWIDMetaDataNode, OWIDVariableData, OWIDVariableMetaData} from '../app/owid/owid.data';
+
 const outPath = "src/assets/owid-new/";
 if (!fs.existsSync(outPath)) {
   fs.mkdirSync(outPath);
@@ -31,14 +33,6 @@ const out = (() => {
   };
 })();
 
-interface OWIDMetaDataNode {  // root, groups, pages, variables
-  key: string;
-  title: string;
-  url?: string;
-  children?: OWIDMetaDataNode[];
-  dataSetRefs?: string[];
-}
-
 interface OWIDDataSet { // a data set, i.e. what can be retrieved from one OWID chart
   key: string;
   description: string;
@@ -54,25 +48,7 @@ interface OWIDRawData {
   metaData: OWIDMetaDataNode;
 }
 
-interface OWIDVariableMetaData extends OWIDMetaDataNode {
-  key: string;
-  description: string;
-  dataUrl: string;
-  dataFile: string;
-  allDataSetRefs: string[]; // one variable can be contained in multiple data sets multiple times (hopefully its always the same? We use the larges anyways.)
-  years: number[];
-  valuesPerYear: number[];
-}
 
-interface OWIDVariableData {
-  key: string;
-  countries: [{
-    code: string;
-    label: string;
-    years: number[];
-    values: number[];
-  }];
-}
 
 /**
  * Fetches meta data and data from an individual OWID gapher metaData URI.

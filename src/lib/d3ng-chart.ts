@@ -249,7 +249,12 @@ export abstract class D3ngChart implements OnChanges, AfterViewInit {
 
     const selection = this.currentSelection.getSelection(group, direct, true);
 
-    selection.selected = this.computeSelectedRepresentatives(selected);
+    if (this.data) {
+      selection.selected = this.computeSelectedRepresentatives(selected);
+    } else {
+      this.preDirectSelection = selected;
+      selection.selected = [];
+    }
 
     this.currentSelection.sortSelection(this.groupOrder);
     if (this._isDrawSelection) {
