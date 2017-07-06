@@ -70,7 +70,7 @@ export class OwidComponent implements OnInit {
   }
 
   constructor(private http: Http) {
-    this.http.get('/assets/owid-new/owid_metadata.json')
+    this.http.get('/assets/owid/owid_metadata.json')
       .map((res: Response) => res.json())
       .subscribe((res: OWIDMetaDataNode) => {
         this.metaDataRoots = [res];
@@ -123,7 +123,7 @@ export class OwidComponent implements OnInit {
 
   private loadVariableData(variables: OWIDVariableMetaData[], callback: () => void) {
     const notYetLoadedVariables = variables.filter(variable => !this.countryDataCache[variable.key]);
-    const requests = notYetLoadedVariables.map(variable => this.http.get("/assets/owid-new/" + variable.dataFile).map(res => {
+    const requests = notYetLoadedVariables.map(variable => this.http.get("/assets/owid/" + variable.dataFile).map(res => {
       return {
         metaData: variable,
         variable: res.json()

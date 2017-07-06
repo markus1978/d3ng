@@ -17,7 +17,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "gen:highlights": "node src/tools/highlight.js src/app/stories src/assets/story-sources/ && node src/tools/highlight.js src/app/demos src/assets/demo-sources/",
-    "gen:owid": "ts-node src/tools/OWIDScraper-new.ts",
+    "gen:owid": "ts-node src/tools/owid-generator.ts",
     "deploy:app": "node src/tools/gh-pages.js"
   },
   "main": "d3ng.bundle.js",

@@ -10,7 +10,7 @@ import * as ProgressBar from 'progress';
 import {OWIDMetaDataNode, OWIDVariableData, OWIDVariableMetaData} from '../app/owid/owid.data';
 import {Matrix} from './matrix';
 
-const outPath = "src/assets/owid-new/";
+const outPath = "src/assets/owid/";
 if (!fs.existsSync(outPath)) {
   fs.mkdirSync(outPath);
 }

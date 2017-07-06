@@ -42,8 +42,6 @@ testem.log
 Thumbs.db
 
 # Generated
-/src/assets/owid-2017.json
 /src/assets/owid/
-/src/assets/owid-new/
 /src/assets/demo-sources/
 /src/assets/story-sources/
