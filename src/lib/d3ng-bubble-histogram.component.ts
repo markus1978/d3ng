@@ -22,6 +22,7 @@ export class D3ngBubbleHistogramComponent extends D3ngChart {
   @Input() categoryKey = "category";
 
   private d3Chart = null;
+  private zoomableAxis = null;
 
   private _sliderX = 0;
   @Input() set sliderX(value: number) {
@@ -52,9 +53,14 @@ export class D3ngBubbleHistogramComponent extends D3ngChart {
   }
 
   private updateSliderX(value: number) {
-    if (value != this._sliderX) { // do not emmit change, when set via setter
-      this._sliderX = value;
-      setTimeout(() => this.sliderXChange.emit(value), 0); // delay emit to avoid change detection errors
+    let doEmmit = value != this._sliderX; // do not emmit change, when set via setter
+
+    this._sliderX = value;
+    this._sliderX = this.checkSliderXValue();
+    doEmmit = doEmmit || this._sliderX != value;
+
+    if (doEmmit) {
+      this.sliderXChange.emit(value);
     }
 
     // highlight closest data
@@ -67,7 +73,7 @@ export class D3ngBubbleHistogramComponent extends D3ngChart {
         if (currentDist >= 0) {
           const dist = dists[category];
           if (!dist || currentDist < dist) {
-            dists[category] = dist;
+            dists[category] = currentDist;
             highlightDataMap[category] = data;
           }
         }
@@ -75,6 +81,23 @@ export class D3ngBubbleHistogramComponent extends D3ngChart {
       const highlighted = Object.keys(highlightDataMap).map(key => highlightDataMap[key]);
       this.d3Chart.selectAll(".dot").classed("highlighted", data => highlighted.indexOf(data) != -1);
     }
+  }
+
+  private checkSliderXValue(): number {
+    let extent = null;
+    if (this.zoomableAxis) {
+      extent = this.zoomableAxis.zoomedExtent;
+    } else {
+      extent = d3.extent(this.data, d => this.x(d));
+    }
+
+    if (this._sliderX < extent[0]) {
+      return extent[0];
+    }
+    if (this._sliderX > extent[1]) {
+      return extent[1]
+    }
+    return this._sliderX;
   }
 
   /** creates linear scale and axis that can be zoomed with handles */
@@ -181,11 +204,11 @@ export class D3ngBubbleHistogramComponent extends D3ngChart {
     this.d3Chart = svg;
 
     // the x-axis
-    const zoomableAxis = this.createZoomableAxis([0, width], d3.extent(this.data, d => this.x(d)));
+    this.zoomableAxis = this.createZoomableAxis([0, width], d3.extent(this.data, d => this.x(d)));
     svg.append("g")
       .attr("class", "scale")
       .attr("transform", "translate( 0, " + (height + margin.bottom - 33) + ")")
-      .call(zoomableAxis.append);
+      .call(this.zoomableAxis.append);
 
     // the categories
     const categoriesSvg = svg.selectAll(".category")
@@ -208,23 +231,18 @@ export class D3ngBubbleHistogramComponent extends D3ngChart {
       .attr("height", d => valueScale(this.value(d)))
       .attr("width", 2);
     const updateBubbles = () => bubbles
-      .attr("x", d => zoomableAxis.scale(this.x(d)))
+      .attr("x", d => this.zoomableAxis.scale(this.x(d)))
       .attr("y", d => categoryScale(this.category(d)) - valueScale(this.value(d)));
     updateBubbles();
 
-    zoomableAxis.onChanged(() => {
+    this.zoomableAxis.onChanged(() => {
       updateBubbles();
     });
 
     this.appendTooltip(bubbles, d => "" + this.value(d));
 
     // the slider
-    if (this._sliderX < zoomableAxis.zoomedExtent[0]) {
-      this.updateSliderX(zoomableAxis.zoomedExtent[0]);
-    }
-    if (this._sliderX > zoomableAxis.zoomedExtent[1]) {
-      this.updateSliderX(zoomableAxis.zoomedExtent[1]);
-    }
+    this.updateSliderX(this._sliderX);
     const slider = svg.append("g")
       .attr("class", "slider");
     slider.append("path")
@@ -235,7 +253,7 @@ export class D3ngBubbleHistogramComponent extends D3ngChart {
       .attr("x", 5);
 
     const updateSlider = () => {
-      slider.x = zoomableAxis.scale(this._sliderX);
+      slider.x = this.zoomableAxis.scale(this._sliderX);
       slider.attr("transform", "translate(" + slider.x + ")");
       slider.select("text").text("" + Number(this._sliderX).toFixed(0));
     };
@@ -243,16 +261,16 @@ export class D3ngBubbleHistogramComponent extends D3ngChart {
 
     slider.call(d3.behavior.drag()
       .on("drag", () => {
-        const x = zoomableAxis.scale.invert(d3.event.x);
-        if (x >= zoomableAxis.zoomedExtent[0] && x <= zoomableAxis.zoomedExtent[1]) {
+        const x = this.zoomableAxis.scale.invert(d3.event.x);
+        if (x >= this.zoomableAxis.zoomedExtent[0] && x <= this.zoomableAxis.zoomedExtent[1]) {
           this.updateSliderX(x);
           updateSlider();
         }
       })
     );
 
-    zoomableAxis.onChanged(() => {
-      this.updateSliderX(zoomableAxis.scale.invert(slider.x));
+    this.zoomableAxis.onChanged(() => {
+      this.updateSliderX(this.zoomableAxis.scale.invert(slider.x));
       updateSlider();
     });
   }

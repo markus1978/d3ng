@@ -37,8 +37,7 @@ export class OwidComponent implements OnInit {
   private initialVariableKeys = [
     "UN – Population Division (Fertility) – 2015 revision",
     "Gapminder (child mortality estimates version 8)",
-   // "Rate of Natural Population Increase – UN 2015",
-    "Population Density",
+    // "Population Density",
     "Population by Country (Clio Infra)",
     "Life Expectancy at Birth (both genders)"
   ];
@@ -97,8 +96,8 @@ export class OwidComponent implements OnInit {
         maxYear = Math.min(maxYear, row.years);
         return {
           category: row.key,
-          x: row.years,
-          value: row.valuesPerYear
+          x: Number(row.years),
+          value: Number(row.valuesPerYear)
         };
     });
     // update time extent data
