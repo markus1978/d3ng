@@ -34,12 +34,27 @@ export class OwidComponent implements OnInit {
   }
 
   // The list of variables that we initially have selected for the user.
-  private initialVariableKeys = [
-    "UN – Population Division (Fertility) – 2015 revision",
-    "Gapminder (child mortality estimates version 8)",
-    // "Population Density",
-    "Population by Country (Clio Infra)",
-    "Life Expectancy at Birth (both genders)"
+  initialVariablesConfig = [
+    {
+      key: "UN – Population Division (Fertility) – 2015 revision",
+      scale: 1,
+      direction: 1
+    },
+    {
+      key: "Gapminder (child mortality estimates version 8)",
+      scale: 1,
+      direction: 1
+    },
+    {
+      key: "Population by Country (Clio Infra)",
+      scale: 0.125,
+      direction: 1
+    },
+    {
+      key: "Life Expectancy at Birth (both genders)",
+      scale: 2,
+      direction: -1
+    }
   ];
 
   tsHistogramData: {category: string, x: number, value: number}[] = [];
@@ -75,7 +90,7 @@ export class OwidComponent implements OnInit {
         this.metaDataRoots = [res];
         const selectedVariables: OWIDVariableMetaData[] = [];
         treeForEach(res, ((node: OWIDMetaDataNode) => {
-          if (this.initialVariableKeys.indexOf(node.key) != -1) {
+          if (this.initialVariablesConfig.find(variable => node.key == variable.key)) {
             if (!selectedVariables.find(variable => variable.key == node.key)) {
               selectedVariables.push(node as OWIDVariableMetaData);
             }

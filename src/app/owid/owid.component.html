@@ -26,7 +26,7 @@
         2. Select a point in time.
         There is some data from {{timeExtent.minLabel}} to {{timeExtent.maxLabel}}. You can shift in time with the purple ruler.
       </div>
-      <d3ng-bubble-histogram [data]="tsHistogramData" [(sliderX)]="selectedYear"></d3ng-bubble-histogram>
+      <d3ng-bubble-histogram [data]="tsHistogramData" [(sliderX)]="selectedYear" [zoomedExtent]="[1850, 2017]"></d3ng-bubble-histogram>
     </d3ng-collapsible-panel>
     <d3ng-collapsible-panel>
       <div class="info">
@@ -34,7 +34,8 @@
         dragging vertically on an axis. You can use the small arrow heads to spread or compress the axis projections."
       </div>
       <d3ng-groups [context]="context" [groups]="[1]" (selectedChanged)="selectedCountries = $event.selected">
-        <d3ng-parallel-coordinates #pc [data]="countryData" [dimensions]="countryDataDimensions"></d3ng-parallel-coordinates>
+        <d3ng-parallel-coordinates #pc [data]="countryData" [dimensions]="countryDataDimensions"
+                                       [dimensionConfigurations]="initialVariablesConfig"></d3ng-parallel-coordinates>
       </d3ng-groups>
     </d3ng-collapsible-panel>
     <d3ng-collapsible-panel>

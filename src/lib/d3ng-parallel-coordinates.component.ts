@@ -20,6 +20,10 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
 
   @ViewChild('chart') chart;
 
+  private d3Chart = null;
+  protected _dimensions: Dimension[] = [];
+  private _dimensionConfigurations: Dimension[] = [];
+
   /**
    * An array of strings that provides the axis. These have to
    * the keys for the data objects.
@@ -32,10 +36,33 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
         direction: 1
       };
     });
+    this.mergeDimensionConfigurationsIntoDimensions();
   }
 
-  private d3Chart = null;
-  protected _dimensions: Dimension[] = [];
+  @Input() set dimensionConfigurations(value: Dimension[]) {
+    this._dimensionConfigurations = value;
+    if (this.mergeDimensionConfigurationsIntoDimensions()) {
+      this.redraw();
+    }
+  };
+
+  private mergeDimensionConfigurationsIntoDimensions(): boolean {
+    let changed = false;
+    this._dimensions.forEach(dim => {
+      const config = this._dimensionConfigurations.find(config => config.key == dim.key);
+      if (config) {
+        Object.keys(config).forEach(key => {
+          if (key != "key") {
+            if (dim[key] != config[key]) {
+              dim[key] = config[key];
+              changed = true;
+            }
+          }
+        });
+      }
+    });
+    return changed;
+  }
 
   protected drawSelection(selection: D3ngSelection): void {
     if (this.d3Chart) {

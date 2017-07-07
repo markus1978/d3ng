@@ -23,6 +23,7 @@ export class D3ngBubbleHistogramComponent extends D3ngChart {
 
   private d3Chart = null;
   private zoomableAxis = null;
+  _zoomedExtent: number[];
 
   private _sliderX = 0;
   @Input() set sliderX(value: number) {
@@ -30,6 +31,11 @@ export class D3ngBubbleHistogramComponent extends D3ngChart {
     this.updateSliderX(value);
   }
   @Output() sliderXChange = new EventEmitter<number>();
+
+  @Input() set zoomedExtent(value: number[]) {
+    this._zoomedExtent = value;
+    this.redraw();
+  }
 
   protected x(d: any): number {
     return d[this.xKey];
@@ -60,7 +66,7 @@ export class D3ngBubbleHistogramComponent extends D3ngChart {
     doEmmit = doEmmit || this._sliderX != value;
 
     if (doEmmit) {
-      this.sliderXChange.emit(value);
+      setTimeout(() => this.sliderXChange.emit(value), 0);
     }
 
     // highlight closest data
@@ -95,7 +101,7 @@ export class D3ngBubbleHistogramComponent extends D3ngChart {
       return extent[0];
     }
     if (this._sliderX > extent[1]) {
-      return extent[1]
+      return extent[1];
     }
     return this._sliderX;
   }
@@ -111,6 +117,7 @@ export class D3ngBubbleHistogramComponent extends D3ngChart {
     const zoomedAxis = d3.svg.axis().orient("top").scale(zoomedScale);
 
     const callbacks = [];
+    let setHandleFunctions;
 
     return {
       append: (selection) => {
@@ -136,32 +143,39 @@ export class D3ngBubbleHistogramComponent extends D3ngChart {
           const updateHandle = () => handle
             .attr("points", handleTriangle(fullScale(zoomedExtent[index]), index == 0 ? 1 : -1));
           updateHandle();
+          const setHandle = (x) => {
+            if (x >= insetExtent[0] && x <= insetExtent[1]) {
+              const test = zoomedExtent.slice(0);
+              test[index] = x;
+              if (test[0] < test[1]) {
+                zoomedExtent[index] = x;
+                zoomedScale.domain(zoomedExtent);
+                zoomedAxisSvg.call(zoomedAxis);
+                updateHandle();
+                updateZoomRect();
+                this._zoomedExtent = zoomedExtent.slice(0);
+                callbacks.forEach(callback => callback(zoomedExtent));
+              }
+            }
+          };
           handle.call(d3.behavior.drag()
-              .on("drag", () => {
-                const x = fullScale.invert(d3.event.x);
-                if (x >= insetExtent[0] && x <= insetExtent[1]) {
-                  const test = zoomedExtent.slice(0);
-                  test[index] = x;
-                  if (test[0] < test[1]) {
-                    zoomedExtent[index] = x;
-                    zoomedScale.domain(zoomedExtent);
-                    zoomedAxisSvg.call(zoomedAxis);
-                    updateHandle();
-                    updateZoomRect();
-                    callbacks.forEach(callback => callback(zoomedExtent));
-                  }
-                }
-              })
-            );
+            .on("drag", () => {
+              setHandle(fullScale.invert(d3.event.x));
+            })
+          );
+          return setHandle;
         };
-        createHandle(selection, 0);
-        createHandle(selection, 1);
+        setHandleFunctions = [createHandle(selection, 0), createHandle(selection, 1)];
       },
       scale: zoomedScale,
       onChanged: (callback: (zoomedExtent: number[]) => void) => {
         callbacks.push(callback);
       },
-      zoomedExtent: zoomedExtent
+      zoomedExtent: zoomedExtent,
+      setZoom: (extent) => {
+        setHandleFunctions[0](extent[0]);
+        setHandleFunctions[1](extent[1]);
+      }
     };
   }
 
@@ -273,5 +287,9 @@ export class D3ngBubbleHistogramComponent extends D3ngChart {
       this.updateSliderX(this.zoomableAxis.scale.invert(slider.x));
       updateSlider();
     });
+
+    if (this._zoomedExtent) {
+      this.zoomableAxis.setZoom(this._zoomedExtent);
+    }
   }
 }
