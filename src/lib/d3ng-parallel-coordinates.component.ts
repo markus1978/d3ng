@@ -104,7 +104,7 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
 
     // Create a scale and brush for each dimension.
     this._dimensions.forEach(dim => {
-      this.data.forEach(datum => datum[dim.key] = +datum[dim.key]); // why? TODO
+      this.data.forEach(datum => datum[dim.key] = +datum[dim.key]); // ensure numbers?
 
       // Calculate domain with 5% extra space
       const extent = d3.extent(this.data, datum => datum[dim.key]);

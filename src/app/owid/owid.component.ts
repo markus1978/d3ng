@@ -117,7 +117,7 @@ export class OwidComponent implements OnInit {
       }
     }
 
-    this.updateCountryData();
+    this.updateCountryData(() => this.countryDataDimensions = this.selectedVariables.map(variable => variable.key));
   }
 
   private loadVariableData(variables: OWIDVariableMetaData[], callback: () => void) {
@@ -138,9 +138,8 @@ export class OwidComponent implements OnInit {
     }
   }
 
-  private updateCountryData() {
+  private updateCountryData(callback?) {
     this.loadVariableData(this.selectedVariables, () => {
-      this.countryDataDimensions = this.selectedVariables.map(variable => variable.key);
       const countryServerData = this.selectedVariables.map(variable => this.countryDataCache[variable.key].variable);
       const countryMap = {};
       countryServerData.forEach(variable => variable.countries.forEach(country => {
@@ -164,6 +163,9 @@ export class OwidComponent implements OnInit {
         }
       }));
       this.countryData = Object.keys(countryMap).map(key => countryMap[key]);
+      if (callback) {
+        callback();
+      }
     });
   }
 
