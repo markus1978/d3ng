@@ -27,6 +27,7 @@ export class D3ngCollapsibleIndentedTreeComponent extends D3ngHierarchicalChart 
           while (node) {
             if (node.className == "closed") {
               node.className = "open";
+              node.firstChild.innerHTML = "remove_circle_outline";
             }
             node = node.parentNode;
           }
@@ -39,7 +40,7 @@ export class D3ngCollapsibleIndentedTreeComponent extends D3ngHierarchicalChart 
     this.chart.nativeElement.innerHTML = "";
   }
 
-  public customizeEntrySpan(span:any):void {
+  public customizeEntrySpan(span): void {
 
   }
 
