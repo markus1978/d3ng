@@ -201,48 +201,19 @@ export class OwidComponent implements OnInit {
       }
     };
 
-    // this should be moved into parallel coordinates (or all axis based visualizations)!
+    const appendAxisBase = this.pc.appendAxis;
+    const self = this;
     this.pc.appendAxis = (axis) => {
-      axis.selectAll('.axisTitle').attr("y", -15);
-      this.pc.appendTooltip(axis, variableKey => {
-        const metaData = this.getMetaDataForVariableKey(variableKey);
+      appendAxisBase.call(this.pc, axis);
+
+      this.pc.appendTooltip(axis, dimension => {
+        const metaData = self.getMetaDataForVariableKey(dimension.key);
         if (metaData) {
           return metaData.title + ": " + metaData.description;
         } else {
-         return variableKey;
+          return dimension.key;
         }
       });
-
-      const addScaleArrow = (direction) => {
-        axis.filter(variableKey => this.countryDataCache[variableKey]).append('svg:text')
-          .text(direction > 0 ? '>' : '<')
-          .attr("text-anchor", "middle")
-          .attr("y", -4)
-          .attr("x", 5 * direction)
-          .attr("style", "font-size: 11px; cursor: pointer;")
-          .on('click', (variableKey) => {
-            const metaData = this.getMetaDataForVariableKey(variableKey) as any;
-            if (!metaData.scale) {
-              metaData.scale = 1;
-            }
-            metaData.scale = direction > 0 ? metaData.scale * 1.2 : metaData.scale / 1.2;
-            this.pc.redraw();
-          });
-      };
-      addScaleArrow(1);
-      addScaleArrow(-1);
-    };
-
-    this.pc.getScaleForDimension = (variableKey) => {
-      const metaData = this.getMetaDataForVariableKey(variableKey) as any;
-      if (metaData) {
-        let scale = metaData.scale;
-        if (!scale) {
-          scale = 1;
-        }
-        return d3.scale.pow().exponent(scale);
-      }
-      return d3.scale.linear();
     };
   }
 }
