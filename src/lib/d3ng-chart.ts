@@ -271,16 +271,11 @@ export abstract class D3ngChart implements OnChanges, AfterViewInit {
     if (this.multiselect && originalSelected.length != 0) {
       const currentDirectSelection = this.currentSelection.getSelection(this.currentSelectionGroup, true);
       if (currentDirectSelection) {
-        if (selected.length == 1 && currentDirectSelection.selected.lastIndexOf(selected[0]) != -1) {
-          const allSelected = currentDirectSelection.selected.slice(0);
-          const index = allSelected.indexOf(selected[0]);
-          allSelected.splice(index, 1);
-          selected = allSelected;
-        } else {
-          const allSelected = currentDirectSelection.selected.slice(0);
-          selected.forEach(s => allSelected.push(s));
-          selected = allSelected;
-        }
+        // perform an xor with new and existing collection
+        const newSelected = [];
+        selected.filter(item => currentDirectSelection.selected.indexOf(item) == -1).forEach(item => newSelected.push(item));
+        currentDirectSelection.selected.filter(item => selected.indexOf(item) == -1).forEach(item => newSelected.push(item));
+        selected = newSelected;
       }
     }
     this.updateSelection(selected, this.currentSelectionGroup, true);
