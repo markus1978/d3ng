@@ -155,28 +155,35 @@ export class OwidComponent implements OnInit {
 
   private updateCountryData(callback?) {
     this.loadVariableData(this.selectedVariables, () => {
-      const countryServerData = this.selectedVariables.map(variable => this.countryDataCache[variable.key].variable);
       const countryMap = {};
-      countryServerData.forEach(variable => variable.countries.forEach(country => {
-        let countryData = countryMap[country.code];
-        if (!countryData) {
-          countryData = {
-            code: country.code,
-            label: country.label
-          };
-          countryMap[country.code] = countryData;
-        }
-        let yearIndex = 0;
-        for (; yearIndex < country.years.length; yearIndex++) {
-          if (country.years[yearIndex] > this.selectedYear) {
-            break;
+      this.selectedVariables.forEach(variableMetaData => {
+        const variable = this.countryDataCache[variableMetaData.key].variable;
+
+        let selectedDataYear = Number.MIN_SAFE_INTEGER;
+        variableMetaData.years.forEach(year => {
+          if (year <= this.selectedYear && year > selectedDataYear) {
+            selectedDataYear = year;
           }
-        }
-        yearIndex--;
-        if (yearIndex >= 0) {
-          countryData[variable.key] = country.values[yearIndex];
-        }
-      }));
+        });
+        variable.countries.forEach(country => {
+          let countryData = countryMap[country.code];
+          if (!countryData) {
+            countryData = {
+              code: country.code,
+              label: country.label
+            };
+            countryMap[country.code] = countryData;
+          }
+          let yearIndex = 0;
+          countryData[variable.key] = undefined;
+          for (; yearIndex < country.years.length; yearIndex++) {
+            if (country.years[yearIndex] == selectedDataYear) {
+              countryData[variable.key] = country.values[yearIndex];
+              break;
+            }
+          }
+        });
+      });
       this.countryData = Object.keys(countryMap).map(key => countryMap[key]);
       if (callback) {
         callback();
