@@ -12,10 +12,13 @@
   </p>
 </div>
 <div class="grid">
-  <div class="col-4-12" style="overflow: auto;">
+  <div class="col-4-12" style="overflow: auto; padding-right: 0;">
     <p>
       1. Choose the data-sets that you want to visualize. (Right click deselects all.)
     </p>
+    <d3ng-histogram #metaHistogram style="height: 200px;" d3ngSource [source]="originalMetaDataRoots" pattern="node/variable"
+                    [config]="{ numberOfBuckets: 8, numberOfTicks: 5 }"
+                    [multiselect]="true" (selectedChange)="onVariableHistogramSelectionChanged($event)"></d3ng-histogram>
     <d3ng-collapsible-indented-tree #meta d3ngSource [source]="metaDataRoots" pattern="."
                                     [multiselect]="true" [(selected)]="selectedVariables">
     </d3ng-collapsible-indented-tree>

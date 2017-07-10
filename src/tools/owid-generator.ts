@@ -112,6 +112,7 @@ function fetchData(callback: (err, data: OWIDRawData) => void): void {
         }) ((err, pageContent) => {
           const urls = pageContent.srcURLs.filter(url => url && url.match(grapherRE));
           const result: OWIDMetaDataNode = {
+            type: "node",
             key: page.url,
             title: page.title,
             url: page.url,
@@ -121,6 +122,7 @@ function fetchData(callback: (err, data: OWIDRawData) => void): void {
         });
       }, (err, pages) => {
         const result: OWIDMetaDataNode = {
+          type: "node",
           key: group.title,
           title: group.title,
           children: pages
@@ -147,6 +149,7 @@ function fetchData(callback: (err, data: OWIDRawData) => void): void {
           dataSetCount: dataSets.length,
           dataSets: dataSets,
           metaData: {
+            type: "node",
             key: "root",
             title: "OWID",
             url: url,
@@ -244,6 +247,7 @@ function transformRawDataSetToVariables(dataSet: OWIDDataSet): {variable: OWIDVa
     // compute meta data
     const dataByYear = data.groupBy(["year"], "countries").array();
     const metaData: OWIDVariableMetaData = {
+      type: "variable",
       key: variable.key,
       title: variable.key,
       description: dataSet.description,

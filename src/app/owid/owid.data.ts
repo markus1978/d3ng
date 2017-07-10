@@ -1,4 +1,5 @@
 export interface OWIDMetaDataNode {  // root, groups, pages, variables
+  type: string;
   key: string;
   title: string;
   url?: string;

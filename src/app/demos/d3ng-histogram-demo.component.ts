@@ -4,25 +4,28 @@ import { Component } from '@angular/core';
   selector: 'd3ng-histogram-demos',
   template: `
     <h2>D3ng Histogram Demo</h2>
-    <d3ng-histogram [data]="listData" [(selected)]="selection" property="a"></d3ng-histogram>
-    
-    <h3>Control list</h3>
-    <d3ng-list [data]="listData" [(selected)]="selection" labelKey="a"></d3ng-list>
+    <d3ng-histogram [data]="data" [(selected)]="selection" valueKey="a"  [multiselect]="true"></d3ng-histogram>
+    <d3ng-list [(selected)]="selection" [data]="data" [multiselect]="true" [customLabel]="label"></d3ng-list>
   `,
   styles: [ 'd3ng-histogram { height : 300px; display:block; }' ]
 })
 
 export class D3ngHistogramDemoComponent {
   selection: any[] = [];
-  listData = [
-    { a: "One", b: 2, c:"++" },
-    { a: "Two" },
-    { a: "Two" },
-    { a: "Threes" },
-    { a: "Threes" },
-    { a: "Four" },
-    { a: "One" },
-    { a: "One" },
-    { a: "One" },
+
+  data = [
+    { a: 1 },
+    { a: 2 },
+    { a: 2 },
+    { a: 3 },
+    { a: 3 },
+    { a: 4 },
+    { a: 1 },
+    { a: 1 },
+    { a: 1 }
   ];
+
+  label = function(d) {
+    return d.a;
+  };
 }

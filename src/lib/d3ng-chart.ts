@@ -310,8 +310,7 @@ export abstract class D3ngChart implements OnChanges, AfterViewInit {
   }
 
   protected onDataChanged() {
-    this.clear();
-    this.draw();
+    this.redraw();
 
     if (this.preDirectSelection) {
       this.setDirectSelection(this.preDirectSelection);

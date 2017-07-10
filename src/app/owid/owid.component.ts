@@ -8,6 +8,8 @@ import {D3ngMapComponent} from "../../lib/d3ng-map.component";
 import {Observable} from "rxjs/Observable";
 import {OWIDMetaDataNode, OWIDVariableMetaData, treeForEach} from "./owid.data";
 import {Matrix} from "../../tools/matrix";
+import {D3ngHistogramDemoComponent} from "../demos/d3ng-histogram-demo.component";
+import {D3ngHistogramComponent} from "../../lib/d3ng-histogram.component";
 
 @Component({
   selector: 'app-owid',
@@ -22,6 +24,7 @@ export class OwidComponent implements OnInit {
   context = new D3ngGroupContext();
   // The root nodes of the meta data tree.
   metaDataRoots: OWIDMetaDataNode[] = [];
+  originalMetaDataRoots: OWIDMetaDataNode[] = [];
 
   // The list of user selected variables.
   _selectedVariables: OWIDVariableMetaData[] = [];
@@ -75,6 +78,7 @@ export class OwidComponent implements OnInit {
   // The list of selected countries as list of data objects.
   selectedCountries = [];
 
+  @ViewChild('metaHistogram') variableHistogram: D3ngHistogramComponent;
   @ViewChild('meta') variableTreeElement: D3ngCollapsibleIndentedTreeComponent;
   @ViewChild('pc') pc: D3ngParallelCoordinatesComponent;
   @ViewChild('map') map: D3ngMapComponent;
@@ -88,6 +92,7 @@ export class OwidComponent implements OnInit {
       .map((res: Response) => res.json())
       .subscribe((res: OWIDMetaDataNode) => {
         this.metaDataRoots = [res];
+        this.originalMetaDataRoots = [res];
         const selectedVariables: OWIDVariableMetaData[] = [];
         treeForEach(res, ((node: OWIDMetaDataNode) => {
           if (this.initialVariablesConfig.find(variable => node.key == variable.key)) {
@@ -166,21 +171,30 @@ export class OwidComponent implements OnInit {
           }
         });
         variable.countries.forEach(country => {
-          let countryData = countryMap[country.code];
-          if (!countryData) {
-            countryData = {
-              code: country.code,
-              label: country.label
-            };
-            countryMap[country.code] = countryData;
-          }
+          let value = undefined;
           let yearIndex = 0;
-          countryData[variable.key] = undefined;
           for (; yearIndex < country.years.length; yearIndex++) {
             if (country.years[yearIndex] == selectedDataYear) {
-              countryData[variable.key] = country.values[yearIndex];
+              value = country.values[yearIndex];
               break;
             }
+          }
+
+          if (value) {
+            let countryData = countryMap[country.code];
+            if (!countryData) {
+              const existingCountry = this.countryData.find(existingCountry => existingCountry.code == country.code);
+              if (existingCountry) {
+                countryData = existingCountry;
+              } else {
+                countryData = {
+                  code: country.code,
+                  label: country.label
+                };
+              }
+              countryMap[country.code] = countryData;
+            }
+            countryData[variableMetaData.key] = value;
           }
         });
       });
@@ -195,7 +209,42 @@ export class OwidComponent implements OnInit {
     return this.countryDataCache[variableKey].metaData;
   }
 
+  onVariableHistogramSelectionChanged(selectedVariables: OWIDVariableMetaData[]): void {
+    // compute meta data tree copy with the histogram and tree selected variables
+    if (selectedVariables.length == 0) {
+      this.metaDataRoots = this.originalMetaDataRoots;
+    } else {
+      const targetMetaDataRoots = [];
+      const visit = (source: OWIDMetaDataNode, targetArray: OWIDMetaDataNode[]) => {
+        if (source.type == "variable") {
+          if (selectedVariables.indexOf(source as OWIDVariableMetaData) != -1 ||
+            this.selectedVariables.indexOf(source as OWIDVariableMetaData) != -1) {
+            targetArray.push(source);
+          }
+        } else {
+          const target: any = {
+            type: source.type,
+            key: source.key,
+            title: source.title,
+            url: source.url
+          };
+
+          if (source.children) {
+            target.children = [];
+            source.children.forEach(child => visit(child, target.children));
+          }
+
+          targetArray.push(target);
+        }
+      };
+      this.originalMetaDataRoots.forEach(root => visit(root, targetMetaDataRoots));
+      this.metaDataRoots = targetMetaDataRoots;
+    }
+  }
+
   ngOnInit() {
+    this.variableHistogram.value = variable => d3.max(variable.valuesPerYear);
+
     this.variableTreeElement.customLabel = (item: OWIDMetaDataNode) => {
       if (item.children) { // can't be a variable
         return item.title;
