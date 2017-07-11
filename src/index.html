@@ -82,11 +82,20 @@
     }
   </style>
   <script>
+    const __d3ng_cookieName = 'd3ngComplianceCookie';
+
+    window.onload = () => {
+      if (document.cookie.indexOf(__d3ng_cookieName) == -1) {
+        document.getElementById("disclaimer").style = "display: block;";
+      }
+    }
+
     function __d3ng_hideDisclaimer() {
       document.getElementById("disclaimer").remove();
+      document.cookie = `${__d3ng_cookieName}=on; path=/`;
     }
   </script>
-  <div id="disclaimer">
+  <div id="disclaimer" style="display: none;">
     <div id="disclaimer-content">
     <p>
       Be aware that <b>d3ng</b> and this demonstration of it are <b>under development</b>, and we had not yet time to

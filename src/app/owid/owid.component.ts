@@ -180,20 +180,20 @@ export class OwidComponent implements OnInit {
             }
           }
 
-          if (value) {
-            let countryData = countryMap[country.code];
-            if (!countryData) {
-              const existingCountry = this.countryData.find(existingCountry => existingCountry.code == country.code);
-              if (existingCountry) {
-                countryData = existingCountry;
-              } else {
-                countryData = {
-                  code: country.code,
-                  label: country.label
-                };
-              }
-              countryMap[country.code] = countryData;
+          let countryData = countryMap[country.code];
+          if (!countryData && value) {
+            const existingCountry = this.countryData.find(existingCountry => existingCountry.code == country.code);
+            if (existingCountry) {
+              countryData = existingCountry;
+            } else {
+              countryData = {
+                code: country.code,
+                label: country.label
+              };
             }
+            countryMap[country.code] = countryData;
+          }
+          if (countryData) {
             countryData[variableMetaData.key] = value;
           }
         });
