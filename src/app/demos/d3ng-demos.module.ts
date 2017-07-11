@@ -23,6 +23,8 @@ import {D3ngHistogramDemoComponent} from "./d3ng-histogram-demo.component";
 import {D3ngMapDemoComponent} from "./d3ng-map-demo.component";
 import {D3ngShadredModule} from "../shared/d3ng-shared.module";
 import {D3ngBubbleHistogramDemoComponent} from "./d3ng-bubble-histogram-demo.component";
+import {D3ngPathPlotComponent} from "../../lib/d3ng-path-plot.component";
+import {D3ngPathPlotDemoComponent} from "./d3ng-path-plot-demo.component";
 
 export const demosRouting: Routes = [
   {
@@ -40,6 +42,10 @@ export const demosRouting: Routes = [
   {
     path: 'scatter-plot',
     component: D3ngScatterPlotDemoComponent
+  },
+  {
+    path: 'path-plot',
+    component: D3ngPathPlotDemoComponent
   },
   {
     path: 'tree-map',
@@ -89,7 +95,8 @@ export const demosRouting: Routes = [
     D3ngTreeMapDemoComponent,
     D3ngHistogramDemoComponent,
     D3ngMapDemoComponent,
-    D3ngBubbleHistogramDemoComponent
+    D3ngBubbleHistogramDemoComponent,
+    D3ngPathPlotDemoComponent
   ],
   imports: [
     BrowserModule, // before other material modules are imported

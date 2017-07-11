@@ -1,0 +1,52 @@
+:host {
+  display:block;
+  height: 100%;
+  position: relative;
+}
+
+.y-controls {
+  position: absolute;
+  top: 10px;
+  left: 50px;
+  z-index: 10;
+}
+
+.x-controls {
+  position: absolute;
+  bottom: 35px;
+  right: 20px;
+  text-align: right;
+  z-index: 10;
+}
+
+.content { height:100%; }
+:host /deep/ .extent { fill-opacity: 0.2; }
+:host /deep/ .axis path, :host /deep/ .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+:host /deep/ .path-group path {
+  fill: none;
+  stroke-opacity: .2;
+  stroke-width: 1.5px;
+  stroke: #111;
+}
+
+:host /deep/ .path-group circle {
+  stroke: none;
+  fill-opacity: 0.2;
+  fill: #111;
+  z-index: 1;
+}
+
+:host /deep/ .path-group.selected path{
+  stroke-opacity: 1;
+  z-index: 2;
+}
+
+:host /deep/ .path-group.selected circle {
+  fill-opacity: 1;
+  z-index: 3;
+}

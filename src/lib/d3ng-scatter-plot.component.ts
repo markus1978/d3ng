@@ -40,14 +40,12 @@ export class D3ngScatterPlotComponent extends D3ngChart {
 
   onXChange(event: any): void {
     this.x = event.value;
-    this.clear();
-    this.draw();
+    this.redraw();
   }
 
   onYChange(event: any): void {
     this.y = event.value;
-    this.clear();
-    this.draw();
+    this.redraw();
   }
 
   protected drawSelection(selection: D3ngSelection): void {

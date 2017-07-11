@@ -19,6 +19,7 @@ import {Http} from "@angular/http";
           <md-list-item><a routerLink="pattern">Pattern</a></md-list-item>
           <md-list-item><a routerLink="parallel-coordinates">Parallel Coordinates</a></md-list-item>
           <md-list-item><a routerLink="scatter-plot">Scatter Plot</a></md-list-item>
+          <md-list-item><a routerLink="path-plot">Path Plot</a></md-list-item>
           <md-list-item><a routerLink="tree-map">Tree Map</a></md-list-item>
           <md-list-item><a routerLink="chord-diagram">Chord Diagram</a></md-list-item>
           <md-list-item><a routerLink="radial-edge-bundling">Radial Edge Bundling</a></md-list-item>
