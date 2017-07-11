@@ -100,12 +100,12 @@ export class D3ngPathPlotComponent extends D3ngChart {
     if (this.config && this.config.extent) {
       extent = this.config.extent;
     } else {
-      extent = [[Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER], [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]];
+      extent = [[Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER], [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]];
       paths.forEach(path => path.path.forEach(point => {
-        extent[0][0] = Math.max(extent[0][0], point.x);
-        extent[0][1] = Math.min(extent[0][1], point.x);
-        extent[1][0] = Math.max(extent[1][0], point.y);
-        extent[1][1] = Math.min(extent[1][1], point.y);
+        extent[0][1] = Math.max(extent[0][1], point.x);
+        extent[0][0] = Math.min(extent[0][0], point.x);
+        extent[1][1] = Math.max(extent[1][1], point.y);
+        extent[1][0] = Math.min(extent[1][0], point.y);
       }));
       extent.forEach(extent => {
         const size = extent[1] - extent[0];
@@ -149,25 +149,6 @@ export class D3ngPathPlotComponent extends D3ngChart {
       .attr("class", "y axis")
       .call(yAxis);
 
-    const line = d3.svg.line();
-    const svgPathGroups = svg.selectAll(".path-group")
-      .data(paths)
-      .enter().append("g").attr("class", "path-group");
-
-    svgPathGroups.append("path")
-      .attr("class", "path")
-      .attr("d", path => line(path.path.map(point => [scales.x(point.x), scales.y(point.y)])));
-
-    svgPathGroups.selectAll(".dot")
-      .data(path => path.path)
-      .enter().append("circle")
-      .attr("class", "dot")
-      .attr("r", 3.5)
-      .attr("cx", point => scales.x(point.x))
-      .attr("cy", point => scales.y(point.y));
-
-    // this.appendTooltip(dots);
-    //
     const brush = d3.svg.brush()
       .x(scales.x).y(scales.y)
       .on("brush", () => {
@@ -181,6 +162,26 @@ export class D3ngPathPlotComponent extends D3ngChart {
         this.setDirectSelection(selection);
       });
     svg.append("g").call(brush);
+
+    const line = d3.svg.line();
+    const svgPathGroups = svg.selectAll(".path-group")
+      .data(paths)
+      .enter().append("g").attr("class", "path-group");
+
+    const svgPaths = svgPathGroups.append("path")
+      .attr("class", "path")
+      .attr("d", path => line(path.path.map(point => [scales.x(point.x), scales.y(point.y)])));
+
+    const svgDots = svgPathGroups.selectAll(".dot")
+      .data(path => path.path)
+      .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 3.5)
+      .attr("cx", point => scales.x(point.x))
+      .attr("cy", point => scales.y(point.y));
+
+    this.appendTooltip(svgPaths, path => `${path.source.label} (${path.path[0].label}-${path.path[path.path.length - 1].label})`);
+    this.appendTooltip(svgDots, point => point.label);
   }
 
 }

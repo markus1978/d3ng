@@ -124,7 +124,6 @@ export class D3ngScatterPlotComponent extends D3ngChart {
       });
     }
 
-
     svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
@@ -133,16 +132,6 @@ export class D3ngScatterPlotComponent extends D3ngChart {
     svg.append("g")
       .attr("class", "y axis")
       .call(yAxis);
-
-    const dots = svg.selectAll(".dot")
-      .data(self.data)
-      .enter().append("circle");
-    dots.attr("class", "dot")
-      .attr("r", 3.5)
-      .attr("cx", function(d) { return scales.x(d[self.x]); })
-      .attr("cy", function(d) { return scales.y(d[self.y]); });
-
-    this.appendTooltip(dots);
 
     const brush = d3.svg.brush()
       .x(scales.x).y(scales.y)
@@ -157,6 +146,16 @@ export class D3ngScatterPlotComponent extends D3ngChart {
         self.setDirectSelection(selection);
       });
     svg.append("g").call(brush);
+
+    const dots = svg.selectAll(".dot")
+      .data(self.data)
+      .enter().append("circle");
+    dots.attr("class", "dot")
+      .attr("r", 3.5)
+      .attr("cx", function(d) { return scales.x(d[self.x]); })
+      .attr("cy", function(d) { return scales.y(d[self.y]); });
+
+    this.appendTooltip(dots);
   }
 
 }
