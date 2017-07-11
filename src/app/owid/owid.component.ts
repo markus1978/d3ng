@@ -10,6 +10,7 @@ import {OWIDMetaDataNode, OWIDVariableMetaData, treeForEach} from "./owid.data";
 import {Matrix} from "../../tools/matrix";
 import {D3ngHistogramDemoComponent} from "../demos/d3ng-histogram-demo.component";
 import {D3ngHistogramComponent} from "../../lib/d3ng-histogram.component";
+import {Path, Point} from "../../lib/d3ng-path-plot.component";
 
 @Component({
   selector: 'app-owid',
@@ -287,6 +288,39 @@ export class OwidComponent implements OnInit {
           return dimension.key;
         }
       });
+    };
+  }
+
+  createPath(): (datum, xdim, ydim) => Path {
+    return (datum, xdim, ydim) => {
+      const dims = [xdim, ydim];
+      const countryDatas = dims.map(dim => this.countryDataCache[dim].variable.countries.find(country => country.code == datum.code));
+      if (!(countryDatas[0] && countryDatas[1])) {
+        return []; // data is only available for one or none of the variables (dims)
+      }
+
+      const points: Point[] = [];
+      const xData = countryDatas[0];
+      const yData = countryDatas[1];
+
+      for (let xi = 0; xi < xData.years.length; xi++) {
+        const xYear = xData.years[xi];
+        for (let yi = 0; yi < yData.years.length; yi++) {
+          const yYear = yData.years[yi];
+          if (yYear == xYear || (yYear < xYear && yi < yData.years.length - 1 && yData.years[yi + 1] > xYear)) {
+            points.push({
+              x: xData.values[xi],
+              y: yData.values[yi],
+              label: "" + xYear,
+            });
+            if (yYear >= xYear) {
+              break;
+            }
+          }
+        }
+      }
+
+      return points;
     };
   }
 }

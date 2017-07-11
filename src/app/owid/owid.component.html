@@ -66,6 +66,9 @@
           5. Analyse the data of the selected countries. Select via clicking and dragging.
           Click the colored boxes to switch the selection color."
         </div>
+        <d3ng-groups [context]="context" [groups]="[0,2]" style="width: 100%; height: 300px;">
+          <d3ng-path-plot [data]="selectedCountries" [dimensions]="countryDataDimensions" [path]="createPath()"></d3ng-path-plot>
+        </d3ng-groups>
         <div class="grid" style="min-width: initial;">
           <div class="col-4-12">
             <d3ng-groups [context]="context" [groups]="[0,2]" style="width: 100%; height: 260px;">
