@@ -127,6 +127,9 @@ export class D3ngPathPlotComponent extends D3ngChart {
     if (this.config && this.config.ticks) {
       xAxis.ticks(this.config.ticks[0], "s");
       yAxis.ticks(this.config.ticks[1], "s");
+    } else {
+      xAxis.ticks(null, "s");
+      yAxis.ticks(null, "s");
     }
 
     const d_chart = d3.select(this.chart.nativeElement);
@@ -183,5 +186,4 @@ export class D3ngPathPlotComponent extends D3ngChart {
     this.appendTooltip(svgPaths, path => `${path.source.label} (${path.path[0].label}-${path.path[path.path.length - 1].label})`);
     this.appendTooltip(svgDots, point => point.label);
   }
-
 }

@@ -14,11 +14,14 @@
 <div class="grid">
   <div class="col-4-12" style="overflow: auto; padding-right: 0;">
     <p>
-      1. Choose the data-sets that you want to visualize. (Right click deselects all.)
+      <b>1. Choose the data-sets that you want to visualize.</b>
     </p>
     <d3ng-histogram #metaHistogram style="height: 200px;" d3ngSource [source]="originalMetaDataRoots" pattern="node/variable"
                     [config]="{ numberOfBuckets: 8, numberOfTicks: 5 }"
                     [multiselect]="true" (selectedChange)="onVariableHistogramSelectionChanged($event)"></d3ng-histogram>
+    <p class="caption">This histogram shows the distribution for how countries are covered by the given variables. Click bins to
+    apply a filter to all variables shown below. Click on variables in the tree below to select or deselect a variable.</p>
+
     <d3ng-collapsible-indented-tree #meta d3ngSource [source]="metaDataRoots" pattern="."
                                     [multiselect]="true" [(selected)]="selectedVariables">
     </d3ng-collapsible-indented-tree>
@@ -26,24 +29,26 @@
   <div class="col-8-12" style="padding-left: 30px">
     <d3ng-collapsible-panel>
       <div class="info">
-        2. Select a point in time.
-        There is some data from {{timeExtent.minLabel}} to {{timeExtent.maxLabel}}. You can shift in time with the purple ruler.
+        <b>2. Select a point in time.</b> There is some data from {{timeExtent.minLabel}} to {{timeExtent.maxLabel}}.
       </div>
       <d3ng-bubble-histogram [data]="tsHistogramData" [(sliderX)]="selectedYear" [zoomedExtent]="[1850, 2017]"></d3ng-bubble-histogram>
+      <p class="caption">This chart shows for which years data is available for what variable. The height of the
+      bars depicts the number of countries with available data. You can select a point in time with the vertical purple handle.</p>
     </d3ng-collapsible-panel>
     <d3ng-collapsible-panel>
       <div class="info">
-        3. Use the parallel coordinates to filter outliers and other unwanted data points by clicking and
-        dragging vertically on an axis. You can use the small arrow heads to spread or compress the axis projections."
+        <b>3. Use the parallel coordinates to filter outliers and other unwanted countries</b>. Select countries (each line a country) by clicking and
+        dragging vertically (<i>brushing</i>) on an axis."
       </div>
       <d3ng-groups [context]="context" [groups]="[1]" (selectedChanged)="selectedCountries = $event.selected">
         <d3ng-parallel-coordinates #pc [data]="countryData" [dimensions]="countryDataDimensions"
-                                       [dimensionConfigurations]="initialVariablesConfig"></d3ng-parallel-coordinates>
+                                       [dimensionConfigurations]="initialSelectionAndConfig.variables"></d3ng-parallel-coordinates>
       </d3ng-groups>
+      <p class="caption">The parallel coordinates show country data for all selected variables at the selected point in time. You can modify axises with the small arrows. Select countries by brushing along an axis.</p>
     </d3ng-collapsible-panel>
     <d3ng-collapsible-panel>
       <div class="info">
-        4. You can also select data points by country. (Right click deselects all.)"
+        <b>4. Observe and further select countries on a map.</b>
       </div>
       <div class="map-container">
         <div class="map-controls">
@@ -58,39 +63,70 @@
                          [config]="{ choroplethColors: ['#007700', '#FFCC00'] }"></d3ng-map>
         </d3ng-groups>
       </div>
+      <p class="caption">Shows selected countries and a choropleth for a single variable for the selected year. Select countries by clicking on them. The choropleth variable can be chosen, the choropleth and
+      display of selected countries can be disabled.</p>
     </d3ng-collapsible-panel>
 
+    <div *ngIf="!(selectedCountries && selectedCountries.length > 0)">
+      <div class="info">
+        Use the charts above to select a set of countries to visualize set countries.
+      </div>
+    </div>
     <div  *ngIf="selectedCountries && selectedCountries.length > 0">
       <d3ng-collapsible-panel>
         <div class="info">
-          5. Analyse the data of the selected countries. Select via clicking and dragging.
+          <b>5. Analyse the data of the selected countries.</b> Select via clicking and dragging (<i>brushing</i>).
           Click the colored boxes to switch the selection color."
         </div>
         <d3ng-groups [context]="context" [groups]="[0,2]" style="width: 100%; height: 300px;">
-          <d3ng-path-plot [data]="selectedCountries" [dimensions]="countryDataDimensions" [path]="createPath()"></d3ng-path-plot>
+          <d3ng-path-plot [data]="selectedCountries" [dimensions]="countryDataDimensions"
+                          [path]="createPath()" [redrawLimit]="500"></d3ng-path-plot>
         </d3ng-groups>
+        <p class="caption">A scatter plot that shows how each country evolves over time. Only shows data when available for both data points. This chart is independent of the selected year.</p>
+
         <div class="grid" style="min-width: initial;">
-          <div class="col-4-12">
-            <d3ng-groups [context]="context" [groups]="[0,2]" style="width: 100%; height: 260px;">
-              <d3ng-scatter-plot [data]="selectedCountries" [dimensions]='countryDataDimensions' [config]="{ticks: [5, 5]}">
+          <div class="col-6-12">
+            <d3ng-groups [context]="context" [groups]="[0,2]" style="width: 100%; height: 300px;">
+              <d3ng-scatter-plot [data]="selectedCountries" [dimensions]='countryDataDimensions'
+                                 [config]="{ticks: [5, 5]}" [redrawLimit]="500">
               </d3ng-scatter-plot>
             </d3ng-groups>
           </div>
-          <div class="col-4-12">
-            <d3ng-groups [context]="context" [groups]="[0,2]" style="width: 100%; height: 260px;">
-              <d3ng-scatter-plot [data]="selectedCountries" [dimensions]='countryDataDimensions' [config]="{ticks: [5, 5]}">
-              </d3ng-scatter-plot>
-            </d3ng-groups>
-          </div>
-          <div class="col-4-12">
-            <d3ng-groups [context]="context" [groups]="[0,2]" style="width: 100%; height: 260px;">
-              <d3ng-scatter-plot [data]="selectedCountries" [dimensions]='countryDataDimensions' [config]="{ticks: [5, 5]}">
+          <div class="col-6-12">
+            <d3ng-groups [context]="context" [groups]="[0,2]" style="width: 100%; height: 300px;">
+              <d3ng-scatter-plot [data]="selectedCountries" [dimensions]='reverseArray(countryDataDimensions)'
+                                 [config]="{ticks: [5, 5]}" [redrawLimit]="500">
               </d3ng-scatter-plot>
             </d3ng-groups>
           </div>
         </div>
+        <p class="caption">Regular scatter plots. You can select countries by brushing. You can change the shown variables. You can use the colored boxes
+        to create multiple selections.</p>
       </d3ng-collapsible-panel>
     </div>
+
+    <d3ng-collapsible-panel *ngIf="devMode">
+      <div class="info">A summary for the current selections</div>
+      <div class="grid" style="min-width: initial;">
+        <div class="col-6-12">
+          <p>Selected variables:</p>
+          <ul>
+            <li *ngFor="let variable of selectedVariables">{{variable.title}}</li>
+          </ul>
+          <p>Selected year: {{selectedYear}}</p>
+        </div>
+        <div class="col-6-12">
+          <p>Selected countries:</p>
+          <ul>
+            <li *ngFor="let country of selectedCountries">{{country.label}}</li>
+          </ul>
+        </div>
+      </div>
+      <p>JSON:</p>
+      <pre>
+        {{selectionToJSON(selectedYear, selectedVariables, selectedCountries)}}
+      </pre>
+    </d3ng-collapsible-panel>
   </div>
 </div>
 

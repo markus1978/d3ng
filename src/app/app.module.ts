@@ -37,6 +37,7 @@ import {D3ngCollapsiblePanelComponent} from "./owid/d3ng-collapsible-panel.compo
     MdTabsModule,
     MdSelectModule,
     MdSliderModule,
+    MdInputModule,
     FormsModule,
     HttpModule,
     D3ngDemosModule,

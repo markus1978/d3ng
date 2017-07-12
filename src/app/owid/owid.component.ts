@@ -8,8 +8,8 @@ import {D3ngMapComponent} from "../../lib/d3ng-map.component";
 import {Observable} from "rxjs/Observable";
 import {OWIDMetaDataNode, OWIDVariableMetaData, treeForEach} from "./owid.data";
 import {Matrix} from "../../tools/matrix";
-import {D3ngHistogramDemoComponent} from "../demos/d3ng-histogram-demo.component";
 import {D3ngHistogramComponent} from "../../lib/d3ng-histogram.component";
+import { isDevMode } from '@angular/core';
 import {Path, Point} from "../../lib/d3ng-path-plot.component";
 
 @Component({
@@ -37,34 +37,96 @@ export class OwidComponent implements OnInit {
     return this._selectedVariables;
   }
 
-  // The list of variables that we initially have selected for the user.
-  initialVariablesConfig = [
-    {
-      key: "UN – Population Division (Fertility) – 2015 revision",
-      scale: 1,
-      direction: 1
-    },
-    {
-      key: "Gapminder (child mortality estimates version 8)",
-      scale: 1,
-      direction: 1
-    },
-    {
-      key: "Population by Country (Clio Infra)",
-      scale: 0.125,
-      direction: 1
-    },
-    {
-      key: "Life Expectancy at Birth (both genders)",
-      scale: 2,
-      direction: -1
-    }
-  ];
+  devMode = isDevMode();
+
+  private initialSelectionAndConfigInitialized = false;
+  initialSelectionAndConfig = {
+    "year": 2011,
+    "variables": [
+      {
+        "key": "CO2 emissions per capita by nation- CDIAC",
+        "scale": 0.2790816472336535,
+        "direction": 1
+      },
+      {
+        "key": "GDP per capita PPP 2011 – WDI",
+        "scale": 0.401877572016461,
+        "direction": 1
+      },
+      {
+        "key": "Total population (Gapminder)",
+        "scale": 0.19380669946781492,
+        "direction": 1
+      },
+      {
+        "key": "Cumulative CO2 by nation- CDIAC",
+        "scale": 0.19380669946781492,
+        "direction": 1
+      },
+      {
+        "key": "CO2 annual emissions by nation-CDIAC",
+        "scale": 0.19380669946781495,
+        "direction": 1
+      },
+      {
+        "key": "CO2 intensity- (kgCO2/2011-$ PPP)- World Bank",
+        "scale": 0.6944444444444445,
+        "direction": 1
+      },
+      {
+        "key": "Human Development Index (HDI), 1980-2014 - UN",
+        "scale": 1.728,
+        "direction": 1
+      },
+    ],
+    "countries": [
+      "SVK",
+      "ROU",
+      "HUN",
+      "POL",
+      "CZE",
+      "GRC",
+      "TUR",
+      "EGY",
+      "LBY",
+      "TUN",
+      "DZA",
+      "MAR",
+      "CHN",
+      "NZL",
+      "IND",
+      "MEX",
+      "ARG",
+      "CHL",
+      "BRA",
+      "ZAF",
+      "DNK",
+      "BEL",
+      "NLD",
+      "IRL",
+      "ISL",
+      "PRT",
+      "GBR",
+      "AUT",
+      "ITA",
+      "KOR",
+      "JPN",
+      "AUS",
+      "NOR",
+      "SWE",
+      "ESP",
+      "FRA",
+      "DEU",
+      "RUS",
+      "CAN",
+      "USA"
+    ]
+  };
 
   tsHistogramData: {category: string, x: number, value: number}[] = [];
   timeExtent: {min: number, max: number, minLabel: string, maxLabel: string} = OwidComponent.defaultTimeExtent;
 
-  _selectedYear = 2017;
+  _selectedYear = null;
   set selectedYear(value: number) {
     this._selectedYear = value;
     this.updateCountryData();
@@ -76,8 +138,16 @@ export class OwidComponent implements OnInit {
   countryData = [];
   countryDataDimensions: string[] = [];
   private countryDataCache = {};
+
   // The list of selected countries as list of data objects.
-  selectedCountries = [];
+  private _selectedCountries = []
+  set selectedCountries(value: any[]) {
+    this._selectedCountries = value;
+    this.context.applyFilter(selected => this._selectedCountries.indexOf(selected) != -1);
+  }
+  get selectedCountries(): any[] {
+    return this._selectedCountries;
+  }
 
   @ViewChild('metaHistogram') variableHistogram: D3ngHistogramComponent;
   @ViewChild('meta') variableTreeElement: D3ngCollapsibleIndentedTreeComponent;
@@ -88,7 +158,28 @@ export class OwidComponent implements OnInit {
     return (str.length > n) ? str.substr(0, n - 1) + '..' : str;
   }
 
+  selectionToJSON(selectedYear, selectedVariables, selectedCountries): string {
+    try {
+      const selection: any = {
+        year: selectedYear,
+        variables: selectedVariables.map(variable => {
+          const config = this.pc.dimensionConfigurations.find(dim => dim.key == variable.key);
+          if (config) {
+            return config;
+          } else {
+            return {key: variable.key};
+          }
+        }),
+        countries: selectedCountries.map(country => country.code),
+      };
+      return JSON.stringify(selection, null, 2);
+    } catch (nop) {
+      return "Could not collect JSON data.";
+    }
+  }
+
   constructor(private http: Http) {
+    this._selectedYear = this.initialSelectionAndConfig.year;
     this.http.get('/assets/owid/owid_metadata.json')
       .map((res: Response) => res.json())
       .subscribe((res: OWIDMetaDataNode) => {
@@ -96,13 +187,15 @@ export class OwidComponent implements OnInit {
         this.originalMetaDataRoots = [res];
         const selectedVariables: OWIDVariableMetaData[] = [];
         treeForEach(res, ((node: OWIDMetaDataNode) => {
-          if (this.initialVariablesConfig.find(variable => node.key == variable.key)) {
+          if (this.initialSelectionAndConfig.variables.find(variable => node.key == variable.key)) {
             if (!selectedVariables.find(variable => variable.key == node.key)) {
               selectedVariables.push(node as OWIDVariableMetaData);
             }
           }
         }));
-        this.selectedVariables = selectedVariables;
+        this.selectedVariables = this.initialSelectionAndConfig.variables
+          .map(initsc => selectedVariables.find(v => v.key == initsc.key))
+          .filter(variable => variable);
       });
   }
 
@@ -110,24 +203,29 @@ export class OwidComponent implements OnInit {
     // update time series histogram data
     let minYear = Number.MIN_SAFE_INTEGER;
     let maxYear = Number.MAX_SAFE_INTEGER;
-    this.tsHistogramData = Matrix.from(this.selectedVariables)
-      .unzip(['years', 'valuesPerYear'])
-      .array().map(row => {
-        minYear = Math.max(minYear, row.years);
-        maxYear = Math.min(maxYear, row.years);
-        return {
-          category: row.key,
-          x: Number(row.years),
-          value: Number(row.valuesPerYear)
-        };
-    });
-    // update time extent data
-    this.timeExtent = {
-      max: maxYear,
-      min: minYear,
-      minLabel: minYear < 0 ? `${-minYear} BC` : `${minYear} AD`,
-      maxLabel: `${maxYear} AD`
-    };
+    if (this.selectedVariables.length == 0) {
+      this.tsHistogramData = [];
+      this.timeExtent = OwidComponent.defaultTimeExtent;
+    } else {
+      this.tsHistogramData = Matrix.from(this.selectedVariables)
+        .unzip(['years', 'valuesPerYear'])
+        .array().map(row => {
+          minYear = Math.max(minYear, row.years);
+          maxYear = Math.min(maxYear, row.years);
+          return {
+            category: row.key,
+            x: Number(row.years),
+            value: Number(row.valuesPerYear)
+          };
+        });
+      // update time extent data
+      this.timeExtent = {
+        max: maxYear,
+        min: minYear,
+        minLabel: minYear < 0 ? `${-minYear} BC` : `${minYear} AD`,
+        maxLabel: `${maxYear} AD`
+      };
+    }
 
     // update the choropleth dimension
     if (!this.selectedVariables.find(variable => variable.key == this.map.choropleth)) {
@@ -138,7 +236,17 @@ export class OwidComponent implements OnInit {
       }
     }
 
-    this.updateCountryData(() => this.countryDataDimensions = this.selectedVariables.map(variable => variable.key));
+    this.updateCountryData(() => {
+      this.countryDataDimensions = this.selectedVariables.map(variable => variable.key);
+
+      // apply the initial selection and configuration (if it still applies)
+      if (!this.initialSelectionAndConfigInitialized) {
+        this.initialSelectionAndConfigInitialized = true;
+        this.pc.dimensionConfigurations = this.initialSelectionAndConfig.variables;
+        const selectedCountries = this.countryData.filter(country => this.initialSelectionAndConfig.countries.indexOf(country.code) != -1);
+        this.pc.preDirectSelection = selectedCountries;
+      }
+    });
   }
 
   private loadVariableData(variables: OWIDVariableMetaData[], callback: () => void) {
@@ -289,6 +397,8 @@ export class OwidComponent implements OnInit {
         }
       });
     };
+
+    this.map.isDrawChoropleth = false;
   }
 
   createPath(): (datum, xdim, ydim) => Path {
@@ -322,5 +432,13 @@ export class OwidComponent implements OnInit {
 
       return points;
     };
+  }
+
+  reverseArray(arr) {
+    const result = new Array(arr.length);
+    for (let i = 0; i < arr.length; i++) {
+      result[arr.length - 1 - i] = arr[i];
+    }
+    return result;
   }
 }

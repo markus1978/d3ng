@@ -37,7 +37,7 @@ import * as jsonata from "jsonata";
 })
 export class D3ngCollapsiblePanelComponent {
   @Input() info = "";
-  isOpen = true;
+  @Input() isOpen = true;
   currentIcon = 'remove_circle_outline';
 
   switchState(): void {

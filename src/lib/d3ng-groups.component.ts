@@ -3,6 +3,9 @@ import {D3ngChart} from "./d3ng-chart";
 
 export class D3ngGroupContext {
   public groups: D3ngGroup[] = [new D3ngGroup(), new D3ngGroup(), new D3ngGroup(), new D3ngGroup() ];
+  public applyFilter(filter: (selected: any) => boolean) {
+    this.groups.forEach(group => group.applyFilter(filter));
+  }
 }
 
 @Component({
@@ -135,6 +138,16 @@ export class D3ngGroup {
     const index = this.handler.indexOf(handler);
     if (index != -1) {
       this.handler.splice(index, 1);
+    }
+  }
+
+  public applyFilter(filter: (selected: any) => boolean): void {
+    const it = this.selections.keys();
+    let itResult = it.next();
+    while (!itResult.done) {
+      const key = itResult.value;
+      this.selections.set(key, this.selections.get(key).filter(filter));
+      itResult = it.next();
     }
   }
 }

@@ -45,6 +45,15 @@ export class D3ngParallelCoordinatesComponent extends D3ngChart implements OnCha
       this.redraw();
     }
   };
+  get dimensionConfigurations(): Dimension[] {
+    return this._dimensions.map(dim => {
+      return {
+        key: dim.key,
+        scale: dim.scale,
+        direction: dim.direction
+      };
+    });
+  }
 
   private mergeDimensionConfigurationsIntoDimensions(): boolean {
     let changed = false;
