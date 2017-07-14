@@ -25,6 +25,8 @@ import {D3ngShadredModule} from "../shared/d3ng-shared.module";
 import {D3ngBubbleHistogramDemoComponent} from "./d3ng-bubble-histogram-demo.component";
 import {D3ngPathPlotComponent} from "../../lib/d3ng-path-plot.component";
 import {D3ngPathPlotDemoComponent} from "./d3ng-path-plot-demo.component";
+import {D3ngGrammarModule} from "../d3ng-grammar/d3ng-grammar.module";
+import {D3ngGrammarDemoComponent} from "../d3ng-grammar/d3ng-grammar-demo.component";
 
 export const demosRouting: Routes = [
   {
@@ -78,6 +80,10 @@ export const demosRouting: Routes = [
   {
     path: 'bubble-histogram',
     component: D3ngBubbleHistogramDemoComponent
+  },
+  {
+    path: 'grammar',
+    component: D3ngGrammarDemoComponent
   }
 ];
 
@@ -106,6 +112,7 @@ export const demosRouting: Routes = [
     D3ngShadredModule,
     D3ngComponentsModule,
     RouterModule.forChild(demosRouting),
+    D3ngGrammarModule,
   ],
   exports: [
     RouterModule,

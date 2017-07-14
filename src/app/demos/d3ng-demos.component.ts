@@ -28,6 +28,7 @@ import {Http} from "@angular/http";
           <md-list-item><a routerLink="histogram">Histogram</a></md-list-item>
           <md-list-item><a routerLink="map">Map</a></md-list-item>
           <md-list-item><a routerLink="bubble-histogram">Bubble Histogram</a></md-list-item>
+          <md-list-item><a routerLink="grammar">Grammar</a></md-list-item>
         </md-list>
       </div>
       <div class="content col-8-12">
