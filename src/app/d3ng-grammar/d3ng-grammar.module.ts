@@ -1,16 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { D3ngGrammarDemoComponent} from "./d3ng-grammar-demo.component";
-import {ChartComponent} from "./chart.component";
-import {AxisComponent} from "./axis.component";
+import {ChartDirective} from "./chart.directive";
+import {AxisDirective} from "./axis.directive";
+import {CircleMarkDirective} from "./circle-mark.directive";
 
 @NgModule({
   imports: [
     CommonModule
   ],
   declarations: [
-    ChartComponent,
-    AxisComponent,
+    ChartDirective,
+    AxisDirective,
+    CircleMarkDirective,
     D3ngGrammarDemoComponent
   ],
   exports: [
