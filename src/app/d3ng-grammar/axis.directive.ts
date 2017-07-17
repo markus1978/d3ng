@@ -5,44 +5,29 @@ import {
   SimpleChanges
 } from "@angular/core";
 import * as d3 from "d3";
-import {Layoutable, LayoutDimensions} from "./chart.directive";
+import {FieldDeclaration, FieldSpec, Layoutable, LayoutDimensions, WithFieldSpecs} from "./chart.directive";
 
 @Directive({selector: '[d3ng-axis]'})
-export class AxisDirective implements OnInit, Layoutable {
+export class AxisDirective implements OnInit, Layoutable, WithFieldSpecs {
 
   @Input() orientation: string = null;
-  @Input() field: string = null;
+  @Input() field: FieldSpec = null;
   @Input() type: string = null;
   @Input() size = 33;
 
+  private _dimensions: LayoutDimensions = null;
   private g: any = null;
-  public scale: any = null;
-  private axis: any = null;
-
-  public set data(value: object[]) {
-    const extent = d3.extent(value.map(datum => datum[this.field]));
-    const range = extent[1] - extent[0];
-    this.scale.domain([extent[0] - range * 0.1, extent[1] + range * 0.1]);
-    this.g.call(this.axis);
-  }
 
   constructor(elRef: ElementRef) {
     this.g = d3.select(elRef.nativeElement);
   }
 
   ngOnInit(): void {
-    this.scale = d3.scale.linear();
-    this.axis = d3.svg.axis().scale(this.scale).orient(this.orientation);
-
     this.g.classed("axis", true);
   }
 
-  updateDimensions(dimensions: LayoutDimensions) {
-    if (this.orientation == "bottom" || this.orientation == "top") {
-      this.scale.range([0, dimensions.width]);
-    } else if (this.orientation == "left" || this.orientation == "right") {
-      this.scale.range([dimensions.height, 0]);
-    }
+  set dimensions(dimensions: LayoutDimensions) {
+    this._dimensions = dimensions;
 
     if (this.orientation == "left") {
       this.g.attr("transform", `translate(${dimensions.width},${dimensions.y})`);
@@ -53,8 +38,20 @@ export class AxisDirective implements OnInit, Layoutable {
     } else if (this.orientation == "top") {
       this.g.attr("transform", `translate(${dimensions.x}, ${dimensions.height})`);
     }
-
-    this.g.call(this.axis);
   }
+  get dimensions(): LayoutDimensions {
+    return this._dimensions;
+  }
+
+  get fieldSpecs(): FieldSpec[] {
+   return [this.field];
+  }
+
+  set fieldSpecs(specs: FieldSpec[]) {
+    this.field = specs[0];
+
+    const axis = d3.svg.axis().scale((this.field as FieldDeclaration).scale).orient(this.orientation);
+    this.g.call(axis);
+  };
 }
 

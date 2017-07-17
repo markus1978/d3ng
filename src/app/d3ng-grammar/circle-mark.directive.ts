@@ -5,45 +5,44 @@ import {
   SimpleChanges
 } from "@angular/core";
 import * as d3 from "d3";
-import {Layoutable, LayoutDimensions} from "./chart.directive";
+import {FieldDeclaration, FieldSpec, Layoutable, LayoutDimensions, Mark, WithFieldSpecs} from "./chart.directive";
 
 @Directive({selector: '[d3ng-circle-mark]'})
-export class CircleMarkDirective implements Layoutable {
+export class CircleMarkDirective implements Mark {
 
-  @Input() x: string = null;
-  @Input() y: string = null;
-  @Input() r: any = null;
+  @Input() x: FieldSpec = null;
+  @Input() y: FieldSpec = null;
+  @Input() r: FieldSpec = null;
 
   private g: any = null;
-  public xScale: any = null;
-  public yScale: any = null;
-  public rScale: any = null;
 
-  public set data(value: object[]) {
-    if (this.rScale == null) {
-      this.rScale = d3.scale.linear();
-      if (this.r instanceof Object && this.r['range']) {
-        this.rScale.range(this.r.range);
-      }
-      this.rScale.domain(d3.extent(value.map(datum => datum[this.r.field])));
-    }
-
+  public render(value: object[]): void {
     this.g
       .selectAll("circle")
       .data(value)
       .enter()
       .append("circle")
-      .attr("r", d => this.rScale(d[this.r.field]))
-      .attr("cx", d => this.xScale(d[this.x]))
-      .attr("cy", d => this.yScale(d[this.y]));
+      .attr("r", (this.r as FieldDeclaration).project)
+      .attr("cx", (this.x as FieldDeclaration).project)
+      .attr("cy", (this.y as FieldDeclaration).project);
   }
 
-  updateDimensions(dimensions: LayoutDimensions) {
-    this.g.attr("transform", `translate(${dimensions.x}, ${dimensions.y})`);
+  set dimensions(value: LayoutDimensions) {
+    this.g.attr("transform", `translate(${value.x}, ${value.y})`);
   }
 
   constructor(elRef: ElementRef) {
     this.g = d3.select(elRef.nativeElement);
   }
+
+  get fieldSpecs(): FieldSpec[] {
+    return [this.x, this.y, this.r];
+  }
+
+  set fieldSpecs(specs: FieldSpec[]) {
+    this.x = specs[0];
+    this.y = specs[1];
+    this.r = specs[2];
+  };
 }
 

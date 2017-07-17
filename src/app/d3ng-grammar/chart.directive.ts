@@ -29,6 +29,7 @@ export class ChartDirective implements DoCheck {
 
   ngDoCheck() {
     if (this.axis && !this.isLayouted) {
+
       const native = this.elRef.nativeElement;
       const contentDimensions = {
         x: 0, y: 0, width: native.clientWidth, height: native.clientHeight
@@ -48,28 +49,26 @@ export class ChartDirective implements DoCheck {
       });
       this.axis.forEach(axis => {
         if (axis.orientation == "left") {
-          axis.updateDimensions({
+          axis.dimensions = {
             x: 0, y: contentDimensions.y, width: axis.size, height: contentDimensions.height
-          });
+          };
         } else if (axis.orientation == "bottom") {
-          axis.updateDimensions({
+          axis.dimensions = {
             x: contentDimensions.x, y: native.clientHeight - axis.size, width: contentDimensions.width, height: axis.size
-          });
+          };
         } else if (axis.orientation == "top") {
-          axis.updateDimensions({
+          axis.dimensions = {
             x: contentDimensions.x, y: 0, width: contentDimensions.width, height: axis.size
-          });
+          };
         } else if (axis.orientation == "right") {
-          axis.updateDimensions({
+          axis.dimensions = {
             x: native.clientWidth - axis.size, y: contentDimensions.y, width: axis.size, height: contentDimensions.height
-          });
+          };
         }
       });
 
       this.marks.forEach(mark => {
-        mark.updateDimensions(contentDimensions);
-        mark.xScale = this.axis.find(axis => axis.field == mark.x).scale;
-        mark.yScale = this.axis.find(axis => axis.field == mark.y).scale;
+        mark.dimensions = contentDimensions;
       });
 
       this.isLayouted = true;
@@ -79,17 +78,40 @@ export class ChartDirective implements DoCheck {
   }
 
   private updateData() {
+    const fieldRegistry = new FieldRegistry();
     if (this.axis) {
-      this.axis.forEach(axis => axis.data = this._data);
+      this.axis.forEach(axis => {
+        axis.fieldSpecs = axis.fieldSpecs.map(spec => {
+          if (axis.orientation == "bottom" || axis.orientation == "top") {
+            return fieldRegistry.explicite(spec, this._data, [0, axis.dimensions.width]);
+          } else {
+            return fieldRegistry.explicite(spec, this._data, [axis.dimensions.height, 0]);
+          }
+        });
+      });
     }
     if (this.marks) {
-      this.marks.forEach(marks => marks.data = this._data);
+      this.marks.forEach(marks => {
+        marks.fieldSpecs = marks.fieldSpecs.map(spec => {
+          return fieldRegistry.explicite(spec, this._data);
+        });
+      });
+    }
+
+    if (this.marks) {
+      this.marks.forEach(marks => {
+        marks.render(this._data);
+      });
     }
   }
 }
 
 export interface Layoutable {
-  updateDimensions(dimensions: LayoutDimensions);
+  dimensions: LayoutDimensions;
+}
+
+export interface WithFieldSpecs {
+  fieldSpecs: FieldSpec[];
 }
 
 export interface LayoutDimensions {
@@ -99,16 +121,98 @@ export interface LayoutDimensions {
   height: number;
 }
 
-export enum FieldScaleTypes { quantitative, ordinal, nominal }
-export interface FieldSpec {
-  field: string;
-  type: FieldScaleTypes;
-  range: number[];
-  domain: number[];
-  aggregate: string;
-  binning: string;
+export interface Mark extends Layoutable, WithFieldSpecs {
+  render(data: Object[]): void;
+}
 
-  scaleGenerator: (range: number[], domain: number[]) => (any) => number;
-  scale: (any) => number;
-  value: (object) => any;
+export type FieldSpec = FieldDeclaration|string;
+
+export enum FieldTypes { quantitative, ordinal, nominal }
+
+export interface FieldDeclaration {
+  key?: string;
+  field?: string;
+  type?: FieldTypes;
+  domain?: number[];
+  range?: number[];
+  value?: (Object) => any;
+  scale?: (any) => any;
+  project?: (Object) => any;
+}
+
+export class FieldRegistry {
+  private fields = new Map<string, FieldDeclaration>();
+
+  /**
+   * Takes a field specification and adds it to the registry if necessary. The field spec is completed based on
+   * defaults, data, or existing field specs.
+   */
+  public explicite<T>(spec: FieldSpec, data: Object[], defaultRange?: number[]): FieldDeclaration {
+    let dclr: FieldDeclaration = null;
+    if (typeof spec === "string") {
+      dclr = this.fields.get(spec as string);
+      if (!dclr) {
+        dclr = {
+          key: spec
+        };
+        this.fields.set(spec as string, dclr);
+      }
+    } else {
+      let key = (spec as FieldDeclaration).key;
+      if (!key) {
+        key = (spec as FieldDeclaration).field;
+      }
+      dclr = this.fields.get(key);
+      if (!dclr) {
+        dclr = spec;
+        this.fields.set(key, dclr);
+      } else {
+        Object.keys(spec).forEach(key => dclr[key] = spec[key]);
+      }
+    }
+
+    if (!dclr.key) {
+      dclr.key = dclr.field;
+    }
+
+    if (!dclr.value) {
+      if (!dclr.field) {
+        dclr.field = dclr.key;
+      }
+      dclr.value = (o: Object) => o[dclr.field];
+    }
+
+    if (!dclr.type) {
+      const datum = data.find(datum => datum && dclr.value(datum));
+      if (typeof dclr.value(datum) === "number") {
+        dclr.type = FieldTypes.quantitative;
+      } else {
+        // TODO
+      }
+    }
+
+    if (!dclr.scale) {
+      if (dclr.type == FieldTypes.quantitative) {
+        if (!dclr.domain) {
+          const extent = d3.extent(data.map(dclr.value));
+          const size = extent[1] - extent[0];
+          dclr.domain = [extent[0] - size * 0.1, extent[1] + size * 0.1];
+        }
+
+        if (!dclr.range) {
+          dclr.range = defaultRange;
+        }
+
+        dclr.scale = d3.scale.linear().domain(dclr.domain).range(dclr.range);
+      } else {
+        // TODO
+      }
+    }
+
+    if (!dclr.project) {
+      dclr.project = (datum: Object) => dclr.scale(dclr.value(datum));
+    }
+
+    return dclr;
+  }
 }
