@@ -1,5 +1,6 @@
 <svg d3ng-chart [data]="data" style="height: 300px; width: 100%;">
   <g d3ng-axis orientation="bottom" field="a"></g>
   <g d3ng-axis orientation="left" field="b"></g>
+  <g d3ng-grid y="b"></g>
   <g d3ng-circle-mark x="a" y="b" [r]="{range: [3, 10], field: 'c'}"></g>
 </svg>

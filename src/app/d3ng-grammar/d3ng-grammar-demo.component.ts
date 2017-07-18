@@ -10,6 +10,7 @@ import * as d3 from "d3";
   styles: [
     ":host /deep/ g.axis path { fill: none; stroke: #000; shape-rendering: crispEdges; }",
     ":host /deep/ g.axis line { fill: none; stroke: #000; shape-rendering: crispEdges; }",
+    ":host /deep/ g.grid line { fill: none; stroke: #AAA; shape-rendering: crispEdges; }",
   ]
 })
 export class D3ngGrammarDemoComponent {

@@ -4,6 +4,7 @@ import { D3ngGrammarDemoComponent} from "./d3ng-grammar-demo.component";
 import {ChartDirective} from "./chart.directive";
 import {AxisDirective} from "./axis.directive";
 import {CircleMarkDirective} from "./circle-mark.directive";
+import {GridDirective} from "./grid.directive";
 
 @NgModule({
   imports: [
@@ -13,6 +14,7 @@ import {CircleMarkDirective} from "./circle-mark.directive";
     ChartDirective,
     AxisDirective,
     CircleMarkDirective,
+    GridDirective,
     D3ngGrammarDemoComponent
   ],
   exports: [

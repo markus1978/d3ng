@@ -1,0 +1,13 @@
+line, path {
+  fill: none; shape-rendering: crispEdges;
+}
+
+:host /deep/ g.axis path {
+  stroke: #000;
+}
+:host /deep/ g.axis line {
+  stroke: #000;
+}
+:host /deep/ g.grid line {
+  stroke: #AAA;
+}

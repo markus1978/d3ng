@@ -1,14 +1,12 @@
-import {
-  AfterContentChecked,
-  AfterContentInit,
-  AfterViewInit, Component, Directive, ElementRef, EventEmitter, Host, HostListener, Input, OnChanges, OnInit, Output,
-  SimpleChanges
-} from "@angular/core";
+import {Directive, ElementRef, forwardRef, Input} from "@angular/core";
 import * as d3 from "d3";
-import {FieldDeclaration, FieldSpec, Layoutable, LayoutDimensions, Mark, WithFieldSpecs} from "./chart.directive";
+import {ChartElement, FieldDeclaration, FieldSpec, LayoutDimensions, LayoutOrientation} from "./chart-element";
 
-@Directive({selector: '[d3ng-circle-mark]'})
-export class CircleMarkDirective implements Mark {
+@Directive({
+  selector: '[d3ng-circle-mark]',
+  providers: [{provide: ChartElement, useExisting: forwardRef(() => CircleMarkDirective)}],
+})
+export class CircleMarkDirective extends ChartElement {
 
   @Input() x: FieldSpec = null;
   @Input() y: FieldSpec = null;
@@ -16,10 +14,21 @@ export class CircleMarkDirective implements Mark {
 
   private g: any = null;
 
-  public render(value: object[]): void {
+  constructor(elRef: ElementRef) {
+    super();
+    this.g = d3.select(elRef.nativeElement);
+  }
+
+  registerVariables(registry) {
+    this.x = registry(this.x);
+    this.y = registry(this.y);
+    this.r = registry(this.r);
+  }
+
+  render(data) {
     this.g
       .selectAll("circle")
-      .data(value)
+      .data(data)
       .enter()
       .append("circle")
       .attr("r", (this.r as FieldDeclaration).project)
@@ -27,22 +36,12 @@ export class CircleMarkDirective implements Mark {
       .attr("cy", (this.y as FieldDeclaration).project);
   }
 
-  set dimensions(value: LayoutDimensions) {
-    this.g.attr("transform", `translate(${value.x}, ${value.y})`);
+  registerLayout(registry) {
+    registry(LayoutOrientation.content);
   }
 
-  constructor(elRef: ElementRef) {
-    this.g = d3.select(elRef.nativeElement);
+  layout(dimensions: LayoutDimensions) {
+    this.g.attr("transform", `translate(${dimensions.x}, ${dimensions.y})`);
   }
-
-  get fieldSpecs(): FieldSpec[] {
-    return [this.x, this.y, this.r];
-  }
-
-  set fieldSpecs(specs: FieldSpec[]) {
-    this.x = specs[0];
-    this.y = specs[1];
-    this.r = specs[2];
-  };
 }
 
