@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import * as moment from 'moment';
 
 export abstract class ChartElement {
   abstract registerLayout(registry: (orientation: LayoutOrientation, size: number) => any): void;
@@ -19,12 +20,13 @@ export interface LayoutDimensions {
 
 export type FieldSpec = FieldDeclaration|string;
 
-export enum FieldTypes { quantitative, ordinal, nominal }
+export enum FieldTypes { quantitative, ordinal, nominal, date }
 
 export interface FieldDeclaration {
   key?: string;
   field?: string;
-  type?: FieldTypes;
+  type?: string;
+  format?: string;
   domain?: number[];
   range?: number[];
   value?: (Object) => any;
@@ -76,15 +78,33 @@ export class FieldRegistry {
 
     if (!dclr.type) {
       const datum = data.find(datum => datum && dclr.value(datum));
-      if (typeof dclr.value(datum) === "number") {
-        dclr.type = FieldTypes.quantitative;
+      if (datum) {
+        const value = dclr.value(datum);
+        if (typeof value === "number") {
+          dclr.type = FieldTypes[FieldTypes.quantitative];
+        } else if (typeof value === "string") {
+          if (typeof Number(value) === "number") {
+            dclr.type = FieldTypes[FieldTypes.quantitative];
+            const oldValueFunction = dclr.value;
+            dclr.value = datum => Number(oldValueFunction(datum));
+          }
+        } else {
+          // TODO
+          console.log(`WARNING: Cannot gues data type for datum ${value} (${typeof value}))`);
+        }
       } else {
         // TODO
+      }
+    } else if (FieldTypes[dclr.type] === FieldTypes.date) {
+      if (!(dclr.value as any).forType) {
+        const oldValueFunction = dclr.value;
+        dclr.value = datum => moment(oldValueFunction(datum), dclr.format).dayOfYear();
+        (dclr.value as any).forType = true;
       }
     }
 
     if (!dclr.scale) {
-      if (dclr.type == FieldTypes.quantitative) {
+      if (FieldTypes[dclr.type] === FieldTypes.quantitative || FieldTypes[dclr.type] === FieldTypes.date) {
         if (!dclr.domain) {
           const extent = d3.extent(data.map(dclr.value));
           const size = extent[1] - extent[0];
