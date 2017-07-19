@@ -49,6 +49,7 @@
     "jsonata": "^1.2.6",
     "live-server": "^1.2.0",
     "magic-string": "^0.21.3",
+    "moment": "^2.18.1",
     "rxjs": "^5.4.2",
     "simple-get": "^2.6.0",
     "stream-to-string": "^1.1.0",

@@ -1,6 +1,6 @@
 import {Directive, ElementRef, forwardRef, Input} from "@angular/core";
 import * as d3 from "d3";
-import {ChartElement, FieldDeclaration, FieldSpec, LayoutDimensions, LayoutOrientation} from "./chart-element";
+import {ChartElement, LayoutDimensions, LayoutOrientation} from "./chart-element";
 
 @Directive({
   selector: '[d3ng-axis]',
@@ -9,7 +9,7 @@ import {ChartElement, FieldDeclaration, FieldSpec, LayoutDimensions, LayoutOrien
 export class AxisDirective extends ChartElement {
 
   @Input() orientation: string = null;
-  @Input() field: FieldSpec = null;
+  @Input() field = null;
   @Input() type: string = null;
   @Input() size = 33;
   @Input() grid = false;
@@ -45,7 +45,7 @@ export class AxisDirective extends ChartElement {
   }
 
   render(data) {
-    const axis = d3.svg.axis().scale((this.field as FieldDeclaration).scale).orient(this.orientation);
+    const axis = d3.svg.axis().scale(this.field.scale).orient(this.orientation);
     if (this.grid) {
       if (this.orientation == "top" || this.orientation == "bottom") {
         axis.innerTickSize(-this.dimensions.height);

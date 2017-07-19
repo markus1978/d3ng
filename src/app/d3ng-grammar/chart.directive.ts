@@ -1,6 +1,7 @@
 import {AfterViewInit, ContentChildren, Directive, ElementRef, Input, QueryList} from "@angular/core";
 import * as d3 from "d3";
-import {ChartElement, FieldRegistry, FieldSpec, LayoutDimensions, LayoutOrientation} from "./chart-element";
+import {ChartElement, LayoutDimensions, LayoutOrientation } from "./chart-element";
+import {Variable, VariableRegistry} from "./variables";
 
 @Directive({ selector: '[d3ng-chart]' })
 export class ChartDirective implements AfterViewInit {
@@ -83,24 +84,25 @@ export class ChartDirective implements AfterViewInit {
   }
 
   private updateData() {
-    if (!this.dirty) {
+    if (!this.dirty && this._data && this._data.length > 0) {
       // register/update all fields
-      const fieldRegistry = new FieldRegistry();
+      const variables = new VariableRegistry();
       this.chartElements.forEach(element => {
         const layout = this.layouts.get(element);
-        element.registerVariables((fieldSpec: FieldSpec) => {
+        element.registerVariables((spec: any) => {
           let extent: number[];
           if (layout.orientation === LayoutOrientation.bottom || layout.orientation === LayoutOrientation.top) {
             extent = [0, layout.dimensions.width];
           } else if (layout.orientation === LayoutOrientation.left || layout.orientation === LayoutOrientation.right) {
             extent = [layout.dimensions.height, 0];
           }
-          return fieldRegistry.explicite(fieldSpec, this._data, extent);
+          return variables.register(spec, this._data, extent);
         });
       });
 
-      // render
-      this.chartElements.forEach(element => element.render(this._data));
+      const data = variables.computeBinning(this._data);
+
+      this.chartElements.forEach(element => element.render(data));
     }
   }
 }

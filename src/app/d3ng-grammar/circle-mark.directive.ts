@@ -1,6 +1,6 @@
 import {Directive, ElementRef, forwardRef, Input} from "@angular/core";
 import * as d3 from "d3";
-import {ChartElement, FieldDeclaration, FieldSpec, LayoutDimensions, LayoutOrientation} from "./chart-element";
+import {ChartElement, LayoutDimensions, LayoutOrientation} from "./chart-element";
 
 @Directive({
   selector: '[d3ng-circle-mark]',
@@ -8,9 +8,9 @@ import {ChartElement, FieldDeclaration, FieldSpec, LayoutDimensions, LayoutOrien
 })
 export class CircleMarkDirective extends ChartElement {
 
-  @Input() x: FieldSpec = null;
-  @Input() y: FieldSpec = null;
-  @Input() r: FieldSpec = null;
+  @Input() x = null;
+  @Input() y = null;
+  @Input() r = null;
 
   private g: any = null;
 
@@ -26,14 +26,15 @@ export class CircleMarkDirective extends ChartElement {
   }
 
   render(data) {
+    const self = this;
     this.g
       .selectAll("circle")
       .data(data)
       .enter()
       .append("circle")
-      .attr("r", (this.r as FieldDeclaration).project)
-      .attr("cx", (this.x as FieldDeclaration).project)
-      .attr("cy", (this.y as FieldDeclaration).project);
+      .attr("r", datum => self.r.project(datum))
+      .attr("cx", datum => self.x.project(datum))
+      .attr("cy", datum => self.y.project(datum));
   }
 
   registerLayout(registry) {

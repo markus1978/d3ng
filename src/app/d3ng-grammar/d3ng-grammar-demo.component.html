@@ -1,6 +1,12 @@
-<svg d3ng-chart [data]="data" style="height: 300px; width: 100%;">
-  <g d3ng-axis orientation="bottom" field="a"></g>
-  <g d3ng-axis orientation="left" field="b"></g>
-  <g d3ng-grid y="b"></g>
-  <g d3ng-circle-mark x="a" y="b" [r]="{range: [3, 10], field: 'c'}"></g>
+<svg d3ng-chart [data]="data"
+                style="height: 300px; width: 100%;">
+
+  <g d3ng-axis orientation="bottom" [field]="{field: 'date', format: 'YYYY/MM/DD', type: 'temporal', timeUnit: 'month', bins: 12}"></g>
+  <g d3ng-axis orientation="left" [field]="{field: 'precipitation', domain: [0,null]}"></g>
+  <g d3ng-axis orientation="right" [field]="{fields: ['temp_max','temp_min'], domain: [-10,40]}"></g>
+  <g d3ng-grid y="precipitation"></g>
+
+  <g d3ng-bar-mark x="date" y="precipitation"></g>
+  <g d3ng-circle-mark x="date" y="temp_max" [r]="{range: [3, 10], field: 'wind'}"></g>
+  <g d3ng-circle-mark x="date" y="temp_min" [r]="{range: [3, 10], field: 'wind'}"></g>
 </svg>

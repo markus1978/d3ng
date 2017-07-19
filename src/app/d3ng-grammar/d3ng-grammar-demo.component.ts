@@ -1,8 +1,7 @@
-import {
-  AfterViewInit, Component, EventEmitter, HostListener, Input, OnChanges, Output,
-  SimpleChanges
-} from "@angular/core";
+import {Component} from "@angular/core";
 import * as d3 from "d3";
+import {Http, Response} from "@angular/http";
+import * as moment from 'moment';
 
 @Component({
   selector: 'd3ng-grammar-demo',
@@ -15,9 +14,14 @@ import * as d3 from "d3";
 })
 export class D3ngGrammarDemoComponent {
 
-  data = [
-    { a: 1, b: 3, c: 20 },
-    { a: 3, b: 2, c: 60 }
-  ];
+  data = [];
+
+  constructor(http: Http) {
+    http.get('/assets/seattle-weather.csv')
+      .map((res: Response) => res)
+      .subscribe(res => {
+        this.data = d3.csv.parse(res.text());
+      });
+  }
 }
 
