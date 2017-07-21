@@ -6,21 +6,24 @@ import * as moment from 'moment';
 @Component({
   selector: 'd3ng-grammar-demo',
   templateUrl: './d3ng-grammar-demo.component.html',
-  styles: [
-    ":host /deep/ g.axis path { fill: none; stroke: #000; shape-rendering: crispEdges; }",
-    ":host /deep/ g.axis line { fill: none; stroke: #000; shape-rendering: crispEdges; }",
-    ":host /deep/ g.grid line { fill: none; stroke: #AAA; shape-rendering: crispEdges; }",
-  ]
+  styleUrls: [ './d3ng-grammar-demo.component.css' ]
 })
 export class D3ngGrammarDemoComponent {
 
-  data = [];
+  weather = [];
+  cars = [];
 
   constructor(http: Http) {
     http.get('/assets/seattle-weather.csv')
       .map((res: Response) => res)
       .subscribe(res => {
-        this.data = d3.csv.parse(res.text());
+        this.weather = d3.csv.parse(res.text());
+      });
+
+    http.get('/assets/cars.json')
+      .map((res: Response) => res)
+      .subscribe(res => {
+        this.cars = JSON.parse(res.text());
       });
   }
 }

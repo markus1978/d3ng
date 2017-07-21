@@ -1,4 +1,4 @@
-line, path {
+:host /deep/ line, :host /deep/ path {
   fill: none; shape-rendering: crispEdges;
 }
 
@@ -10,4 +10,18 @@ line, path {
 }
 :host /deep/ g.grid line {
   stroke: #AAA;
+}
+
+:host /deep/ g.perc rect {
+  fill: #68F;
+  stroke: white;
+  stroke-width: 2px;
+}
+
+:host /deep/ g.temp path {
+  stroke: red;
+}
+
+:host /deep/ g.temp circle {
+  fill: red;
 }

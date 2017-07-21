@@ -1,6 +1,6 @@
 import {Directive, ElementRef, forwardRef, Input} from "@angular/core";
 import * as d3 from "d3";
-import {ChartElement, LayoutDimensions, LayoutOrientation} from "./chart-element";
+import {ChartElement, LayoutDimensions, LayoutOrientation} from "./chart.directive";
 
 @Directive({
   selector: '[d3ng-axis]',
@@ -8,7 +8,6 @@ import {ChartElement, LayoutDimensions, LayoutOrientation} from "./chart-element
 })
 export class AxisDirective extends ChartElement {
 
-  @Input() orientation: string = null;
   @Input() field = null;
   @Input() type: string = null;
   @Input() size = 33;
@@ -24,18 +23,18 @@ export class AxisDirective extends ChartElement {
   }
 
   registerLayout(registry) {
-    registry(LayoutOrientation[this.orientation], this.size);
+    registry(LayoutOrientation[this.field.orientation], this.size);
   }
 
   layout(dimensions) {
     this.dimensions = dimensions;
-    if (this.orientation == "left") {
+    if (this.field.orientation == "left") {
       this.g.attr("transform", `translate(${dimensions.width},${dimensions.y})`);
-    } else if (this.orientation == "right") {
+    } else if (this.field.orientation == "right") {
       this.g.attr("transform", `translate(${dimensions.x}, ${dimensions.y})`);
-    } else if (this.orientation == "bottom") {
+    } else if (this.field.orientation == "bottom") {
       this.g.attr("transform", `translate(${dimensions.x}, ${dimensions.y})`);
-    } else if (this.orientation == "top") {
+    } else if (this.field.orientation == "top") {
       this.g.attr("transform", `translate(${dimensions.x}, ${dimensions.height})`);
     }
   }
@@ -45,9 +44,9 @@ export class AxisDirective extends ChartElement {
   }
 
   render(data) {
-    const axis = d3.svg.axis().scale(this.field.scale).orient(this.orientation);
+    const axis = d3.svg.axis().scale(this.field.scale).orient(this.field.orientation);
     if (this.grid) {
-      if (this.orientation == "top" || this.orientation == "bottom") {
+      if (this.field.orientation == "top" || this.field.orientation == "bottom") {
         axis.innerTickSize(-this.dimensions.height);
       } else {
         axis.innerTickSize(-this.dimensions.width);

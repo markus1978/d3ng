@@ -3,14 +3,16 @@ import * as d3 from "d3";
 import {ChartElement, LayoutDimensions, LayoutOrientation} from "./chart.directive";
 
 @Directive({
-  selector: '[d3ng-circle-mark]',
-  providers: [{provide: ChartElement, useExisting: forwardRef(() => CircleMarkDirective)}],
+  selector: '[d3ng-line-mark]',
+  providers: [{provide: ChartElement, useExisting: forwardRef(() => LineMarkDirective)}],
 })
-export class CircleMarkDirective extends ChartElement {
+export class LineMarkDirective extends ChartElement {
 
   @Input() x = null;
   @Input() y = null;
-  @Input() r: any = { project: datum => 3 };
+
+  @Input() w: any = { project: datum => 3};
+  @Input() r: any = { project: datum => 3};
 
   private g: any = null;
 
@@ -22,6 +24,7 @@ export class CircleMarkDirective extends ChartElement {
   registerVariables(registry) {
     this.x = registry(this.x);
     this.y = registry(this.y);
+    this.w = registry(this.w);
     this.r = registry(this.r);
   }
 
@@ -35,6 +38,10 @@ export class CircleMarkDirective extends ChartElement {
       .attr("r", datum => this.r.project(datum))
       .attr("cx", datum => this.x.project(datum))
       .attr("cy", datum => this.y.project(datum));
+
+    const points = data.map(datum => [this.x.project(datum), this.y.project(datum)]);
+    const line = d3.svg.line()(points);
+    const path = this.g.selectAll("path").data([line]).enter().append("path").attr("d", line).attr("stroke-width", datum => this.w.project(data[0]));
   }
 
   registerLayout(registry) {

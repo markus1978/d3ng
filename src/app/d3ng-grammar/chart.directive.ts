@@ -1,7 +1,24 @@
 import {AfterViewInit, ContentChildren, Directive, ElementRef, Input, QueryList} from "@angular/core";
 import * as d3 from "d3";
-import {ChartElement, LayoutDimensions, LayoutOrientation } from "./chart-element";
 import {Variable, VariableRegistry} from "./variables";
+
+
+export abstract class ChartElement {
+  abstract registerLayout(registry: (orientation: LayoutOrientation, size: number) => any): void;
+  abstract layout(dimensions: LayoutDimensions): void;
+
+  abstract registerVariables(registry: (spec: any) => Variable);
+  abstract render(data: Object[]);
+}
+
+export enum LayoutOrientation { top, bottom, left, right, content, chart }
+
+export interface LayoutDimensions {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
 
 @Directive({ selector: '[d3ng-chart]' })
 export class ChartDirective implements AfterViewInit {
@@ -18,11 +35,17 @@ export class ChartDirective implements AfterViewInit {
   private g: any = null;
   private layouts = new Map<ChartElement, { orientation: LayoutOrientation; size?: number; dimensions?: LayoutDimensions }>();
 
+  private variables: VariableRegistry = new VariableRegistry();
+
   constructor(private elRef: ElementRef) {
     this.g = d3.select(elRef.nativeElement);
   }
 
   ngAfterViewInit() {
+    // register variables
+    this.chartElements.forEach(element => element.registerVariables(spec => this.variables.register(spec, element)));
+
+    // layout
     const native = this.elRef.nativeElement;
     const chartDimensions = {
       x: 0, y: 0, width: native.clientWidth, height: native.clientHeight
@@ -85,23 +108,8 @@ export class ChartDirective implements AfterViewInit {
 
   private updateData() {
     if (!this.dirty && this._data && this._data.length > 0) {
-      // register/update all fields
-      const variables = new VariableRegistry();
-      this.chartElements.forEach(element => {
-        const layout = this.layouts.get(element);
-        element.registerVariables((spec: any) => {
-          let extent: number[];
-          if (layout.orientation === LayoutOrientation.bottom || layout.orientation === LayoutOrientation.top) {
-            extent = [0, layout.dimensions.width];
-          } else if (layout.orientation === LayoutOrientation.left || layout.orientation === LayoutOrientation.right) {
-            extent = [layout.dimensions.height, 0];
-          }
-          return variables.register(spec, this._data, extent);
-        });
-      });
-
-      const data = variables.computeBinning(this._data);
-
+      this.chartElements.forEach(element => this.variables.check(element, this.layouts.get(element).dimensions, this._data));
+      const data = this.variables.computeBinning(this._data);
       this.chartElements.forEach(element => element.render(data));
     }
   }

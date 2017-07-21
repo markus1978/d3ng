@@ -6,6 +6,7 @@ import {AxisDirective} from "./axis.directive";
 import {CircleMarkDirective} from "./circle-mark.directive";
 import {GridDirective} from "./grid.directive";
 import {BarMarkDirective} from "./bar-mark.directive";
+import {LineMarkDirective} from "./line-mark.directive";
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import {BarMarkDirective} from "./bar-mark.directive";
     CircleMarkDirective,
     GridDirective,
     BarMarkDirective,
+    LineMarkDirective,
     D3ngGrammarDemoComponent
   ],
   exports: [

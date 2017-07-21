@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import * as moment from "moment";
+import {ChartElement, LayoutDimensions} from "./chart.directive";
 
 enum VariableTypes { quantitative, temporal, ordinal }
 enum AggregationFunctions { mean, middle }
@@ -10,6 +11,8 @@ export class Variable {
   type: VariableTypes = VariableTypes.quantitative;
   format: string = null;
   timeUnit: string = null;
+
+  orientation: string = null;
 
   bins: number = null;
   binSize: number = null;
@@ -37,7 +40,7 @@ export class Variable {
   }
 
   defaultValueGen(data: Object[]) {
-    const baseValue = datum => datum[this.key];
+    const baseValue = datum => datum[this.field];
     let value = baseValue;
     if (this.type === VariableTypes.temporal) {
       if (this.timeUnit == "month") {
@@ -221,16 +224,27 @@ export class Variable {
 export class VariableRegistry {
 
   private variableDefinitions = new Map<string, Variable>();
-  private last: Variable[] = [];
+  private variables: Variable[] = [];
+  private elements = new Map<ChartElement, Variable[]>();
 
-  public register(spec: any, data: Object[], range?: number[]): Variable {
+  private unique = 0;
+
+  private genKey() {
+    return `__generated_${this.unique++}`;
+  }
+
+  public register(spec: any, element: ChartElement): Variable {
+    if (!spec) {
+      return null;
+    }
+
     if (spec.fields) {
       let firstResult: Variable = null;
       spec.fields.forEach(field => {
         const copy = JSON.parse(JSON.stringify(spec));
         delete copy.fields;
         copy.field = field;
-        const result = this.register(copy, data, range);
+        const result = this.register(copy, element);
         if (!firstResult) {
           firstResult = result;
         }
@@ -247,6 +261,10 @@ export class VariableRegistry {
     } else {
       key = spec.key ? spec.key : spec.field;
     }
+    if (!key) {
+      spec.key = this.genKey();
+      key = spec.key;
+    }
     variable = this.variableDefinitions.get(key);
     if (!variable) {
       variable = new Variable(spec);
@@ -255,32 +273,48 @@ export class VariableRegistry {
       variable.update(spec);
     }
 
-    if (!isRef) {
-      variable.initBeforeBinning(data, range);
+    let variables = this.elements.get(element);
+    if (!variables) {
+      variables = [];
+      this.elements.set(element, variables);
     }
+    variables.push(variable);
 
-    this.last.push(variable);
+    this.variables.push(variable);
 
     return variable;
   }
 
+  public check(element: ChartElement, dimensions: LayoutDimensions, data: Object[]) {
+    this.elements.get(element).forEach(variable => {
+      let extent: number[];
+      if (variable.orientation == 'bottom' || variable.orientation == 'top') {
+        extent = [0, dimensions.width];
+      } else if (variable.orientation == 'left' || variable.orientation == 'right') {
+        extent = [dimensions.height, 0];
+      }
+      variable.initBeforeBinning(data, extent);
+    });
+  }
+
   computeBinning(source: Object[]): Object[] {
-    const binningVariable = this.last.find(variable => variable.doBin != null);
+    let result = null;
+    const binningVariable = this.variables.find(variable => variable.doBin != null);
     if (binningVariable == null) {
-      return source;
+      result = source;
+    } else {
+      const bins = binningVariable.doBin(source);
+      result = new Array(bins.length);
+      for (let i = 0; i < bins.length; i++) {
+        const target = {};
+        this.variables.forEach(variable => {
+          target[variable.field] = variable.doAggregate(bins[i]);
+        });
+        result[i] = target;
+      }
     }
 
-    const bins = binningVariable.doBin(source);
-    const result = new Array(bins.length);
-    for (let i = 0; i < bins.length; i++) {
-      const target = {};
-      this.last.forEach(variable => {
-        target[variable.field] = variable.doAggregate(bins[i]);
-      });
-      result[i] = target;
-    }
-
-    this.last.forEach(variable => variable.initAfterBinning(result));
+    this.variables.forEach(variable => variable.initAfterBinning(result));
 
     return result;
   }

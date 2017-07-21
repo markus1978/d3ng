@@ -1,6 +1,6 @@
 import {Directive, ElementRef, forwardRef, Input} from "@angular/core";
 import * as d3 from "d3";
-import {ChartElement, LayoutDimensions, LayoutOrientation} from "./chart-element";
+import {ChartElement, LayoutDimensions, LayoutOrientation} from "./chart.directive";
 
 @Directive({
   selector: '[d3ng-bar-mark]',
@@ -40,7 +40,6 @@ export class BarMarkDirective extends ChartElement {
         const value = this.x.value(datum);
         return this.x.scale(value + halfWidth) - this.x.scale(value - halfWidth);
       })
-      .style("fill", "blue")
       .attr("y", datum => this.y.project(datum))
       .attr("height", datum => this.y.scale(this.y.domain[0]) - this.y.project(datum));
   }

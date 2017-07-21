@@ -1,6 +1,6 @@
 import {Directive, ElementRef, forwardRef, Input} from "@angular/core";
 import * as d3 from "d3";
-import {ChartElement, LayoutDimensions, LayoutOrientation} from "./chart-element";
+import {ChartElement, LayoutDimensions, LayoutOrientation} from "./chart.directive";
 
 @Directive({
   selector: '[d3ng-grid]',
