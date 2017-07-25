@@ -1,6 +1,8 @@
-import {AfterViewInit, ContentChildren, Directive, ElementRef, Input, QueryList} from "@angular/core";
+import {AfterViewInit, ContentChildren, Directive, ElementRef, forwardRef, Input, QueryList} from "@angular/core";
 import * as d3 from "d3";
 import {Variable, VariableRegistry} from "./variables";
+import {D3ngChart, D3ngSelection} from "../../lib/d3ng-chart";
+import {AbstractMarkDirective} from "./abstract-mark.directive";
 
 
 export abstract class ChartElement {
@@ -20,25 +22,45 @@ export interface LayoutDimensions {
   height: number;
 }
 
-@Directive({ selector: '[d3ng-chart]' })
-export class ChartDirective implements AfterViewInit {
+@Directive({
+  selector: '[d3ng-chart]',
+  providers: [{provide: D3ngChart, useExisting: forwardRef(() => ChartDirective)}]
+})
+export class ChartDirective extends D3ngChart implements AfterViewInit {
 
   @ContentChildren(ChartElement) chartElements: QueryList<ChartElement>;
 
-  private _data: object[] = null;
-  @Input() set data(value: object[]) {
-    this._data = value;
-    this.updateData();
-  }
-
-  private dirty = true;
   private g: any = null;
   private layouts = new Map<ChartElement, { orientation: LayoutOrientation; size?: number; dimensions?: LayoutDimensions }>();
 
   private variables: VariableRegistry = new VariableRegistry();
 
   constructor(private elRef: ElementRef) {
+    super();
     this.g = d3.select(elRef.nativeElement);
+  }
+
+  clear() {
+
+  }
+
+  draw() {
+    if (this.data && this.data.length > 0) {
+      this.chartElements.forEach(element => this.variables.check(element, this.layouts.get(element).dimensions, this.data));
+      const data = this.variables.computeBinning(this.data);
+      this.chartElements.forEach(element => element.render(data));
+    }
+  }
+
+  protected drawSelection(selection: D3ngSelection): void {
+    // listen to selection event in marks
+    if (this.chartElements) {
+      this.chartElements.forEach((mark: AbstractMarkDirective) => {
+        if (mark.drawSelection) {
+          mark.drawSelection(selection);
+        }
+      });
+    }
   }
 
   ngAfterViewInit() {
@@ -99,18 +121,13 @@ export class ChartDirective implements AfterViewInit {
       element.layout(layout.dimensions);
     });
 
-    this.dirty = false;
-
-    if (this._data) {
-      this.updateData();
-    }
-  }
-
-  private updateData() {
-    if (!this.dirty && this._data && this._data.length > 0) {
-      this.chartElements.forEach(element => this.variables.check(element, this.layouts.get(element).dimensions, this._data));
-      const data = this.variables.computeBinning(this._data);
-      this.chartElements.forEach(element => element.render(data));
-    }
+    // listen to selection event in marks
+    this.chartElements.forEach((mark: AbstractMarkDirective) => {
+      if (mark.selectionChange) {
+        mark.selectionChange.subscribe(selected => {
+          this.setDirectSelection(selected);
+        });
+      }
+    });
   }
 }

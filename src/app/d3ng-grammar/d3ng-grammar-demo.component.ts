@@ -2,6 +2,7 @@ import {Component} from "@angular/core";
 import * as d3 from "d3";
 import {Http, Response} from "@angular/http";
 import * as moment from 'moment';
+import {D3ngGroupContext} from "../../lib/d3ng-groups.component";
 
 @Component({
   selector: 'd3ng-grammar-demo',
@@ -9,7 +10,7 @@ import * as moment from 'moment';
   styleUrls: [ './d3ng-grammar-demo.component.css' ]
 })
 export class D3ngGrammarDemoComponent {
-
+  groupContext = new D3ngGroupContext();
   weather = [];
   cars = [];
 

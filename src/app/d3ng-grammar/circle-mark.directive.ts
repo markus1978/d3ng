@@ -1,12 +1,14 @@
 import {Directive, ElementRef, forwardRef, Input} from "@angular/core";
 import * as d3 from "d3";
 import {ChartElement, LayoutDimensions, LayoutOrientation} from "./chart.directive";
+import {AbstractMarkDirective} from "./abstract-mark.directive";
+import {D3ngSelection} from "../../lib/d3ng-chart";
 
 @Directive({
   selector: '[d3ng-circle-mark]',
   providers: [{provide: ChartElement, useExisting: forwardRef(() => CircleMarkDirective)}],
 })
-export class CircleMarkDirective extends ChartElement {
+export class CircleMarkDirective extends AbstractMarkDirective {
 
   @Input() x = null;
   @Input() y = null;
@@ -26,8 +28,7 @@ export class CircleMarkDirective extends ChartElement {
   }
 
   render(data) {
-    const self = this;
-    this.g
+    const marks = this.g
       .selectAll("circle")
       .data(data)
       .enter()
@@ -35,6 +36,12 @@ export class CircleMarkDirective extends ChartElement {
       .attr("r", datum => this.r.project(datum))
       .attr("cx", datum => this.x.project(datum))
       .attr("cy", datum => this.y.project(datum));
+
+    this.installHandlers(marks);
+  }
+
+  drawSelection(selection: D3ngSelection): void {
+    this.g.selectAll("circle").style("fill", dataPoint => selection.selectionColor(dataPoint));
   }
 
   registerLayout(registry) {

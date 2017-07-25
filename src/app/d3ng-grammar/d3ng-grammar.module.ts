@@ -7,10 +7,12 @@ import {CircleMarkDirective} from "./circle-mark.directive";
 import {GridDirective} from "./grid.directive";
 import {BarMarkDirective} from "./bar-mark.directive";
 import {LineMarkDirective} from "./line-mark.directive";
+import {D3ngComponentsModule} from "../../lib/d3ng.module";
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    D3ngComponentsModule
   ],
   declarations: [
     ChartDirective,

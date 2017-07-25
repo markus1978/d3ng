@@ -15,12 +15,14 @@
 <table style="width: 100%;">
   <tr *ngFor="let varRow of ['Horsepower', 'Acceleration']">
     <td *ngFor="let varCol of ['Horsepower', 'Acceleration']">
-      <svg d3ng-chart [data]="cars" style="height: 150px; width: 100%;">
-        <g d3ng-grid y="row" x="col"></g>
-        <g d3ng-circle-mark y="row" x="col"></g>
-        <g d3ng-axis [field]="{key: 'col', field: varCol, orientation: 'bottom'}"></g>
-        <g d3ng-axis [field]="{key: 'row', field: varRow, orientation: 'left'}"></g>
-      </svg>
+      <d3ng-groups [groups]="[0]" [context]="groupContext">
+        <svg d3ng-chart [data]="cars" style="height: 150px; width: 100%;">
+          <g d3ng-grid y="row" x="col"></g>
+          <g d3ng-circle-mark y="row" x="col" select="multiClick"></g>
+          <g d3ng-axis [field]="{key: 'col', field: varCol, orientation: 'bottom'}"></g>
+          <g d3ng-axis [field]="{key: 'row', field: varRow, orientation: 'left'}"></g>
+        </svg>
+      </d3ng-groups>
     </td>
   </tr>
 </table>
